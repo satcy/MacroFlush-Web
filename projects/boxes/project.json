@@ -1,0 +1,309 @@
+{
+  "clipFormatVersion": 2,
+  "rootCompositionId": "example-boxes",
+  "assets": [
+    {
+      "id": "example-boxes",
+      "kind": "composition",
+      "name": "Boxes",
+      "detail": "1920 x 1080, 60 fps",
+      "composition": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 720,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "layer-boxes",
+            "name": "Boxes",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "html-clip-12",
+                "name": "Boxes",
+                "kind": "html",
+                "assetId": "html-clip-12-asset",
+                "inFrame": 0,
+                "outFrame": 720,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      960,
+                      540
+                    ],
+                    "value": [
+                      960,
+                      540
+                    ],
+                    "label": "anchorPoint",
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1920,
+                      1080
+                    ],
+                    "value": [
+                      1920,
+                      1080
+                    ],
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+                  "js": "const { scene, new3d } = clip.use(\"centi3d\");\n\nsetup(() => {\n\n  let geometry = new3d(T.BoxGeometry, [36, 36, 420]);\n  let prop = {};\n  prop.color = 0x00FFFF;\n  let material = new3d(T.MeshPhongMaterial, [prop]);\n\n  for (let i = 0; i < 20; i += 1) {\n    let mesh = new3d(T.Mesh, [geometry, material]);\n    mesh.position.x = i * 36 - 36 * 10 + 36 / 2;\n    scene.add(mesh);\n  }\n\n  let directionalLight = new3d(T.DirectionalLight, [0xffffff, 0.5]);\n  directionalLight.position.set(0, 0, 1);\n  scene.add(directionalLight);\n});\n\nonFrame(({ runTime }) => {\n  for (let i = 0; i < 20; i += 1) {\n    scene.children[i].rotation.x = nz(runTime / 2, i / 20) * PI2;\n    scene.children[i].rotation.z = nz(runTime / 2, i / 20) * PI2;\n  }\n});\n"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "html-clip-12-asset",
+      "name": "Boxes",
+      "kind": "html-clip",
+      "detail": "HTML Clip",
+      "clipId": "html-clip-12",
+      "htmlTemplate": {
+        "id": "html-clip-12",
+        "name": "Boxes",
+        "kind": "html",
+        "assetId": "html-clip-12-asset",
+        "inFrame": 0,
+        "outFrame": 720,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              960,
+              540
+            ],
+            "value": [
+              960,
+              540
+            ],
+            "label": "anchorPoint",
+            "group": "custom",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1920,
+              1080
+            ],
+            "value": [
+              1920,
+              1080
+            ],
+            "group": "custom",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+          "js": "const { scene, new3d } = clip.use(\"centi3d\");\n\nsetup(() => {\n\n  let geometry = new3d(T.BoxGeometry, [36, 36, 420]);\n  let prop = {};\n  prop.color = 0x00FFFF;\n  let material = new3d(T.MeshPhongMaterial, [prop]);\n\n  for (let i = 0; i < 20; i += 1) {\n    let mesh = new3d(T.Mesh, [geometry, material]);\n    mesh.position.x = i * 36 - 36 * 10 + 36 / 2;\n    scene.add(mesh);\n  }\n\n  let directionalLight = new3d(T.DirectionalLight, [0xffffff, 0.5]);\n  directionalLight.position.set(0, 0, 1);\n  scene.add(directionalLight);\n});\n\nonFrame(({ runTime }) => {\n  for (let i = 0; i < 20; i += 1) {\n    scene.children[i].rotation.x = nz(runTime / 2, i / 20) * PI2;\n    scene.children[i].rotation.z = nz(runTime / 2, i / 20) * PI2;\n  }\n});\n"
+        }
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "interactive-examples.mdn.mozilla.net",
+      "files.freemusicarchive.org"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  }
+}

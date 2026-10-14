@@ -1,0 +1,309 @@
+{
+  "clipFormatVersion": 2,
+  "rootCompositionId": "example-gradient",
+  "assets": [
+    {
+      "id": "example-gradient",
+      "kind": "composition",
+      "name": "Gradient",
+      "detail": "1920 x 1080, 60 fps",
+      "composition": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 720,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "layer-gradient",
+            "name": "Gradient",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "html-clip-2",
+                "name": "Gradient",
+                "kind": "html",
+                "assetId": "html-clip-2-asset",
+                "inFrame": 0,
+                "outFrame": 720,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      960,
+                      540
+                    ],
+                    "value": [
+                      960,
+                      540
+                    ],
+                    "label": "anchorPoint",
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1920,
+                      1080
+                    ],
+                    "value": [
+                      1920,
+                      1080
+                    ],
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+                  "js": "clip.use(\"centi\");\n\nconst point = vec2(100, 0);\nconst colors = [\"#33ff00\", \"#ff0033\", \"#0055ff\"];\n\nsetup(() => {\n  size(720, 360);\n  bg(0);\n});\n\nonFrame(({ frame }) => {\n  bm(5); // lighten\n  clear();\n\n  for (let index = 0; index <= 2; index += 1) {\n    const rotated = point.rotate((frame + 10000) / (index * 20 + 30));\n\n    grad(\n      cx - rotated.x,\n      cy - rotated.y,\n      cx + rotated.x,\n      cy + rotated.y\n    );\n    gradColor(0, colors[index]);\n    gradColor(1, colors[(index + 1) % colors.length]);\n\n    rect(0, 0, width, height);\n  }\n});"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "html-clip-2-asset",
+      "name": "Gradient",
+      "kind": "html-clip",
+      "detail": "HTML Clip",
+      "clipId": "html-clip-2",
+      "htmlTemplate": {
+        "id": "html-clip-2",
+        "name": "Gradient",
+        "kind": "html",
+        "assetId": "html-clip-2-asset",
+        "inFrame": 0,
+        "outFrame": 720,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              960,
+              540
+            ],
+            "value": [
+              960,
+              540
+            ],
+            "label": "anchorPoint",
+            "group": "custom",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1920,
+              1080
+            ],
+            "value": [
+              1920,
+              1080
+            ],
+            "group": "custom",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+          "js": "clip.use(\"centi\");\n\nconst point = vec2(100, 0);\nconst colors = [\"#33ff00\", \"#ff0033\", \"#0055ff\"];\n\nsetup(() => {\n  size(720, 360);\n  bg(0);\n});\n\nonFrame(({ frame }) => {\n  bm(5); // lighten\n  clear();\n\n  for (let index = 0; index <= 2; index += 1) {\n    const rotated = point.rotate((frame + 10000) / (index * 20 + 30));\n\n    grad(\n      cx - rotated.x,\n      cy - rotated.y,\n      cx + rotated.x,\n      cy + rotated.y\n    );\n    gradColor(0, colors[index]);\n    gradColor(1, colors[(index + 1) % colors.length]);\n\n    rect(0, 0, width, height);\n  }\n});"
+        }
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "interactive-examples.mdn.mozilla.net",
+      "files.freemusicarchive.org"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  }
+}

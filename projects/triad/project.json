@@ -1,0 +1,309 @@
+{
+  "clipFormatVersion": 2,
+  "rootCompositionId": "example-triad",
+  "assets": [
+    {
+      "id": "example-triad",
+      "kind": "composition",
+      "name": "Triad",
+      "detail": "1920 x 1080, 60 fps",
+      "composition": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 720,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "layer-triad",
+            "name": "Triad",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "html-clip-3",
+                "name": "Triad",
+                "kind": "html",
+                "assetId": "html-clip-3-asset",
+                "inFrame": 0,
+                "outFrame": 720,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      960,
+                      540
+                    ],
+                    "value": [
+                      960,
+                      540
+                    ],
+                    "label": "anchorPoint",
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1920,
+                      1080
+                    ],
+                    "value": [
+                      1920,
+                      1080
+                    ],
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+                  "js": "clip.use(\"centi\");\n\nsetup(() => {\n  size(720, 800);\n});\n\nonFrame(({ frame }) => {\n  clear();\n  col(255);\n  for (let j = 0; j < 20; j += 1) {\n    push();\n\n    translate(zmap(cos(frame / (57 + j)), -1, 1, -600, 0), 0);\n    scale(zmap(cos(frame / (53 + j)), -1, 1, 0.5, 1.0), 1);\n\n    for (let i = 0; i < 100; i += 1) {\n      tri(150, 0, 150, 50, 0, 50);\n      translate(150, 0);\n      scale(zmap(cos(frame / 55 + i / 2), -1, 1, 0.6, 1.5), 1);\n    }\n\n    pop();\n    translate(0, 50);\n  }\n});"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "html-clip-3-asset",
+      "name": "Triad",
+      "kind": "html-clip",
+      "detail": "HTML Clip",
+      "clipId": "html-clip-3",
+      "htmlTemplate": {
+        "id": "html-clip-3",
+        "name": "Triad",
+        "kind": "html",
+        "assetId": "html-clip-3-asset",
+        "inFrame": 0,
+        "outFrame": 720,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              960,
+              540
+            ],
+            "value": [
+              960,
+              540
+            ],
+            "label": "anchorPoint",
+            "group": "custom",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1920,
+              1080
+            ],
+            "value": [
+              1920,
+              1080
+            ],
+            "group": "custom",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+          "js": "clip.use(\"centi\");\n\nsetup(() => {\n  size(720, 800);\n});\n\nonFrame(({ frame }) => {\n  clear();\n  col(255);\n  for (let j = 0; j < 20; j += 1) {\n    push();\n\n    translate(zmap(cos(frame / (57 + j)), -1, 1, -600, 0), 0);\n    scale(zmap(cos(frame / (53 + j)), -1, 1, 0.5, 1.0), 1);\n\n    for (let i = 0; i < 100; i += 1) {\n      tri(150, 0, 150, 50, 0, 50);\n      translate(150, 0);\n      scale(zmap(cos(frame / 55 + i / 2), -1, 1, 0.6, 1.5), 1);\n    }\n\n    pop();\n    translate(0, 50);\n  }\n});"
+        }
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "interactive-examples.mdn.mozilla.net",
+      "files.freemusicarchive.org"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  }
+}
