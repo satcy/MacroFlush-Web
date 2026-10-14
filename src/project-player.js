@@ -1,3 +1,4 @@
+import { translate as t } from "./locale.js";
 import { createClipPlayer } from "../player/macroflush-player.js";
 import { frameAtTime } from "./timeline-model.js";
 
@@ -6,7 +7,7 @@ export function loadProject(projectUrl) {
   const url = new URL(projectUrl, location.href);
   if (!projects.has(url.href)) {
     const request = fetch(url).then(response => {
-      if (!response.ok) throw new Error(`Projectを読み込めません (${response.status})`);
+      if (!response.ok) throw new Error(t(`Projectを読み込めません (${response.status})`));
       return response.json();
     }).catch(error => { projects.delete(url.href); throw error; });
     projects.set(url.href, request);
@@ -17,7 +18,7 @@ export function loadProject(projectUrl) {
 export function getComposition(project) {
   if (project.clipFormatVersion === 1) return project;
   const root = project.assets?.find(asset => asset.kind === "composition" && asset.id === project.rootCompositionId);
-  if (!root) throw new Error("Root Compositionが見つかりません");
+  if (!root) throw new Error(t("Root Compositionが見つかりません"));
   return root.composition;
 }
 
@@ -40,7 +41,7 @@ export class ProjectPreview {
     document.body.append(this.host);
     this.mediaObserver = new MutationObserver(() => this.setMuted(this.muted));
     this.mediaObserver.observe(this.host, { childList: true, subtree: true });
-    this.setStatus("loading", "Projectを読み込み中…");
+    this.setStatus("loading", t("Projectを読み込み中…"));
     this.loading = this.initialize();
   }
 
@@ -63,9 +64,9 @@ export class ProjectPreview {
         await Promise.all(project.assets.map(async asset => {
           if (!asset.sourceUrl || /^(data:|blob:)/.test(asset.sourceUrl)) return;
           const assetUrl = new URL(asset.sourceUrl, url);
-          if (assetUrl.origin !== location.origin) throw new Error("外部のリンクメディアは使用できません");
+          if (assetUrl.origin !== location.origin) throw new Error(t("外部のリンクメディアは使用できません"));
           const response = await fetch(assetUrl, { signal: this.abort.signal });
-          if (!response.ok) throw new Error(`メディアを読み込めません: ${asset.sourceUrl}`);
+          if (!response.ok) throw new Error(t(`メディアを読み込めません: ${asset.sourceUrl}`));
           const blobUrl = URL.createObjectURL(await response.blob());
           this.blobUrls.push(blobUrl); asset.sourceUrl = blobUrl;
         }));
@@ -112,7 +113,7 @@ export class ProjectPreview {
   fail(error) {
     if (this.destroyed || this.failed) return;
     this.failed = true; clearTimeout(this.startupTimeout);
-    this.setStatus("error", error.message || "Playerの読み込みに失敗しました");
+    this.setStatus("error", error.message || t("Playerの読み込みに失敗しました"));
     this.player?.destroy();
     this.pauseMedia();
     this.abort.abort(); this.releaseBlobs();
@@ -124,7 +125,7 @@ export class ProjectPreview {
     if (!playing && this.hasFrame && this.lastTime !== time && !this.dirty) this.requestRender();
     if (!this.hasFrame) {
       this.startupActiveMs += Math.min(now - this.lastTick, 1000 / this.tickFps);
-      if (this.startupActiveMs > 15000) { this.fail(new Error("Playerの描画が完了しませんでした")); return; }
+      if (this.startupActiveMs > 15000) { this.fail(new Error(t("Playerの描画が完了しませんでした"))); return; }
     }
     if (!playing && this.hasFrame && this.lastTime === time && !this.dirty) { this.pauseMedia(); return; }
     this.lastTick = now;

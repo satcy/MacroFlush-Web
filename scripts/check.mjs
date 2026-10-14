@@ -5,8 +5,10 @@ import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { build } from "./build.mjs";
 import { examples } from "../src/examples.js";
-import { api, groups } from "../src/content.js";
+import { api, groups, lessons } from "../src/content.js";
 import { getBasePath } from "./site-path.mjs";
+import { apiDescriptions, groupDescriptions, lessonTranslations } from "../src/content-en.js";
+import { translate } from "../src/locale.js";
 
 await build();
 const root = resolve("dist");
@@ -21,12 +23,25 @@ async function files(dir) {
   return found;
 }
 const htmlFiles = (await files(root)).filter(file => file.endsWith(".html"));
+assert.equal(htmlFiles.length, 2 * (5 + lessons.length) + 1, "Missing localized pages");
 assert.equal(new Set(api.map(entry => entry.id)).size, api.length);
+for (const group of groups) assert(groupDescriptions[group.id], `Missing English group: ${group.id}`);
+for (const lesson of lessons) {
+  const english = lessonTranslations[lesson.id];
+  assert(english?.title && english.summary, `Missing English tutorial: ${lesson.id}`);
+  assert.equal(english.steps.length, lesson.steps.length);
+  for (const step of english.steps) assert(step.title && step.text);
+}
 for (const entry of api) {
   assert(groups.some(group => group.id === entry.group));
+  assert(apiDescriptions[entry.id], `Missing English API: ${entry.id}`);
   if (entry.group !== "player" && !entry.label?.startsWith("set_clip")) {
     assert.doesNotThrow(() => new Function(entry.code), `Invalid Reference snippet: ${entry.id}`);
+    assert.doesNotThrow(() => new Function(translate(entry.code, "en")), `Invalid English Reference snippet: ${entry.id}`);
   }
+}
+for (const example of examples) {
+  assert(!/[\u3040-\u30ff\u3400-\u9fff]/.test(translate(example.description, "en")), `Missing English example: ${example.id}`);
 }
 for (const file of htmlFiles) {
   const html = await readFile(file, "utf8");
@@ -41,8 +56,21 @@ for (const file of htmlFiles) {
     assert(await stat(path), `Missing local target ${url} in ${file}`);
   }
   if (!file.endsWith("404.html")) {
+    const english = file.startsWith(resolve(root, "en") + "/");
     assert.equal((html.match(/aria-current="page"/g) || []).length, file.includes("/tutorials/") && !file.endsWith("/tutorials/index.html") ? 2 : 1);
-    assert(html.includes('<html lang="ja">'));
+    assert(html.includes(`<html lang="${english ? "en" : "ja"}">`));
+    if (english) assert(!/[\u3040-\u30ff\u3400-\u9fff]/.test(html), `Untranslated English page: ${file}`);
+    const pagePath = "/" + relative(english ? resolve(root, "en") : root, file).replace(/index\.html$/, "");
+    const switches = html.match(/<nav class="language-switch"[^>]*>(.*?)<\/nav>/)?.[1];
+    assert(switches, `Missing language switch: ${file}`);
+    assert(switches.includes(`href="${basePath}${pagePath.slice(1)}" lang="ja"`));
+    assert(switches.includes(`href="${basePath}en${pagePath}" lang="en"`));
+    assert.equal((switches.match(/aria-current="true"/g) || []).length, 1);
+    const navigation = html.match(/<nav class="main-nav"[^>]*>(.*?)<\/nav>/)?.[1];
+    for (const [, url] of navigation.matchAll(/href="([^"]+)"/g)) {
+      assert(url.startsWith(basePath + (english ? "en/" : "")));
+      if (!english) assert(!url.startsWith(basePath + "en/"));
+    }
   }
 }
 const provenance = JSON.parse(await readFile("vendor/provenance.json", "utf8"));

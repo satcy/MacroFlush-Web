@@ -1,6 +1,6 @@
 # MacroFlush Web
 
-MacroFlushアプリのためのWebサイト。アプリのダークパネル、Playfair Displayのロゴ、シアン・ピンク・黄色の配色を継承しています。
+MacroFlushアプリのための日本語・英語Webサイト。アプリのダークパネル、Playfair Displayのロゴ、シアン・ピンク・黄色の配色を継承しています。
 
 ## 起動
 
@@ -32,6 +32,8 @@ npm run preview  # ビルド済みdist/を確認
 
 各チュートリアルにも固有のURLがあります。ページ本文はビルド時にHTML化され、JavaScriptが無効でも読むことができます。プレビューの停止、reduced-motion設定、キーボード操作に対応しています。
 
+日本語は上記のURL、英語は `/en/` 配下です（例: `/en/reference/`）。ヘッダーのJA / ENで同じページの言語を切り替えます。JavaScriptが有効な場合はReferenceの現在のアンカーも保持します。両言語のHTMLを静的に生成するため、英語ページもJavaScriptなしで読めます。Playerと作例JSONは両言語で共有します。
+
 ## ソース
 
 - `src/pages.js`: 共通レイアウトとページ本文
@@ -41,6 +43,8 @@ npm run preview  # ビルド済みdist/を確認
 - `src/timeline-model.js`: キーの移動・RGB成分・Undoのデータ操作
 - `src/reference-extra.js`: Centiとp5.jsの詳細リファレンス
 - `src/reference-guides.js`: 導入手順・単位・Centiとp5の比較
+- `src/content-en.js`: 共通IDに対応するReference・Tutorialsの英語本文
+- `src/ui-en.js` / `src/locale.js`: 画面文言・コードコメント・操作メッセージの英訳と切り替え
 - `src/project-player.js`: MacroFlush Playerのロード・再生・破棄
 - `src/client.js`: プレビュー、ダイアログ、検索、コピー、絞り込み
 - `src/styles.css`: アプリから引き継いだデザインとレスポンシブ表示

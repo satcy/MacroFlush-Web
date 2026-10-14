@@ -2,7 +2,7 @@
 
 ## 目的と範囲
 
-MacroFlushアプリの紹介・学習用の日本語Webサイトです。メインコンテンツは Top / About / Reference / Examples / Tutorials。アプリのダークパネル、Playfair Displayのロゴ、シアン・ピンク・黄色の配色を継承してください。
+MacroFlushアプリの紹介・学習用の日本語・英語Webサイトです。メインコンテンツは Top / About / Reference / Examples / Tutorials。アプリのダークパネル、Playfair Displayのロゴ、シアン・ピンク・黄色の配色を継承してください。
 
 このリポジトリはWebサイトを管理します。隣接する `../MacroFlush` はPlayer・サンプル・API仕様の参照元です。Webサイトの作業でアプリ本体を変更しないでください。
 
@@ -41,6 +41,8 @@ npm run preview  # 生成済み dist/ を配信
 | `scripts/` | ビルド・サーバー・同期・検証 |
 
 本文はビルド時にHTML化します。主要な説明・ナビゲーションはJavaScriptが無効でも読める構造を保ってください。`dist/` は生成物なので直接編集・コミットしません。
+
+日本語は `/`、英語は `/en/` 配下に生成します。ReferenceとTutorialsの英訳は同じIDで `src/content-en.js` に記載し、画面文言・コードコメント・動的メッセージは `src/ui-en.js` と `src/locale.js` で管理します。追加・変更時は両言語を更新してください。英語HTMLへの日本語の混入、言語切り替え先、英語のコード例も `npm run check` で検証します。実作例のClipソースとプロジェクトJSONは翻訳せず共有します。
 
 GitHub Pagesは `.github/workflows/pages.yml` で `dist/` を公開します。Jekyllや `docs/` は使用しません。URLに関わる変更は、通常の検証に加えて `BASE_PATH=/MacroFlush-Web/ npm run check` でも確認してください。ビルド時のHTMLリンクは `scripts/site-path.mjs` で補正し、ブラウザの作例URL・モジュール・CSSリソースはファイルの位置を基準に解決します。
 

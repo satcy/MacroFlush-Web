@@ -90,3 +90,16 @@ dialog{width:min(1120px,calc(100% - 48px));max-height:calc(100dvh - 60px);border
 .reference-table-wrap{max-width:100%;min-width:0}
 @media(max-width:760px){.docs-layout,.tutorial-layout{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:760px){.p5-guide table{min-width:0;table-layout:fixed}.p5-guide th,.p5-guide td{overflow-wrap:anywhere;padding:9px 7px}.p5-guide th:first-child{width:22%}}
+
+/* Language links stay beside the main navigation at every viewport size. */
+.language-switch{display:flex;align-items:center;gap:5px;flex-shrink:0;font:11px var(--mono);color:var(--muted)}
+.language-switch a{display:grid;place-items:center;min-width:30px;min-height:32px;border:1px solid transparent;border-radius:2px}
+.language-switch a:hover{color:var(--text)}
+.language-switch a[aria-current]{color:var(--cyan);background:#172830;border-color:#345562}
+.error-language-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+html[lang=en] .hero-ja{font-size:19px;letter-spacing:0}
+html[lang=en] .large-copy{line-height:1.55}
+@media(min-width:761px){.site-header{gap:24px}.main-nav{gap:3px}.main-nav a{padding-inline:12px}}
+@media(max-width:760px){.language-switch{margin-left:auto;margin-right:16px}.site-header .main-nav{order:4}.site-header .github-link{order:3}}
+@media(max-width:380px){.site-header{padding-inline:16px}.site-header .wordmark{font-size:18px}.language-switch{margin-right:8px;font-size:10px}.language-switch a{min-width:27px}.site-header .github-link{gap:4px}.main-nav a{padding-inline:7px}}
+@media(min-width:761px) and (max-width:1000px){html{scroll-padding-top:130px}.site-header{height:auto;min-height:107px;padding:18px 26px 0;flex-wrap:wrap;gap:0}.language-switch{margin-left:auto;margin-right:20px}.site-header .main-nav{order:4;flex-basis:100%;justify-content:center;margin:12px 0 0;padding-bottom:12px}.site-header .github-link{order:3}}

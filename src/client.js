@@ -1,5 +1,15 @@
+import { translate as t } from "./locale.js";
 import { examples } from "./examples.js";
 import { HeroEditor, updateProgress, timecode } from "./hero-editor.js";
+
+// Keep the current Reference anchor when switching language.
+function updateLanguageLinks() {
+  document.querySelectorAll(".language-switch a").forEach(link => {
+    const url = new URL(link.href); url.hash = location.hash; link.href = url.href;
+  });
+}
+updateLanguageLinks();
+window.addEventListener("hashchange", updateLanguageLinks);
 
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 let playing = !reduceMotion.matches;
@@ -45,7 +55,7 @@ for (const item of canvases) observer.observe(item.observationTarget);
 function updatePlayButtons() {
   for (const button of document.querySelectorAll(".global-play")) {
     button.textContent = button.classList.contains("icon-button") ? (playing ? "Ⅱ" : "▷") : (playing ? "Ⅱ Pause" : "▷ Play");
-    button.setAttribute("aria-label", playing ? "アニメーションを停止" : "アニメーションを再生");
+    button.setAttribute("aria-label", playing ? t("アニメーションを停止") : t("アニメーションを再生"));
   }
 }
 updatePlayButtons();
@@ -55,7 +65,7 @@ reduceMotion.addEventListener("change", e => {
 });
 function updateHeroPlay() {
   const button = document.querySelector("#hero-play");
-  if (button) { button.textContent = heroPlaying ? "Ⅱ" : "▷"; button.setAttribute("aria-label", heroPlaying ? "デモを停止" : "デモを再生"); }
+  if (button) { button.textContent = heroPlaying ? "Ⅱ" : "▷"; button.setAttribute("aria-label", heroPlaying ? t("デモを停止") : t("デモを再生")); }
 }
 function pauseHero() { heroPlaying = false; updateHeroPlay(); }
 updateHeroPlay();
@@ -82,7 +92,7 @@ let sources = [];
 
 function updateDemoPlay() {
   demoPlay.textContent = demoPlaying ? "Ⅱ Pause" : "▷ Play";
-  demoPlay.setAttribute("aria-label", demoPlaying ? "作例を停止" : "作例を再生");
+  demoPlay.setAttribute("aria-label", demoPlaying ? t("作例を停止") : t("作例を再生"));
 }
 function showSource() {
   const asset = sources.find(a => a.id === sourceClip.value);
@@ -120,12 +130,12 @@ function openDemo(id) {
   document.querySelector("#demo-code").textContent = "";
   document.querySelector("#speed-output").textContent = "1.0×";
   document.querySelector("#demo-title").textContent = selected.title;
-  document.querySelector("#demo-description").textContent = selected.description;
+  document.querySelector("#demo-description").textContent = t(selected.description);
   document.querySelector("#project-info").textContent = "";
   demoSeek.value = "0"; demoSeek.disabled = true; demoSeek.style.setProperty("--progress", "0%");
   document.querySelector("#demo-download").href = selected.projectUrl;
   dialogCanvas.width = 720;
-  statusFor(dialogCanvas)("loading", "Projectを読み込み中…");
+  statusFor(dialogCanvas)("loading", t("Projectを読み込み中…"));
   updateDemoPlay(); dialog.showModal();
   canvases.forEach(item => item.preview?.pauseMedia());
   void mountDialog(++generation, example);
@@ -139,7 +149,7 @@ dialog.addEventListener("close", () => { generation++; dialogPreview?.destroy();
 demoPlay.addEventListener("click", () => { demoPlaying = !demoPlaying; updateDemoPlay(); if (!demoPlaying) dialogPreview?.pauseMedia(); });
 document.querySelector("#demo-reset").addEventListener("click", () => {
   demoTime = 0; dialogPreview?.destroy(); dialogPreview = null;
-  statusFor(dialogCanvas)("loading", "Projectを読み込み中…");
+  statusFor(dialogCanvas)("loading", t("Projectを読み込み中…"));
   if (selected) void mountDialog(++generation, selected);
 });
 speed.addEventListener("input", () => { document.querySelector("#speed-output").textContent = `${Number(speed.value).toFixed(1)}×`; });
@@ -194,8 +204,8 @@ let toastTimer;
 function toast(message) { const el = document.querySelector(".toast"); el.textContent = message; el.classList.add("visible"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("visible"), 2500); }
 document.querySelectorAll(".copy-button").forEach(button => button.addEventListener("click", async () => {
   const code = button.closest(".code-block").querySelector("code").textContent;
-  try { await navigator.clipboard.writeText(code); button.textContent = "Copied ✓"; toast("コードをコピーしました"); }
-  catch { const selection = getSelection(); const range = document.createRange(); range.selectNodeContents(button.closest(".code-block").querySelector("code")); selection.removeAllRanges(); selection.addRange(range); button.textContent = "⌘ / Ctrl + C"; toast("コードを選択しました。⌘ / Ctrl + Cでコピーしてください"); }
+  try { await navigator.clipboard.writeText(code); button.textContent = "Copied ✓"; toast(t("コードをコピーしました")); }
+  catch { const selection = getSelection(); const range = document.createRange(); range.selectNodeContents(button.closest(".code-block").querySelector("code")); selection.removeAllRanges(); selection.addRange(range); button.textContent = "⌘ / Ctrl + C"; toast(t("コードを選択しました。⌘ / Ctrl + Cでコピーしてください")); }
   setTimeout(() => { button.textContent = "Copy"; }, 2500);
 }));
 document.querySelectorAll("[data-filter]").forEach(button => button.addEventListener("click", () => {
@@ -214,7 +224,7 @@ if (search) {
     let count = 0;
     document.querySelectorAll(".api-entry").forEach(entry => { entry.hidden = !entry.dataset.search.includes(query); if (!entry.hidden) count++; });
     document.querySelectorAll(".api-group").forEach(group => { group.hidden = ![...group.querySelectorAll(".api-entry")].some(entry => !entry.hidden); });
-    document.querySelector("#search-result").textContent = query ? (count ? `${count}件のAPIが見つかりました` : "該当するAPIが見つかりません。別のキーワードをお試しください。") : "";
+    document.querySelector("#search-result").textContent = query ? (count ? t("{count}件のAPIが見つかりました", undefined, { count }) : t("該当するAPIが見つかりません。別のキーワードをお試しください。")) : "";
   });
   document.addEventListener("keydown", e => { if (e.key === "/" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) { e.preventDefault(); search.focus(); } });
 }

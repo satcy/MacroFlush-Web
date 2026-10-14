@@ -1,3 +1,4 @@
+import { translate as t } from "./locale.js";
 import { clamp, frameAtTime, componentValue, withComponent, valueAtFrame, moveKeyframe, snapshotClip, restoreClip } from "./timeline-model.js";
 
 const svgNode = (tag, attrs = {}) => {
@@ -192,7 +193,7 @@ export class HeroEditor {
       button.setAttribute("aria-pressed", String(key === this.selected)); button.setAttribute("aria-label", `${this.param} key ${key.frame} frame`); button.title = `${key.frame} f / ${Array.isArray(key.value) ? key.value.join(", ") : key.value}`;
       button.append(document.createElement("span")); lane.append(button);
     }
-    if (!this.track.length) { const hint = document.createElement("span"); hint.className = "empty-track"; hint.textContent = "＋ Keyで追加"; lane.append(hint); }
+    if (!this.track.length) { const hint = document.createElement("span"); hint.className = "empty-track"; hint.textContent = t("＋ Keyで追加"); lane.append(hint); }
     this.renderCurve(channels); this.updateInspector(); this.tick(this.getTime());
   }
   renderCurve(channels) {
@@ -231,7 +232,7 @@ export class HeroEditor {
     if (this.schema.type === "color") this.el["key-color"].value = value;
     else if (document.activeElement !== this.el["key-value"]) this.el["key-value"].value = componentValue(value, this.channel);
     this.el["delete-key"].disabled = !selected; this.el.undo.disabled = !this.history.length;
-    this.el["edit-status"].textContent = selected ? `${this.param} / Key ${selected.frame} f · ドラッグで編集` : `${this.track.length} keys · ◆を選択 / ドラッグで移動`;
+    this.el["edit-status"].textContent = selected ? t(`${this.param} / Key ${selected.frame} f · ドラッグで編集`) : t(`${this.track.length} keys · ◆を選択 / ドラッグで移動`);
   }
   tick(time) {
     const frame = frameAtTime(time, this.composition.fps, this.composition.durationFrames);
