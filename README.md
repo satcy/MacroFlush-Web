@@ -29,10 +29,17 @@ npm run preview  # ビルド済みdist/を確認
 | `/reference/` | Reference / Centiの41項目・p5.jsの12項目を含む検索可能なAPIリファレンス |
 | `/examples/` | Examples / 6実プロジェクト・カテゴリ絞り込み・ソース閲覧・JSONダウンロード |
 | `/tutorials/` | Tutorials / 4本の制作手順 |
+| `/online-editor/` | OnlineEditor / ブラウザで動作する実MacroFlushエディタ |
 
 各チュートリアルにも固有のURLがあります。ページ本文はビルド時にHTML化され、JavaScriptが無効でも読むことができます。プレビューの停止、reduced-motion設定、キーボード操作に対応しています。
 
 日本語は上記のURL、英語は `/en/` 配下です（例: `/en/reference/`）。ヘッダーのJA / ENで同じページの言語を切り替えます。JavaScriptが有効な場合はReferenceの現在のアンカーも保持します。両言語のHTMLを静的に生成するため、英語ページもJavaScriptなしで読めます。Playerと作例JSONは両言語で共有します。
+
+OnlineEditorは `MacroFlush/dist/index.html` を含むビルド一式を `vendor/editor/` に保持し、同じエディタの起動ページ `/editor/launcher.html` をiframeで表示します。日英ページは同じ実エディタを使用し、サイトヘッダーや追加の操作バーを表示せず、エディタだけを画面いっぱいに表示します。狭い画面では編集パネルを横にスクロールできます。エディタ自体のUIは参照元ビルドの内容をそのまま使用します。
+
+Topの「はじめる」はOnlineEditorを開きます。各作例の「Editorで開く」は `/online-editor/?example=triad` などのURLで、その作例の実プロジェクトJSONを読み込みます。起動用の追加スクリプトは、カタログに登録された作例だけを取得し、エディタ本来のプロジェクトファイル読み込み処理へ渡します。成功後は読み込み表示を消してエディタだけを表示します。参照元の配布ファイルは変更しません。
+
+エディタだけをアプリの最新ビルドから取り込むには `npm run sync:editor`、続けて `npm run check` を実行します。既定の参照先は `../MacroFlush/dist` です。`MACROFLUSH_ROOT` でアプリの場所を指定できます。取り込んだ各ファイルのSHA-256は `vendor/editor-provenance.json` に記録します。ビルド・GitHub Pagesの公開時にアプリ本体は不要です。
 
 ## ソース
 
@@ -50,6 +57,7 @@ npm run preview  # ビルド済みdist/を確認
 - `src/styles.css`: アプリから引き継いだデザインとレスポンシブ表示
 - `assets/`: アプリのロゴ、画面キャプチャ、Playfair Display (OFL)
 - `scripts/`: ビルド、ローカルHTTPサーバー、検証
+- `scripts/sync-editor.mjs`: MacroFlushのブラウザ版エディタの配布ファイルをそのまま取り込み
 
 本文はローカルMacroFlush 0.3.10のREADMEとランタイム型定義を参照して作成。アプリの更新時はAPIと出力制約を再確認してください。TopとExamplesは `MacroFlush/dist/player` の実Playerを使い、`projects/` のMacroFlush V2プロジェクトJSONを読み込んで再生します。サイト側に代用の描画実装はありません。
 

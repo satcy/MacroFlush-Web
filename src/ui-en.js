@@ -1,4 +1,11 @@
 export const englishUI = {
+  "Editorで開く": "Open in Editor",
+  "のプロジェクトをEditorで開く": ": open project in Editor",
+  "プロジェクトをEditorで開いています…": "Opening project in Editor…",
+  "このExampleは見つかりません。": "This Example could not be found.",
+  "プロジェクトを読み込めませんでした。": "Could not load the project.",
+  "Editorでプロジェクトを開けませんでした。": "Could not open the project in Editor.",
+  "再読み込み": "Reload",
   "MacroFlush — HTML、CSS、JavaScriptをライブなClipに。タイムラインで重ね、動かすモーショングラフィックス環境。": "MacroFlush — Turn HTML, CSS and JavaScript into live Clips. Layer and animate them on a timeline to create motion graphics.",
   "コードを、動きにする。Programmable Motion Graphics Environment.": "Code becomes motion. Programmable Motion Graphics Environment.",
   "コンテンツへ移動": "Skip to content",

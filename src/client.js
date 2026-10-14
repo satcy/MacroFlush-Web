@@ -134,6 +134,9 @@ function openDemo(id) {
   document.querySelector("#project-info").textContent = "";
   demoSeek.value = "0"; demoSeek.disabled = true; demoSeek.style.setProperty("--progress", "0%");
   document.querySelector("#demo-download").href = selected.projectUrl;
+  const editorUrl = new URL(document.documentElement.lang === "en" ? "../en/online-editor/" : "../online-editor/", import.meta.url);
+  editorUrl.searchParams.set("example", selected.id);
+  document.querySelector("#demo-editor").href = editorUrl.href;
   dialogCanvas.width = 720;
   statusFor(dialogCanvas)("loading", t("Projectを読み込み中…"));
   updateDemoPlay(); dialog.showModal();

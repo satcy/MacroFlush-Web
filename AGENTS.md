@@ -2,7 +2,7 @@
 
 ## 目的と範囲
 
-MacroFlushアプリの紹介・学習用の日本語・英語Webサイトです。メインコンテンツは Top / About / Reference / Examples / Tutorials。アプリのダークパネル、Playfair Displayのロゴ、シアン・ピンク・黄色の配色を継承してください。
+MacroFlushアプリの紹介・学習用の日本語・英語Webサイトです。メインコンテンツは Top / About / Reference / Examples / Tutorials / OnlineEditor。アプリのダークパネル、Playfair Displayのロゴ、シアン・ピンク・黄色の配色を継承してください。
 
 このリポジトリはWebサイトを管理します。隣接する `../MacroFlush` はPlayer・サンプル・API仕様の参照元です。Webサイトの作業でアプリ本体を変更しないでください。
 
@@ -48,7 +48,10 @@ GitHub Pagesは `.github/workflows/pages.yml` で `dist/` を公開します。J
 
 ## 実Playerと作例
 
+OnlineEditorは `vendor/editor/` の実ブラウザ版エディタを配信し、日英の `/online-editor/` ページからiframeで表示します。このページはサイトヘッダーや追加の操作バーを置かず、実エディタだけで画面全体を使います。ビルド時に元のindex.htmlから `/editor/launcher.html` を追加生成し、`src/editor-example-loader.js` で `?example=<id>` の作例をエディタ本来のプロジェクトファイル読み込み処理へ渡します。カタログに登録された作例だけを取得してください。読み込みは実エディタのファイル入力・ステータスDOMに依存するため、同期後は作例の直接読み込みもブラウザで確認してください。配布ファイルを直接編集せず、更新は `npm run sync:editor` で行います。`vendor/editor-provenance.json` に全ファイルのSHA-256を記録し、コピー後の同一性を検証します。相対パスで読むJS・CSS・メディア・フォント・Playerをまとめて保持してください。エディタUIの言語は参照元ビルドに従います。
+
 - TopとExamplesは `vendor/player/` の実MacroFlush Playerで実プロジェクトを再生します。サイト独自の代用描画に置き換えないでください。
+- 可視のEffect layerがあるプロジェクトはCompositionの原寸で合成し、CSSでプレビューを縮小してください。Playerの出力Canvasだけを縮小すると、Effectの原寸入力バッファと座標がずれて描画が欠けます。
 - Playerの配布ファイルは直接編集せず、サイト側のラッパーで対応してください。更新が必要な場合は `npm run sync:macroflush` を使い、続けて `npm run check` を実行します。
 - 同期はPlayerスナップショット、掲載作例のJSON、provenanceを上書きします。作例を独自編集した後に同期する場合は差分を確認してください。
 - 同期元の既定値は `../MacroFlush`。変更する場合は `MACROFLUSH_ROOT=/path/to/MacroFlush npm run sync:macroflush` を使用します。通常のビルドはこのアプリの存在に依存しません。

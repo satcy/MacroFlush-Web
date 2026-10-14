@@ -103,3 +103,11 @@ html[lang=en] .large-copy{line-height:1.55}
 @media(max-width:760px){.language-switch{margin-left:auto;margin-right:16px}.site-header .main-nav{order:4}.site-header .github-link{order:3}}
 @media(max-width:380px){.site-header{padding-inline:16px}.site-header .wordmark{font-size:18px}.language-switch{margin-right:8px;font-size:10px}.language-switch a{min-width:27px}.site-header .github-link{gap:4px}.main-nav a{padding-inline:7px}}
 @media(min-width:761px) and (max-width:1000px){html{scroll-padding-top:130px}.site-header{height:auto;min-height:107px;padding:18px 26px 0;flex-wrap:wrap;gap:0}.language-switch{margin-left:auto;margin-right:20px}.site-header .main-nav{order:4;flex-basis:100%;justify-content:center;margin:12px 0 0;padding-bottom:12px}.site-header .github-link{order:3}}
+
+/* Keep all six menu entries visible on small screens. */
+@media(max-width:1000px){.main-nav{flex-wrap:wrap;justify-content:center!important;gap:3px}.main-nav a{flex-shrink:0}}
+body[data-page=online-editor] main{width:100vw;height:100dvh;overflow-x:auto;overflow-y:hidden}
+#online-editor-frame{display:block;width:100%;height:100%;min-width:1000px;border:0;background:var(--bg)}
+.demo-card-actions{display:flex;justify-content:flex-end;padding:10px 15px;border-top:1px solid var(--line);background:#15191f}
+.demo-card-actions .text-link{font-size:11px;gap:12px;color:var(--cyan)}
+#demo-editor{margin-right:16px;margin-bottom:12px}

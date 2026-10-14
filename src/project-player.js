@@ -102,8 +102,11 @@ export class ProjectPreview {
       window.addEventListener("message", this.onRuntimeFrame);
       await this.player.ready;
       if (this.destroyed) return;
-      // Composite at preview resolution; the authored Composition stays unchanged.
-      this.player.resize(720, Math.round(720 * composition.height / composition.width));
+      // Effects allocate their input buffers at Composition resolution. Resizing
+      // only the output canvas makes their input and output coordinates disagree.
+      // Keep those projects at authored resolution and let CSS scale the preview.
+      const width = composition.layers.some(layer => layer.kind === "effect" && layer.visible !== false) ? composition.width : 720;
+      this.player.resize(width, Math.round(width * composition.height / composition.width));
       this.initialized = true;
       this.setMuted(this.muted);
       this.startupActiveMs = 0;
