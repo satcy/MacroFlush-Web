@@ -1,8 +1,10 @@
 import { mkdir, writeFile, cp, rm } from "node:fs/promises";
 import { render } from "../src/pages.js";
 import { lessons } from "../src/content.js";
+import { getBasePath, prefixSiteLinks } from "./site-path.mjs";
 
 export async function build() {
+  const basePath = getBasePath();
   await rm("dist", { recursive: true, force: true });
   await mkdir("dist/assets", { recursive: true });
   await cp("assets", "dist/assets", { recursive: true });
@@ -12,13 +14,14 @@ export async function build() {
   for (const page of ["top", "about", "reference", "examples", "tutorials"]) {
     const dir = page === "top" ? "dist" : `dist/${page}`;
     await mkdir(dir, { recursive: true });
-    await writeFile(`${dir}/index.html`, render(page));
+    await writeFile(`${dir}/index.html`, prefixSiteLinks(render(page), basePath));
   }
   for (const lesson of lessons) {
     await mkdir(`dist/tutorials/${lesson.id}`, { recursive: true });
-    await writeFile(`dist/tutorials/${lesson.id}/index.html`, render("tutorials", lesson.id));
+    await writeFile(`dist/tutorials/${lesson.id}/index.html`, prefixSiteLinks(render("tutorials", lesson.id), basePath));
   }
-  await writeFile("dist/404.html", '<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found — MacroFlush</title><link rel="stylesheet" href="/assets/styles.css"><main class="container page-heading"><p class="eyebrow">404</p><h1>Page not found.</h1><p>ページが見つかりません。</p><a class="button" href="/">Topへ戻る</a></main></html>');
-  console.log("Built 9 pages and 6 examples → dist/");
+  await writeFile("dist/404.html", prefixSiteLinks('<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found — MacroFlush</title><link rel="stylesheet" href="/assets/styles.css"><main class="container page-heading"><p class="eyebrow">404</p><h1>Page not found.</h1><p>ページが見つかりません。</p><a class="button" href="/">Topへ戻る</a></main></html>', basePath));
+  await writeFile("dist/.nojekyll", "");
+  console.log(`Built 9 pages and 6 examples → dist/ (base: ${basePath})`);
 }
 if (process.argv[1] === new URL(import.meta.url).pathname) await build();

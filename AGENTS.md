@@ -42,6 +42,8 @@ npm run preview  # 生成済み dist/ を配信
 
 本文はビルド時にHTML化します。主要な説明・ナビゲーションはJavaScriptが無効でも読める構造を保ってください。`dist/` は生成物なので直接編集・コミットしません。
 
+GitHub Pagesは `.github/workflows/pages.yml` で `dist/` を公開します。Jekyllや `docs/` は使用しません。URLに関わる変更は、通常の検証に加えて `BASE_PATH=/MacroFlush-Web/ npm run check` でも確認してください。ビルド時のHTMLリンクは `scripts/site-path.mjs` で補正し、ブラウザの作例URL・モジュール・CSSリソースはファイルの位置を基準に解決します。
+
 ## 実Playerと作例
 
 - TopとExamplesは `vendor/player/` の実MacroFlush Playerで実プロジェクトを再生します。サイト独自の代用描画に置き換えないでください。

@@ -64,6 +64,21 @@ npm run check
 
 ## 配置
 
-`dist/` の中身を静的ホスティングのルートへ配置します。サブディレクトリの `index.html` と `404.html` を配信できる設定にしてください。サイトはドメインのルートへの配置を想定しています。このリポジトリからアプリ本体の起動・配布は行いません。
+`dist/` の中身を静的ホスティングへ配置します。サブディレクトリの `index.html` と `404.html` を配信できる設定にしてください。このリポジトリからアプリ本体の起動・配布は行いません。
+
+### GitHub Pages
+
+GitHubのリポジトリ設定で **Settings → Pages → Build and deployment → Source → GitHub Actions** を選択します。`.github/workflows/pages.yml` は `main` へのpushまたはActions画面の手動実行で、Node.jsによるビルド・検証と `dist/` の公開を行います。Jekyllや `docs/` フォルダーは使用しません。
+
+公開先は通常 `https://satcy.github.io/MacroFlush-Web/` です。ワークフローはGitHub Pagesの `base_path` を使用し、リンクを公開先に合わせます。Playerと作例は同じ配下に配置されます。独自ドメインなどでルート配信する場合にも対応します。
+
+GitHub Pagesと同じパスをローカルで検証するには次を実行します。
+
+```sh
+BASE_PATH=/MacroFlush-Web/ npm run check
+BASE_PATH=/MacroFlush-Web/ PORT=4174 npm run preview
+```
+
+`http://127.0.0.1:4174/MacroFlush-Web/` を開いて確認します。通常のルート配信に戻すには `npm run build` を実行します。既存の公開設定が `main` の `/docs` になっている場合は、SourceをGitHub Actionsへ切り替えてください。
 
 TopのTimelineは読み込んだAutecの配置とパラメータのキーを表示します。キーを選択しても再生位置は変えず、シークは再生バーとルーラーから操作します。Timelineではキーの時刻、Curveでは時刻と成分値を編集できます。矢印キー、Shift+矢印、数値入力、追加・削除・Undo・Resetにも対応し、Save JSONで編集したV2プロジェクトを保存できます。変更はブラウザ内のデモに反映されます。

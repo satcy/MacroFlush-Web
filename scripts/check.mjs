@@ -1,13 +1,17 @@
 import assert from "node:assert/strict";
 import { readFile, readdir, stat } from "node:fs/promises";
-import { resolve, dirname } from "node:path";
+import { resolve, dirname, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { build } from "./build.mjs";
 import { examples } from "../src/examples.js";
 import { api, groups } from "../src/content.js";
+import { getBasePath } from "./site-path.mjs";
 
 await build();
 const root = resolve("dist");
+const basePath = getBasePath();
+const { examples: builtExamples } = await import("../dist/assets/examples.js");
 async function files(dir) {
   const found = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -31,7 +35,8 @@ for (const file of htmlFiles) {
   for (const [, url] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
     if (/^https?:/.test(url)) continue;
     if (url.startsWith("#")) { assert(ids.includes(url.slice(1)), `Missing anchor ${url} in ${file}`); continue; }
-    const path = url.startsWith("/") ? resolve(root, `.${url}`) : resolve(dirname(file), url);
+    if (url.startsWith("/")) assert(url.startsWith(basePath), `URL outside site base path: ${url}`);
+    const path = url.startsWith("/") ? resolve(root, url.slice(basePath.length)) : resolve(dirname(file), url);
     assert(path.startsWith(root), `Path escapes output: ${url}`);
     assert(await stat(path), `Missing local target ${url} in ${file}`);
   }
@@ -43,8 +48,27 @@ for (const file of htmlFiles) {
 const provenance = JSON.parse(await readFile("vendor/provenance.json", "utf8"));
 assert.equal(createHash("sha256").update(await readFile("vendor/player/macroflush-player.js")).digest("hex"), provenance.playerSha256);
 assert.equal(await readFile("dist/player/macroflush-player.js", "utf8"), await readFile("vendor/player/macroflush-player.js", "utf8"));
-for (const example of examples) {
-  const project = JSON.parse(await readFile(resolve(root, `.${example.projectUrl}`), "utf8"));
+// Resolve browser module imports and CSS resources under the deployed prefix.
+for (const file of (await files(resolve(root, "assets"))).filter(file => /\.(js|css)$/.test(file))) {
+  const source = await readFile(file, "utf8");
+  const relative = file.slice(root.length + 1);
+  const deployedUrl = new URL(basePath + relative, "https://satcy.github.io");
+  const urls = file.endsWith(".js")
+    ? [...source.matchAll(/(?:from\s+|import\s*\()(["'])(\.[^"']+)\1/g)].map(match => match[2])
+    : [...source.matchAll(/url\(['"]?([^)'"\s]+)['"]?\)/g)].map(match => match[1]);
+  for (const url of urls) {
+    const target = new URL(url, deployedUrl);
+    assert(target.pathname.startsWith(basePath), `Resource outside site base path: ${target}`);
+    assert(await stat(resolve(root, target.pathname.slice(basePath.length))), `Missing resource: ${target}`);
+  }
+}
+for (const example of builtExamples) {
+  const projectPath = new URL(example.projectUrl);
+  assert(fileURLToPath(projectPath).startsWith(root + "/projects/"));
+  const projectRelativeUrl = relative(resolve(root, "assets"), fileURLToPath(projectPath));
+  const browserUrl = new URL(projectRelativeUrl, `https://satcy.github.io${basePath}assets/examples.js`);
+  assert.equal(browserUrl.pathname, `${basePath}projects/${example.id}/project.json`);
+  const project = JSON.parse(await readFile(projectPath, "utf8"));
   assert.equal(project.clipFormatVersion, 2);
   const ids = project.assets.map(asset => asset.id);
   assert.equal(new Set(ids).size, ids.length);
