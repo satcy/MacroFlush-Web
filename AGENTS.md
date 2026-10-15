@@ -46,6 +46,10 @@ npm run preview  # 生成済み dist/ を配信
 
 GitHub Pagesは `.github/workflows/pages.yml` で `dist/` を公開します。Jekyllや `docs/` は使用しません。URLに関わる変更は、通常の検証に加えて `BASE_PATH=/MacroFlush-Web/ npm run check` でも確認してください。ビルド時のHTMLリンクは `scripts/site-path.mjs` で補正し、ブラウザの作例URL・モジュール・CSSリソースはファイルの位置を基準に解決します。
 
+## GitHubリンクの公開設定
+
+`https://github.com/satcy/MacroFlush` は現在プライベートのため、サイト上のリンクを非表示にしています。復元するときは `src/pages.js` の `showRepositoryLinks` を `true` にしてください。元のURLと配置は `repositoryLink()` の呼び出しとして保持しています。配置は共通ヘッダーのGitHub、共通フッターのGitHub、About末尾のSource on GitHub、Referenceサイドバーの「完全なドキュメント」（`/blob/main/docs/README.md`）の4か所です。日英に共通で適用されます。
+
 ## 実Playerと作例
 
 OnlineEditorは `vendor/editor/` の実ブラウザ版エディタを配信し、日英の `/online-editor/` ページからiframeで表示します。このページはサイトヘッダーや追加の操作バーを置かず、実エディタだけで画面全体を使います。ビルド時に元のindex.htmlから `/editor/launcher.html` を追加生成し、`src/editor-example-loader.js` で `?example=<id>` の作例をエディタ本来のプロジェクトファイル読み込み処理へ渡します。カタログに登録された作例だけを取得してください。読み込みは実エディタのファイル入力・ステータスDOMに依存するため、同期後は作例の直接読み込みもブラウザで確認してください。配布ファイルを直接編集せず、更新は `npm run sync:editor` で行います。`vendor/editor-provenance.json` に全ファイルのSHA-256を記録し、コピー後の同一性を検証します。相対パスで読むJS・CSS・メディア・フォント・Playerをまとめて保持してください。エディタUIの言語は参照元ビルドに従います。
