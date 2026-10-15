@@ -7,3 +7,10 @@ export const examples = [
   { id: "gradient", title: "Gradient", appClip: "Gradient", category: "Color", number: "05", projectUrl: new URL("../projects/gradient/project.json", import.meta.url).href, description: "同梱プロジェクトのGradient Clip。回転するグラデーションをlightenで合成。" },
   { id: "boxes", title: "Boxes", appClip: "Boxes", category: "3D", number: "06", projectUrl: new URL("../projects/boxes/project.json", import.meta.url).href, description: "同梱プロジェクトのBoxes Clip。Centi3DとThree.jsで3Dボックスを動かします。" }
 ];
+
+// Additional editor-only projects used by the illustrated tutorial.
+export const editorProjects = [
+  ...examples,
+  { id: "tutorial-3d-start", projectUrl: new URL("../projects/tutorials/timeline-3d/start.json", import.meta.url).href },
+  { id: "tutorial-3d-complete", projectUrl: new URL("../projects/tutorials/timeline-3d/complete.json", import.meta.url).href }
+];

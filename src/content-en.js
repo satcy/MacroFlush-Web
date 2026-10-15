@@ -1,6 +1,8 @@
 import { featureGroupDescriptions, featureDescriptions } from "./reference-features.js";
+import { threeDGroupDescriptions, threeDDescriptions, threeDLessonEnglish } from "./three-d-content.js";
 // English descriptions share the Japanese catalog's IDs, signatures and examples.
 export const groupDescriptions = {
+  ...threeDGroupDescriptions,
   ...featureGroupDescriptions,
   lifecycle: "Clip initialization and time controlled by the timeline.",
   parameters: "Connect values in your code to the Inspector and keyframes.",
@@ -16,6 +18,7 @@ export const groupDescriptions = {
 };
 
 export const apiDescriptions = {
+  ...threeDDescriptions,
   ...featureDescriptions,
   setup: "Register a Clip initialization callback. Use it to set the canvas size and initial values.",
   onframe: "Called whenever the host delivers a frame. Draw from the supplied time instead of starting a separate animation loop inside the Clip.",
@@ -86,6 +89,7 @@ export const apiDescriptions = {
 };
 
 export const lessonTranslations = {
+  "timeline-3d": threeDLessonEnglish,
   "first-clip": {
     title: "Create your first Clip", summary: "Draw a circle on a canvas and animate it with the timeline.",
     steps: [

@@ -28,6 +28,6 @@ export async function build() {
   }
   await writeFile("dist/404.html", prefixSiteLinks(render404(), basePath));
   await writeFile("dist/.nojekyll", "");
-  console.log(`Built 20 pages (JA / EN), 6 examples and OnlineEditor → dist/ (base: ${basePath})`);
+  console.log(`Built ${2 * (6 + lessons.length)} pages (JA / EN), 6 examples and OnlineEditor → dist/ (base: ${basePath})`);
 }
 if (process.argv[1] === new URL(import.meta.url).pathname) await build();

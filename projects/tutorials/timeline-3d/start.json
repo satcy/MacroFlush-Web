@@ -1,0 +1,285 @@
+{
+  "remoteAssetPolicy": {
+    "trustedDomains": [],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  },
+  "clipFormatVersion": 2,
+  "rootCompositionId": "tutorial-3d",
+  "assets": [
+    {
+      "id": "tutorial-3d",
+      "kind": "composition",
+      "name": "Timeline 3D",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 240,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "scene-layer",
+            "name": "Layer1",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "scene1",
+                "name": "Scene1",
+                "kind": "html",
+                "assetId": "scene1-asset",
+                "capabilities": [
+                  "centi3d"
+                ],
+                "inFrame": 0,
+                "outFrame": 240,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "space": "pixels",
+                    "interpolable": true
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "step": 0.01,
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "space": "degrees",
+                    "interpolable": true
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "group": "builtin",
+                    "interpolable": false
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+                  "js": "const { scene, T } = clip.use(\"centi3d\");\nsetup(() => {\n  size(1280, 720);\n  scene.add(new T.AmbientLight(0xffffff, 0.7));\n});"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "scene1-asset",
+      "name": "Scene1",
+      "kind": "html-clip",
+      "detail": "3D Scene",
+      "clipId": "scene1",
+      "htmlTemplate": {
+        "id": "scene1",
+        "name": "Scene1",
+        "kind": "html",
+        "assetId": "scene1-asset",
+        "capabilities": [
+          "centi3d"
+        ],
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "group": "builtin",
+            "interpolable": true
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "space": "pixels",
+            "interpolable": true
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "group": "custom",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "step": 0.01,
+            "group": "builtin",
+            "interpolable": true
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "space": "degrees",
+            "interpolable": true
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "group": "builtin",
+            "interpolable": false
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "custom",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+          "js": "const { scene, T } = clip.use(\"centi3d\");\nsetup(() => {\n  size(1280, 720);\n  scene.add(new T.AmbientLight(0xffffff, 0.7));\n});"
+        }
+      }
+    }
+  ]
+}

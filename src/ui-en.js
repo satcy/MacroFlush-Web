@@ -1,4 +1,10 @@
 export const englishUI = {
+  "parent / mask / 3Dとの違い": "parent / mask / differences from 3D",
+  "基礎から3Dまで、制作の流れをたどります。": "Follow the workflow from the basics to 3D.",
+  "開始用プロジェクト": "Open starter project",
+  "完成版をEditorで開く": "Open completed scene in Editor",
+  "完成プロジェクトJSON": "Download completed project JSON",
+  "画像を拡大": "Open full-size image",
   "ブラウザ版では、p5ライブラリを埋め込んだプロジェクトを開いてから、以下の設定と再生を行えます。URLからのライブラリ取り込みはアプリ版で行います。": "In the browser Editor, open a project with an embedded p5 library, then configure and play it as described below. Importing a library from a URL is an app operation.",
   "ブラウザEditor": "Browser Editor",
   "アプリ版": "App",

@@ -1,0 +1,1305 @@
+{
+  "remoteAssetPolicy": {
+    "trustedDomains": [],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  },
+  "clipFormatVersion": 2,
+  "rootCompositionId": "tutorial-3d",
+  "assets": [
+    {
+      "id": "tutorial-3d",
+      "kind": "composition",
+      "name": "Timeline 3D",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 240,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "rig-layer",
+            "name": "Null1",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "rig-placement",
+                "name": "Null1",
+                "kind": "object-3d",
+                "assetId": "null1",
+                "targetClipId": "scene1",
+                "inFrame": 0,
+                "outFrame": 240,
+                "params": {
+                  "position": {
+                    "key": "position",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec3",
+                    "default": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  }
+                },
+                "keyframeTracks": {
+                  "rotation": [
+                    {
+                      "frame": 0,
+                      "value": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 239,
+                      "value": [
+                        0,
+                        6.283185,
+                        0
+                      ],
+                      "easing": "linear"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "camera-layer",
+            "name": "Camera1",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "camera-placement",
+                "name": "Camera1",
+                "kind": "object-3d",
+                "assetId": "camera1",
+                "targetClipId": "scene1",
+                "inFrame": 0,
+                "outFrame": 240,
+                "params": {
+                  "position": {
+                    "key": "position",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      367
+                    ],
+                    "value": [
+                      0,
+                      160,
+                      650
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec3",
+                    "default": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "cameraType": {
+                    "key": "cameraType",
+                    "type": "select",
+                    "default": "perspective",
+                    "value": "perspective",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "options": [
+                      "perspective",
+                      "orthographic"
+                    ]
+                  },
+                  "fov": {
+                    "key": "fov",
+                    "type": "number",
+                    "default": 60,
+                    "value": 60,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 1,
+                    "max": 179,
+                    "step": 1
+                  },
+                  "orthoHeight": {
+                    "key": "orthoHeight",
+                    "type": "number",
+                    "default": 405,
+                    "value": 405,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0.001,
+                    "max": 100000,
+                    "step": 1
+                  },
+                  "near": {
+                    "key": "near",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0.001,
+                    "step": 0.1
+                  },
+                  "far": {
+                    "key": "far",
+                    "type": "number",
+                    "default": 100000,
+                    "value": 100000,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0.01,
+                    "step": 1
+                  },
+                  "aimMode": {
+                    "key": "aimMode",
+                    "type": "select",
+                    "default": "rotation",
+                    "value": "aim",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "options": [
+                      "rotation",
+                      "aim",
+                      "placement"
+                    ]
+                  },
+                  "aimTarget": {
+                    "key": "aimTarget",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "light-layer",
+            "name": "Light1",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "light-placement",
+                "name": "Light1",
+                "kind": "object-3d",
+                "assetId": "keylight",
+                "targetClipId": "scene1",
+                "inFrame": 0,
+                "outFrame": 240,
+                "params": {
+                  "position": {
+                    "key": "position",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      -200,
+                      300,
+                      400
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec3",
+                    "default": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "lightType": {
+                    "key": "lightType",
+                    "type": "select",
+                    "default": "directional",
+                    "value": "directional",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "options": [
+                      "directional",
+                      "point",
+                      "spot",
+                      "ambient"
+                    ]
+                  },
+                  "color": {
+                    "key": "color",
+                    "type": "color",
+                    "default": "#ffffff",
+                    "value": "#ffffff",
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "intensity": {
+                    "key": "intensity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1.5,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.1
+                  },
+                  "distance": {
+                    "key": "distance",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 1
+                  },
+                  "decay": {
+                    "key": "decay",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.1
+                  },
+                  "angle": {
+                    "key": "angle",
+                    "type": "number",
+                    "default": 1.0472,
+                    "value": 1.0472,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 5e-324,
+                    "max": 1.5707963267948966,
+                    "step": 0.01
+                  },
+                  "penumbra": {
+                    "key": "penumbra",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "sphere-layer",
+            "name": "Mesh2",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "sphere-placement",
+                "name": "Mesh2",
+                "kind": "object-3d",
+                "assetId": "mesh2",
+                "targetClipId": "scene1",
+                "inFrame": 0,
+                "outFrame": 240,
+                "params": {
+                  "position": {
+                    "key": "position",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      150,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec3",
+                    "default": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "color": {
+                    "key": "color",
+                    "type": "color",
+                    "default": "#ffffff",
+                    "value": "#ff6c9a",
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "wireframe": {
+                    "key": "wireframe",
+                    "type": "boolean",
+                    "default": false,
+                    "value": false,
+                    "group": "builtin",
+                    "interpolable": false
+                  },
+                  "side": {
+                    "key": "side",
+                    "type": "select",
+                    "default": "front",
+                    "value": "front",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "options": [
+                      "front",
+                      "double"
+                    ]
+                  },
+                  "type": {
+                    "key": "type",
+                    "type": "select",
+                    "default": "phong",
+                    "value": "phong",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "options": [
+                      "basic",
+                      "lambert",
+                      "phong",
+                      "standard",
+                      "physical",
+                      "toon",
+                      "normal",
+                      "matcap"
+                    ]
+                  },
+                  "emissive": {
+                    "key": "emissive",
+                    "type": "color",
+                    "default": "#000000",
+                    "value": "#000000",
+                    "group": "builtin",
+                    "interpolable": true,
+                    "step": 0.01
+                  },
+                  "emissiveIntensity": {
+                    "key": "emissiveIntensity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.01
+                  },
+                  "specular": {
+                    "key": "specular",
+                    "type": "color",
+                    "default": "#111111",
+                    "value": "#111111",
+                    "group": "builtin",
+                    "interpolable": true,
+                    "step": 0.01
+                  },
+                  "shininess": {
+                    "key": "shininess",
+                    "type": "number",
+                    "default": 30,
+                    "value": 30,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.01
+                  },
+                  "metalness": {
+                    "key": "metalness",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "roughness": {
+                    "key": "roughness",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "clearcoat": {
+                    "key": "clearcoat",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "clearcoatRoughness": {
+                    "key": "clearcoatRoughness",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "transmission": {
+                    "key": "transmission",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "ior": {
+                    "key": "ior",
+                    "type": "number",
+                    "default": 1.5,
+                    "value": 1.5,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 1,
+                    "max": 2.333,
+                    "step": 0.01
+                  },
+                  "thickness": {
+                    "key": "thickness",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.01
+                  },
+                  "flatShading": {
+                    "key": "flatShading",
+                    "type": "boolean",
+                    "default": false,
+                    "value": false,
+                    "group": "builtin",
+                    "interpolable": false,
+                    "step": 0.01
+                  },
+                  "gradientMapAssetId": {
+                    "key": "gradientMapAssetId",
+                    "type": "select",
+                    "default": "",
+                    "value": "",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "step": 0.01,
+                    "options": [
+                      ""
+                    ]
+                  },
+                  "matcapAssetId": {
+                    "key": "matcapAssetId",
+                    "type": "select",
+                    "default": "",
+                    "value": "",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "step": 0.01,
+                    "options": [
+                      ""
+                    ]
+                  }
+                },
+                "parentPlacementId": "rig-placement"
+              }
+            ]
+          },
+          {
+            "id": "cube-layer",
+            "name": "Mesh1",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "cube-placement",
+                "name": "Mesh1",
+                "kind": "object-3d",
+                "assetId": "mesh1",
+                "targetClipId": "scene1",
+                "inFrame": 0,
+                "outFrame": 240,
+                "params": {
+                  "position": {
+                    "key": "position",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      -150,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0.35,
+                      0.45,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec3",
+                    "default": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "color": {
+                    "key": "color",
+                    "type": "color",
+                    "default": "#ffffff",
+                    "value": "#5dd4ff",
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "wireframe": {
+                    "key": "wireframe",
+                    "type": "boolean",
+                    "default": false,
+                    "value": false,
+                    "group": "builtin",
+                    "interpolable": false
+                  },
+                  "side": {
+                    "key": "side",
+                    "type": "select",
+                    "default": "front",
+                    "value": "front",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "options": [
+                      "front",
+                      "double"
+                    ]
+                  },
+                  "type": {
+                    "key": "type",
+                    "type": "select",
+                    "default": "phong",
+                    "value": "phong",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "options": [
+                      "basic",
+                      "lambert",
+                      "phong",
+                      "standard",
+                      "physical",
+                      "toon",
+                      "normal",
+                      "matcap"
+                    ]
+                  },
+                  "emissive": {
+                    "key": "emissive",
+                    "type": "color",
+                    "default": "#000000",
+                    "value": "#000000",
+                    "group": "builtin",
+                    "interpolable": true,
+                    "step": 0.01
+                  },
+                  "emissiveIntensity": {
+                    "key": "emissiveIntensity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.01
+                  },
+                  "specular": {
+                    "key": "specular",
+                    "type": "color",
+                    "default": "#111111",
+                    "value": "#111111",
+                    "group": "builtin",
+                    "interpolable": true,
+                    "step": 0.01
+                  },
+                  "shininess": {
+                    "key": "shininess",
+                    "type": "number",
+                    "default": 30,
+                    "value": 30,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.01
+                  },
+                  "metalness": {
+                    "key": "metalness",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "roughness": {
+                    "key": "roughness",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "clearcoat": {
+                    "key": "clearcoat",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "clearcoatRoughness": {
+                    "key": "clearcoatRoughness",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "transmission": {
+                    "key": "transmission",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  },
+                  "ior": {
+                    "key": "ior",
+                    "type": "number",
+                    "default": 1.5,
+                    "value": 1.5,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 1,
+                    "max": 2.333,
+                    "step": 0.01
+                  },
+                  "thickness": {
+                    "key": "thickness",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.01
+                  },
+                  "flatShading": {
+                    "key": "flatShading",
+                    "type": "boolean",
+                    "default": false,
+                    "value": false,
+                    "group": "builtin",
+                    "interpolable": false,
+                    "step": 0.01
+                  },
+                  "gradientMapAssetId": {
+                    "key": "gradientMapAssetId",
+                    "type": "select",
+                    "default": "",
+                    "value": "",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "step": 0.01,
+                    "options": [
+                      ""
+                    ]
+                  },
+                  "matcapAssetId": {
+                    "key": "matcapAssetId",
+                    "type": "select",
+                    "default": "",
+                    "value": "",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "step": 0.01,
+                    "options": [
+                      ""
+                    ]
+                  }
+                },
+                "parentPlacementId": "rig-placement"
+              }
+            ]
+          },
+          {
+            "id": "scene-layer",
+            "name": "Layer1",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "scene1",
+                "name": "Scene1",
+                "kind": "html",
+                "assetId": "scene1-asset",
+                "capabilities": [
+                  "centi3d"
+                ],
+                "inFrame": 0,
+                "outFrame": 240,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "space": "pixels",
+                    "interpolable": true
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "step": 0.01,
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "space": "degrees",
+                    "interpolable": true
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "group": "builtin",
+                    "interpolable": false
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+                  "js": "const { scene, T } = clip.use(\"centi3d\");\nsetup(() => {\n  size(1280, 720);\n  scene.add(new T.AmbientLight(0xffffff, 0.7));\n});"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "scene1-asset",
+      "name": "Scene1",
+      "kind": "html-clip",
+      "detail": "3D Scene",
+      "clipId": "scene1",
+      "htmlTemplate": {
+        "id": "scene1",
+        "name": "Scene1",
+        "kind": "html",
+        "assetId": "scene1-asset",
+        "capabilities": [
+          "centi3d"
+        ],
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "group": "builtin",
+            "interpolable": true
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "space": "pixels",
+            "interpolable": true
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "group": "custom",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "step": 0.01,
+            "group": "builtin",
+            "interpolable": true
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "space": "degrees",
+            "interpolable": true
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "group": "builtin",
+            "interpolable": false
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "custom",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+          "js": "const { scene, T } = clip.use(\"centi3d\");\nsetup(() => {\n  size(1280, 720);\n  scene.add(new T.AmbientLight(0xffffff, 0.7));\n});"
+        }
+      }
+    },
+    {
+      "id": "mesh1-geometry",
+      "name": "Mesh1 Geometry",
+      "kind": "geometry-3d",
+      "detail": "Box geometry",
+      "descriptor": {
+        "primitive": "box",
+        "width": 140,
+        "height": 140,
+        "depth": 140
+      }
+    },
+    {
+      "id": "mesh1-material",
+      "name": "Mesh1 Material",
+      "kind": "material-3d",
+      "detail": "Phong material",
+      "descriptor": {
+        "type": "phong",
+        "color": "#5dd4ff",
+        "opacity": 1,
+        "wireframe": false,
+        "side": "front",
+        "shininess": 60
+      }
+    },
+    {
+      "id": "mesh1",
+      "name": "Mesh1",
+      "kind": "mesh-3d",
+      "detail": "3D Mesh",
+      "descriptor": {},
+      "geometryAssetId": "mesh1-geometry",
+      "materialAssetId": "mesh1-material"
+    },
+    {
+      "id": "mesh2-geometry",
+      "name": "Mesh2 Geometry",
+      "kind": "geometry-3d",
+      "detail": "Box geometry",
+      "descriptor": {
+        "primitive": "sphere",
+        "width": 72,
+        "height": 72,
+        "depth": 72,
+        "radius": 85,
+        "widthSegments": 32,
+        "heightSegments": 24
+      }
+    },
+    {
+      "id": "mesh2-material",
+      "name": "Mesh2 Material",
+      "kind": "material-3d",
+      "detail": "Phong material",
+      "descriptor": {
+        "type": "phong",
+        "color": "#ff6c9a",
+        "opacity": 1,
+        "wireframe": false,
+        "side": "front",
+        "shininess": 60
+      }
+    },
+    {
+      "id": "mesh2",
+      "name": "Mesh2",
+      "kind": "mesh-3d",
+      "detail": "3D Mesh",
+      "descriptor": {},
+      "geometryAssetId": "mesh2-geometry",
+      "materialAssetId": "mesh2-material"
+    },
+    {
+      "id": "keylight",
+      "name": "Light1",
+      "kind": "light-3d",
+      "detail": "3D Light",
+      "descriptor": {
+        "decay": 0
+      }
+    },
+    {
+      "id": "camera1",
+      "name": "Camera1",
+      "kind": "camera-3d",
+      "detail": "3D Camera",
+      "descriptor": {}
+    },
+    {
+      "id": "null1",
+      "name": "Null1",
+      "kind": "null-3d",
+      "detail": "3D Null",
+      "descriptor": {}
+    }
+  ]
+}

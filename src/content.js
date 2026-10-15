@@ -1,10 +1,12 @@
 import { extraGroups, extraApi } from "./reference-extra.js";
 import { featureGroups, featureApi } from "./reference-features.js";
+import { threeDGroups, threeDApi, threeDLesson } from "./three-d-content.js";
 export const groups = [
   { id: "lifecycle", name: "Lifecycle & time", description: "Clipの初期化と、タイムラインが管理する時間。" },
   { id: "parameters", name: "Parameters", description: "コードの値をInspectorとキーフレームにつなぐ。" },
   { id: "canvas", name: "Canvas / Centi", description: "clip.use(\"centi\")で使える描画ヘルパー。" },
   ...extraGroups,
+  ...threeDGroups,
   ...featureGroups,
   { id: "events", name: "Cues & audio", description: "コンポジションの進行、イベント、音声解析。" },
   { id: "player", name: "Player", description: "Webサイトのホスト側から再生を制御する。" }
@@ -23,6 +25,7 @@ export const api = [
   { id: "shapes", group: "canvas", name: "oval(...) / rect(...) / line(...)", text: "基本図形を描画します。ovalの第3引数は半径です。fill() / stroke()で塗りと線を切り替え、lineWidth()で線幅を指定します。", code: "fill();\noval(360, 202, 40);\nrect(100, 100, 80, 80);\nstroke();\nlineWidth(2);\nline(0, 0, 720, 405);" },
   { id: "getcontext", group: "canvas", name: "getContext()", text: "CentiのCanvasRenderingContext2Dを取得します。標準Canvas2D APIで描画する作例にも使えます。", code: "const ctx = getContext();\nctx.beginPath();\nctx.arc(360, 202, 80, 0, Math.PI * 2);\nctx.stroke();" },
   ...extraApi,
+  ...threeDApi,
   ...featureApi,
   { id: "cue", group: "events", environments: ["browser-editor", "app"], name: "cue(name, frame, options)", text: "CuesタブでコンポジションのCueを定義します。modeはstop、loop、none。通常のHTML ClipのJavaScriptでは使用しません。保存したCueはPlayerでも実行されます。", code: "// Cuesタブに記述\ncue(\"Intro\", 0, { mode: \"stop\" });\ncue(\"Loop\", 180, { mode: \"loop\" });" },
   { id: "go", group: "events", name: "go(name) / onCue(callback)", text: "go()は名前付きCueへPlayheadを移動します。onCue()はClipが作成済みCueに入ったときの処理を登録します。", code: "onCue(({ cueName }) => {\n  console.log(cueName);\n});\n// 明示的なジャンプ: go(\"Intro\");" },
@@ -53,5 +56,6 @@ export const lessons = [
     { title: "Export Mediaを開く", text: "File > Export Mediaから形式を選びます。PNG Sequenceは連番画像、H.264 MP4は動画、Apple ProRes MOVは編集向けの動画形式です。フレーム範囲と出力解像度を設定して書き出します。" },
     { title: "用途に合わせて設定する", text: "MP4はCRFまたは目標ビットレートで品質を調整できます。透明背景が必要ならPNG、またはアルファを保持するProRes 4444 / 4444 XQを選びます。音声はTimelineに配置した音声Clipをミックスできます。" },
     { title: "ファイルを確認する", text: "出力したファイルの解像度、尺、音声、必要な場合はアルファを確認します。現行の書き出しには対象Clipの制約があります。ネストしたCompositionやWGSL、DOMのみのHTML Clipなどは対応状況をアプリのREADMEで確認してください。" }
-  ] }
+  ] },
+  threeDLesson
 ];

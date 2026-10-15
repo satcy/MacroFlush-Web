@@ -7,7 +7,7 @@ if (!process.argv.includes("--production")) await build();
 const root = resolve("dist");
 const port = Number(process.env.PORT || 4173);
 const basePath = getBasePath();
-const types = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8", ".png": "image/png", ".ttf": "font/ttf", ".mp3": "audio/mpeg", ".mp4": "video/mp4", ".obj": "text/plain; charset=utf-8", ".txt": "text/plain; charset=utf-8" };
+const types = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8", ".png": "image/png", ".jpg": "image/jpeg", ".ttf": "font/ttf", ".mp3": "audio/mpeg", ".mp4": "video/mp4", ".obj": "text/plain; charset=utf-8", ".txt": "text/plain; charset=utf-8" };
 createServer(async (req, res) => {
   try {
     const pathname = decodeURIComponent(new URL(req.url, "http://localhost").pathname);

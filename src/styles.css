@@ -131,3 +131,12 @@ body[data-page=online-editor] main{width:100vw;height:100dvh;overflow-x:auto;ove
 .availability-app{border-color:#5a475b;background:#29202b;color:#dfb9df}
 .availability-player{border-color:#4a5140;background:#23271f;color:#c6d6a7}
 @media(max-width:760px){.edition-note{padding:18px}.edition-overview h2{font-size:21px}.edition-overview{scroll-margin-top:150px}.edition-note p:first-child{font-size:15px}}
+
+/* Illustrated tutorials use captures of the real Editor. */
+.tutorial-project-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:0 0 30px}
+.tutorial-content>.availability{margin:0 0 20px}
+.tutorial-figure{margin-top:24px;border:1px solid var(--line);background:#14191f}
+.tutorial-figure a{display:block;cursor:zoom-in}
+.tutorial-figure img{width:100%;height:auto}
+.tutorial-figure figcaption{padding:13px 16px;font-size:11px;line-height:1.9;color:#9eacbc;border-top:1px solid var(--line)}
+@media(max-width:760px){.tutorial-project-actions .button{width:100%;gap:12px}.tutorial-figure figcaption{padding:11px;font-size:10px}}

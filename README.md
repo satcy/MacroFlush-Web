@@ -28,7 +28,7 @@ npm run preview  # ビルド済みdist/を確認
 | `/about/` | About / 概念とワークスペース |
 | `/reference/` | Reference / Centiの41項目・p5.jsの12項目を含む検索可能なAPIリファレンス |
 | `/examples/` | Examples / 6実プロジェクト・カテゴリ絞り込み・ソース閲覧・JSONダウンロード |
-| `/tutorials/` | Tutorials / 4本の制作手順 |
+| `/tutorials/` | Tutorials / 5本の制作手順（3Dの実Editor画像付き） |
 | `/online-editor/` | OnlineEditor / ブラウザで動作する実MacroFlushエディタ |
 
 各チュートリアルにも固有のURLがあります。ページ本文はビルド時にHTML化され、JavaScriptが無効でも読むことができます。プレビューの停止、reduced-motion設定、キーボード操作に対応しています。
@@ -43,6 +43,8 @@ Topの「はじめる」はOnlineEditorを開きます。各作例の「Editor�
 
 Topに対応環境の案内、Aboutに機能比較表、Referenceに項目ごとの対応環境ラベルを表示します。動画・PNG連番書き出し、MCP、UDP OSC、LLMアシスタントはアプリ版の機能です。Shader Clipと記録済みFeedbackはブラウザでも再生できます。FeedbackのPointer記録はEditor、OSC記録はアプリ版で使用します。
 
+画像付きの `/tutorials/timeline-3d/` ではScene・Mesh・Camera・Light・NullをTimelineで配置し、rotationキーで動かす手順を紹介します。`assets/tutorials/timeline-3d/` の5枚は同梱の実Editorを操作した画面です。開始用・完成版JSONは `projects/tutorials/timeline-3d/`、Editor起動用カタログは `src/examples.js` の `editorProjects` に保持します。
+
 ## ソース
 
 - `src/pages.js`: 共通レイアウトとページ本文
@@ -56,6 +58,7 @@ Topに対応環境の案内、Aboutに機能比較表、Referenceに項目ごと
 - `src/ui-en.js` / `src/locale.js`: 画面文言・コードコメント・操作メッセージの英訳と切り替え
 - `src/project-player.js`: MacroFlush Playerのロード・再生・破棄
 - `src/client.js`: プレビュー、ダイアログ、検索、コピー、絞り込み
+- `src/three-d-content.js`: add()・3DアセットのReferenceと画像付きTimeline 3D Tutorialの日英本文
 - `src/reference-features.js`: Shader Clip、Feedback、アプリ版専用機能の日英Reference
 - `src/edition-markup.js`: ブラウザEditor・Player・アプリ版の比較表と対応環境ラベル
 - `src/styles.css`: アプリから引き継いだデザインとレスポンシブ表示

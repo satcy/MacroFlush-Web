@@ -1,4 +1,4 @@
-import { examples } from "./examples.js";
+import { editorProjects } from "./examples.js";
 import { translate } from "./locale.js";
 
 // The original Editor has a project-file importer, but no URL query API.
@@ -28,7 +28,7 @@ async function openExample({ id, language }) {
   const text = value => translate(value, language === "en" ? "en" : "ja");
   label.textContent = text("プロジェクトをEditorで開いています…");
   try {
-    const example = examples.find(item => item.id === id);
+    const example = editorProjects.find(item => item.id === id);
     if (!example) throw new Error(text("このExampleは見つかりません。"));
     const response = await fetch(example.projectUrl, { signal: controller.signal });
     if (!response.ok) throw new Error(text("プロジェクトを読み込めませんでした。"));
