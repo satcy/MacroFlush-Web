@@ -74,4 +74,6 @@ Timeline / Curveは読み込んだCompositionのレイヤー・配置・パラ�
 
 APIの説明・コード例・制約は参照元アプリの実装・型定義・ドキュメントで確認してください。一般的なライブラリの挙動をMacroFlush固有の挙動として記載しないでください。特にCentiの色・単位・補間、p5.jsのライブラリ読み込み、global mode、時間、入力、Isolated replayの条件に注意してください。
 
+対応環境の案内・比較表は `src/edition-markup.js`、Shader / Feedback / アプリ専用機能は `src/reference-features.js` にあります。Referenceの `environments` は `browser-editor` / `app` / `player` で、指定なしのClip APIは3環境、PlayerグループはホストAPIとしてPlayerに対応します。作成・設定の操作はEditorの2環境、MCP・UDP OSC・LLMアシスタント・ネイティブ動画/連番書き出しはアプリ版だけにしてください。Feedbackは入力データの記録・再生で、Pointer記録は両Editor、OSC記録はアプリ版、記録済みデータの再生はPlayerにも対応します。Shader ClipはWebGL2を必要とし、Pipelineは同一フレーム内の処理です。参照元は `../MacroFlush/README.md` のEffect layers / Recorded data: Feedback / OSC reference / Local AI assistantと `src/core/feedbackContracts.ts` です。機能差を変更するときはアプリの実装とサイトに同梱した配布版の両方を確認してください。
+
 UI変更の確認では、デスクトップと狭い画面、キーボード操作、フォーカス、reduced-motion、ダイアログのCloseボタンを対象にします。Player関連では実プロジェクトの初期描画、再生・停止・シーク、progress、Timeline / Curve切替、キー編集、JSON保存、閉じた後の破棄を変更箇所に応じて確認してください。

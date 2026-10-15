@@ -1,9 +1,11 @@
 import { extraGroups, extraApi } from "./reference-extra.js";
+import { featureGroups, featureApi } from "./reference-features.js";
 export const groups = [
   { id: "lifecycle", name: "Lifecycle & time", description: "Clipの初期化と、タイムラインが管理する時間。" },
   { id: "parameters", name: "Parameters", description: "コードの値をInspectorとキーフレームにつなぐ。" },
   { id: "canvas", name: "Canvas / Centi", description: "clip.use(\"centi\")で使える描画ヘルパー。" },
   ...extraGroups,
+  ...featureGroups,
   { id: "events", name: "Cues & audio", description: "コンポジションの進行、イベント、音声解析。" },
   { id: "player", name: "Player", description: "Webサイトのホスト側から再生を制御する。" }
 ];
@@ -21,7 +23,8 @@ export const api = [
   { id: "shapes", group: "canvas", name: "oval(...) / rect(...) / line(...)", text: "基本図形を描画します。ovalの第3引数は半径です。fill() / stroke()で塗りと線を切り替え、lineWidth()で線幅を指定します。", code: "fill();\noval(360, 202, 40);\nrect(100, 100, 80, 80);\nstroke();\nlineWidth(2);\nline(0, 0, 720, 405);" },
   { id: "getcontext", group: "canvas", name: "getContext()", text: "CentiのCanvasRenderingContext2Dを取得します。標準Canvas2D APIで描画する作例にも使えます。", code: "const ctx = getContext();\nctx.beginPath();\nctx.arc(360, 202, 80, 0, Math.PI * 2);\nctx.stroke();" },
   ...extraApi,
-  { id: "cue", group: "events", name: "cue(name, frame, options)", text: "CuesタブでコンポジションのCueを定義します。modeはstop、loop、none。通常のHTML ClipのJavaScriptでは使用しません。", code: "// Cuesタブに記述\ncue(\"Intro\", 0, { mode: \"stop\" });\ncue(\"Loop\", 180, { mode: \"loop\" });" },
+  ...featureApi,
+  { id: "cue", group: "events", environments: ["browser-editor", "app"], name: "cue(name, frame, options)", text: "CuesタブでコンポジションのCueを定義します。modeはstop、loop、none。通常のHTML ClipのJavaScriptでは使用しません。保存したCueはPlayerでも実行されます。", code: "// Cuesタブに記述\ncue(\"Intro\", 0, { mode: \"stop\" });\ncue(\"Loop\", 180, { mode: \"loop\" });" },
   { id: "go", group: "events", name: "go(name) / onCue(callback)", text: "go()は名前付きCueへPlayheadを移動します。onCue()はClipが作成済みCueに入ったときの処理を登録します。", code: "onCue(({ cueName }) => {\n  console.log(cueName);\n});\n// 明示的なジャンプ: go(\"Intro\");" },
   { id: "audio", group: "events", name: "audioBand(name, band)", text: "Projectに読み込んだ音声アセットの帯域エネルギーを0〜1で取得します。low / mid / highを指定でき、コンポジションのPlayheadに従います。対応する音声Clipがアクティブでない場合は0です。", code: "onFrame(() => {\n  const bass = audioBand(\"Music\", \"low\");\n  clip.scale = [1 + bass * 0.3, 1 + bass * 0.3];\n});" },
   { id: "createplayer", group: "player", name: "createClipPlayer(options)", text: "ビルドで生成されるmacroflush-player.jsからインポートします。projectとcanvasを渡してPlayerを作成し、readyを待ってから再生します。", code: "import { createClipPlayer } from \"./macroflush-player.js\";\nconst player = createClipPlayer({ project, canvas });\nawait player.ready;\nplayer.tickTime(0);" },

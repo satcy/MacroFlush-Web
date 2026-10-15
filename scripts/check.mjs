@@ -35,7 +35,7 @@ for (const lesson of lessons) {
 for (const entry of api) {
   assert(groups.some(group => group.id === entry.group));
   assert(apiDescriptions[entry.id], `Missing English API: ${entry.id}`);
-  if (entry.group !== "player" && !entry.label?.startsWith("set_clip")) {
+  if (entry.code && entry.language !== "glsl" && entry.group !== "player" && !entry.label?.startsWith("set_clip")) {
     assert.doesNotThrow(() => new Function(entry.code), `Invalid Reference snippet: ${entry.id}`);
     assert.doesNotThrow(() => new Function(translate(entry.code, "en")), `Invalid English Reference snippet: ${entry.id}`);
   }

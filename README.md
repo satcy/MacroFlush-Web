@@ -41,6 +41,8 @@ Topの「はじめる」はOnlineEditorを開きます。各作例の「Editor�
 
 エディタだけをアプリの最新ビルドから取り込むには `npm run sync:editor`、続けて `npm run check` を実行します。既定の参照先は `../MacroFlush/dist` です。`MACROFLUSH_ROOT` でアプリの場所を指定できます。取り込んだ各ファイルのSHA-256は `vendor/editor-provenance.json` に記録します。ビルド・GitHub Pagesの公開時にアプリ本体は不要です。
 
+Topに対応環境の案内、Aboutに機能比較表、Referenceに項目ごとの対応環境ラベルを表示します。動画・PNG連番書き出し、MCP、UDP OSC、LLMアシスタントはアプリ版の機能です。Shader Clipと記録済みFeedbackはブラウザでも再生できます。FeedbackのPointer記録はEditor、OSC記録はアプリ版で使用します。
+
 ## ソース
 
 - `src/pages.js`: 共通レイアウトとページ本文
@@ -54,6 +56,8 @@ Topの「はじめる」はOnlineEditorを開きます。各作例の「Editor�
 - `src/ui-en.js` / `src/locale.js`: 画面文言・コードコメント・操作メッセージの英訳と切り替え
 - `src/project-player.js`: MacroFlush Playerのロード・再生・破棄
 - `src/client.js`: プレビュー、ダイアログ、検索、コピー、絞り込み
+- `src/reference-features.js`: Shader Clip、Feedback、アプリ版専用機能の日英Reference
+- `src/edition-markup.js`: ブラウザEditor・Player・アプリ版の比較表と対応環境ラベル
 - `src/styles.css`: アプリから引き継いだデザインとレスポンシブ表示
 - `assets/`: アプリのロゴ、画面キャプチャ、Playfair Display (OFL)
 - `scripts/`: ビルド、ローカルHTTPサーバー、検証

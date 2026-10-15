@@ -111,3 +111,23 @@ body[data-page=online-editor] main{width:100vw;height:100dvh;overflow-x:auto;ove
 .demo-card-actions{display:flex;justify-content:flex-end;padding:10px 15px;border-top:1px solid var(--line);background:#15191f}
 .demo-card-actions .text-link{font-size:11px;gap:12px;color:var(--cyan)}
 #demo-editor{margin-right:16px;margin-bottom:12px}
+
+/* Environment guidance and per-entry availability. */
+.edition-note{padding:23px 26px;margin:0 0 26px;border:1px solid #2e4654;background:#17222a}
+.edition-note p:first-child{font-size:16px;color:var(--text);margin-bottom:7px}
+.edition-note p+p{font-size:12px;color:#9fb4c4;margin-bottom:12px}
+.edition-note .text-link{color:var(--cyan)}
+.edition-overview{scroll-margin-top:110px;margin-bottom:30px}
+.edition-overview h2{font-size:25px;margin:10px 0 15px;line-height:1.5}
+.edition-overview .eyebrow{margin-bottom:0}
+.edition-overview .edition-footnote{font-size:11px;line-height:1.85}
+.edition-overview details{margin:20px 0}
+.edition-overview summary{cursor:pointer;font-size:12px;color:var(--cyan);padding:8px 0}
+.reference-guide .edition-table{min-width:560px;width:100%;text-align:left}
+.edition-table caption{text-align:left;font-size:12px;color:var(--muted);padding:8px 0}
+.edition-table th[scope=row]{font-weight:400;color:#c3cfdb;background:transparent;min-width:200px}
+.availability{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+.availability-badge{display:inline-flex;border:1px solid #345562;background:#172830;color:#9fd5e9;border-radius:2px;font:10px/1.6 var(--sans);padding:3px 8px}
+.availability-app{border-color:#5a475b;background:#29202b;color:#dfb9df}
+.availability-player{border-color:#4a5140;background:#23271f;color:#c6d6a7}
+@media(max-width:760px){.edition-note{padding:18px}.edition-overview h2{font-size:21px}.edition-overview{scroll-margin-top:150px}.edition-note p:first-child{font-size:15px}}
