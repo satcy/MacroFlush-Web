@@ -27,11 +27,11 @@ npm run preview  # ビルド済みdist/を確認
 | `/` | Top / ライブプレビュー・アプリ画面・制作の流れ |
 | `/about/` | About / 概念とワークスペース |
 | `/reference/` | Reference / Centiの41項目・p5.jsの12項目を含む検索可能なAPIリファレンス |
-| `/examples/` | Examples / 6実プロジェクト・カテゴリ絞り込み・ソース閲覧・JSONダウンロード |
+| `/examples/` | Examples / 7実プロジェクト・カテゴリ絞り込み・ソース閲覧・JSONダウンロード |
 | `/tutorials/` | Tutorials / 5本の制作手順（3Dの実Editor画像付き） |
 | `/online-editor/` | OnlineEditor / ブラウザで動作する実MacroFlushエディタ |
 
-各チュートリアルにも固有のURLがあります。ページ本文はビルド時にHTML化され、JavaScriptが無効でも読むことができます。プレビューの停止、reduced-motion設定、キーボード操作に対応しています。
+各チュートリアルにも固有のURLがあります。ページ本文はビルド時にHTML化され、JavaScriptが無効でも読むことができます。作例カードは最初の約15フレームで静止し、ホバーまたはキーボードフォーカス中だけ再生します。クリックすると操作できるプレビューが開きます。reduced-motion設定にも対応しています。
 
 日本語は上記のURL、英語は `/en/` 配下です（例: `/en/reference/`）。ヘッダーのJA / ENで同じページの言語を切り替えます。JavaScriptが有効な場合はReferenceの現在のアンカーも保持します。両言語のHTMLを静的に生成するため、英語ページもJavaScriptなしで読めます。Playerと作例JSONは両言語で共有します。
 
@@ -68,7 +68,7 @@ Topに対応環境の案内、Aboutに機能比較表、Referenceに項目ごと
 
 本文はローカルMacroFlush 0.3.10のREADMEとランタイム型定義を参照して作成。アプリの更新時はAPIと出力制約を再確認してください。TopとExamplesは `MacroFlush/dist/player` の実Playerを使い、`projects/` のMacroFlush V2プロジェクトJSONを読み込んで再生します。サイト側に代用の描画実装はありません。
 
-Showcaseはアプリ同梱の `src/sample/sampleProject.json` を元に、リンクメディアを埋め込んだポータブルなプロジェクトです。他の5作例は、そのファイルのオリジナルClipソースを個別コンポジションに配置したプロジェクトです。独立した作例の配置を中央へ調整し、Autecは元のcolorキーフレームを保持します。
+Showcaseはアプリ同梱の `src/sample/sampleProject.json` を元に、リンクメディアを埋め込んだポータブルなプロジェクトです。個別作例は同梱Clipから構成しています。Triadはサイト向けの編集版（`sourcePolicy: "site-edited"`）で、ほかの4作例は元のClipソースを保持します。p5 Orbitsはサイト独自の作例（`sourcePolicy: "site-authored"`）で、`clip.use("p5")`とTimeline同期の`millis()`を使い、p5.js 1.11.1をライセンスとともに埋め込んでいます。Triadとp5 Orbitsの検証では元ソースとの一致ではなく、JavaScriptの構文を確認します。同期時はTriadの編集内容を保持してください。独立した作例の配置を中央へ調整し、Autecは元のcolorキーフレームを保持します。
 
 Player・プロジェクトをアプリから更新するには次を実行します。アプリ本体は変更しません。
 

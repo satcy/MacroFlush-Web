@@ -136,6 +136,13 @@ for (const example of builtExamples) {
     assert(clip.inFrame >= 0 && clip.outFrame > clip.inFrame);
   }
   for (const asset of project.assets) if (asset.sourceUrl) assert(asset.sourceUrl.startsWith("data:"), `Non-portable asset: ${asset.name}`);
+  for (const asset of project.assets) {
+    if (asset.kind === "script") assert.doesNotThrow(() => new Function(asset.source), `Invalid embedded library: ${example.id}/${asset.id}`);
+    if (asset.kind !== "html-clip") continue;
+    for (const id of asset.htmlTemplate.libraries || []) {
+      assert(project.assets.some(library => library.id === id && library.kind === "script" && library.source), `Missing embedded library: ${example.id}/${id}`);
+    }
+  }
   const source = await readFile("dist/assets/client.js", "utf8");
   assert(!source.includes(".draw("), "Site is drawing a substitute instead of using the Player");
 }
@@ -143,9 +150,13 @@ const showcase = JSON.parse(await readFile("projects/showcase/project.json", "ut
 for (const example of examples.filter(e => e.id !== "showcase")) {
   const project = JSON.parse(await readFile(`projects/${example.id}/project.json`, "utf8"));
   const asset = project.assets.find(asset => asset.kind === "html-clip");
+  if (["site-edited", "site-authored"].includes(example.sourcePolicy)) {
+    assert.doesNotThrow(() => new Function(asset.htmlTemplate.source.js), `Invalid edited Clip source: ${example.id}`);
+    continue;
+  }
   const original = showcase.assets.find(original => original.id === asset.id);
   assert.deepEqual(asset.htmlTemplate.source, original.htmlTemplate.source, `Modified application Clip source: ${example.id}`);
 }
-console.log(`Verified ${htmlFiles.length} pages, links, original Player bytes, and 6 portable MacroFlush projects with unchanged Clip sources.`);
+console.log(`Verified ${htmlFiles.length} pages, links, original Player bytes, and ${examples.length} portable MacroFlush projects; original Clip sources match except declared site edits and new examples.`);
 console.log(`Verified ${Object.keys(editorProvenance.files).length} original Editor files and both OnlineEditor pages.`);
 await import("./check-timeline.mjs");

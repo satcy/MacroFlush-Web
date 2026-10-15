@@ -140,3 +140,5 @@ body[data-page=online-editor] main{width:100vw;height:100dvh;overflow-x:auto;ove
 .tutorial-figure img{width:100%;height:auto}
 .tutorial-figure figcaption{padding:13px 16px;font-size:11px;line-height:1.9;color:#9eacbc;border-top:1px solid var(--line)}
 @media(max-width:760px){.tutorial-project-actions .button{width:100%;gap:12px}.tutorial-figure figcaption{padding:11px;font-size:10px}}
+
+.demo-card[data-preview-state=playing]{border-color:#3d687a}

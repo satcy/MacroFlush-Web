@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile, cp, rm } from "node:fs/promises";
 import { render, render404 } from "../src/pages.js";
 import { lessons } from "../src/content.js";
+import { examples } from "../src/examples.js";
 import { getBasePath, prefixSiteLinks } from "./site-path.mjs";
 
 export async function build() {
@@ -28,6 +29,6 @@ export async function build() {
   }
   await writeFile("dist/404.html", prefixSiteLinks(render404(), basePath));
   await writeFile("dist/.nojekyll", "");
-  console.log(`Built ${2 * (6 + lessons.length)} pages (JA / EN), 6 examples and OnlineEditor → dist/ (base: ${basePath})`);
+  console.log(`Built ${2 * (6 + lessons.length)} pages (JA / EN), ${examples.length} examples and OnlineEditor → dist/ (base: ${basePath})`);
 }
 if (process.argv[1] === new URL(import.meta.url).pathname) await build();

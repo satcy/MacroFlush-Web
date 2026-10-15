@@ -38,7 +38,7 @@ function reference({ api, groups, language }) {
 }
 function examples() {
   return `${heading("03", "Examples", "実際のプロジェクトを再生して、制作の中身を見る。")}
-  <div class="filter-bar"><div class="filters" role="group" aria-label="作例のカテゴリ">${["All", "Composition", "Geometry", "Lines", "Color", "3D"].map((c, i) => `<button type="button" data-filter="${c}" aria-pressed="${i === 0}">${c}</button>`).join("")}</div><span class="muted" id="example-count">6 EXAMPLES</span><button class="global-play button compact" type="button" aria-label="アニメーションを停止">Ⅱ Pause</button></div><div class="demo-grid examples-grid">${projectExamples.map(demoCard).join("")}</div><div class="page-callout"><p>アプリ同梱のプロジェクトをMacroFlush Playerで再生しています。JSONをダウンロードして、アプリで開くこともできます。</p>${link("/tutorials/first-clip/", "Clipのつくり方")}</div>`;
+  <div class="filter-bar"><div class="filters" role="group" aria-label="作例のカテゴリ">${["All", ...new Set(projectExamples.map(example => example.category))].map((c, i) => `<button type="button" data-filter="${c}" aria-pressed="${i === 0}">${c}</button>`).join("")}</div><span class="muted" id="example-count">${projectExamples.length} EXAMPLES</span></div><div class="demo-grid examples-grid">${projectExamples.map(demoCard).join("")}</div><div class="page-callout"><p>実際のMacroFlushプロジェクトをPlayerで再生しています。JSONをダウンロードするか、Editorで開いてコードやキーフレームを編集できます。</p>${link("/tutorials/first-clip/", "Clipのつくり方")}</div>`;
 }
 function tutorials({ lessons }) {
   return `${heading("04", "Tutorials", "最初のフレームから、ひとつの映像まで。")}

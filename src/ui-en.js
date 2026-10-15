@@ -170,7 +170,7 @@ export const englishUI = {
   "作例のカテゴリ": "Example categories",
   "アニメーションを停止": "Pause animations",
   "アニメーションを再生": "Play animations",
-  "アプリ同梱のプロジェクトをMacroFlush Playerで再生しています。JSONをダウンロードして、アプリで開くこともできます。": "These projects from the app run in the MacroFlush Player. Download their JSON to open them in the app.",
+  "実際のMacroFlushプロジェクトをPlayerで再生しています。JSONをダウンロードするか、Editorで開いてコードやキーフレームを編集できます。": "Real MacroFlush projects, played with the Player. Download the JSON or open it in the Editor to edit code and keyframes.",
   "Clipのつくり方": "How to create a Clip",
   "最初のフレームから、ひとつの映像まで。": "From your first frame to a finished piece.",
   "つくりながら、覚える。": "Learn by making.",
@@ -235,5 +235,6 @@ export const englishUI = {
   "同梱プロジェクトのTriad Clip。三角形の反復と変形を組み合わせた表現。": "The Triad Clip from the bundled project, combining repeated and transformed triangles.",
   "同梱プロジェクトのSin Clip。位相の異なる正弦波で線を描きます。": "The Sin Clip from the bundled project, drawing lines with sine waves at different phases.",
   "同梱プロジェクトのGradient Clip。回転するグラデーションをlightenで合成。": "The Gradient Clip from the bundled project, compositing rotating gradients with lighten blending.",
-  "同梱プロジェクトのBoxes Clip。Centi3DとThree.jsで3Dボックスを動かします。": "The Boxes Clip from the bundled project, animating 3D boxes with Centi3D and Three.js."
+  "同梱プロジェクトのBoxes Clip。Centi3DとThree.jsで3Dボックスを動かします。": "The Boxes Clip from the bundled project, animating 3D boxes with Centi3D and Three.js.",
+  "clip.use(\"p5\")で描く光の軌道。millis()をTimelineに同期し、広がりをキーフレームで動かします。p5.jsを埋め込んだプロジェクトです。": "Orbits drawn with clip.use(\"p5\"). millis() follows the Timeline, while keyframes animate their spread. Includes the embedded p5.js library."
 };

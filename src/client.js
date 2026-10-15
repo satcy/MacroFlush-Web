@@ -12,8 +12,6 @@ updateLanguageLinks();
 window.addEventListener("hashchange", updateLanguageLinks);
 
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
-let playing = !reduceMotion.matches;
-let time = 0;
 let last = performance.now();
 let runtime;
 let disposed = false;
@@ -21,7 +19,55 @@ let heroTime = 0;
 let heroPlaying = !reduceMotion.matches;
 let heroEditor;
 const getRuntime = () => runtime ??= import("./project-player.js");
-const canvases = [...document.querySelectorAll("canvas[data-project]")].map(canvas => ({ canvas, observationTarget: canvas.closest(".hero-preview") || canvas, example: examples.find(e => e.id === canvas.dataset.project), visible: false }));
+const canvases = [...document.querySelectorAll("canvas[data-project]")].map(canvas => ({ canvas, card: canvas.closest(".demo-card"), observationTarget: canvas.closest(".hero-preview") || canvas, example: examples.find(e => e.id === canvas.dataset.project), visible: false, time: 0, warmed: false, hovered: false, keyboardFocus: false, running: false }));
+
+function pauseCard(item) {
+  if (!item.card) return;
+  item.running = false;
+  item.card.dataset.previewState = "paused";
+  item.preview?.pauseMedia();
+}
+for (const item of canvases.filter(item => item.card)) {
+  item.card.addEventListener("pointerenter", event => {
+    if (event.pointerType !== "touch") item.hovered = true;
+  });
+  item.card.addEventListener("pointerleave", () => {
+    if (item.hovered) item.warmed = true;
+    item.hovered = false;
+    if (!item.keyboardFocus) pauseCard(item);
+  });
+  item.card.addEventListener("focusin", event => {
+    item.keyboardFocus = event.target.matches(":focus-visible");
+  });
+  item.card.addEventListener("focusout", event => {
+    if (item.card.contains(event.relatedTarget)) return;
+    if (item.keyboardFocus) item.warmed = true;
+    item.keyboardFocus = false;
+    if (!item.hovered) pauseCard(item);
+  });
+}
+
+function tickCard(item, delta, now) {
+  const preview = item.preview;
+  if (!preview?.initialized || preview.failed) return;
+  const posterTime = Math.min(15, preview.composition.durationFrames - 1) / preview.composition.fps;
+  const interactive = !reduceMotion.matches && (item.hovered || item.keyboardFocus);
+  // Wait for an actual bitmap before advancing this card's independent clock.
+  if (!preview.hasFrame) {
+    if (reduceMotion.matches) { item.time = posterTime; item.warmed = true; }
+    preview.tick(item.time, false, now);
+    return;
+  }
+  if (interactive || (!item.warmed && !reduceMotion.matches)) {
+    item.time = interactive ? item.time + delta : Math.min(posterTime, item.time + delta);
+    item.running = true;
+    item.card.dataset.previewState = interactive ? "playing" : "warming";
+    preview.tick(item.time, true, now);
+    if (item.time >= posterTime) item.warmed = true;
+    if (!interactive && item.warmed) pauseCard(item);
+  } else if (item.running) pauseCard(item);
+  // Leave the last captured bitmap in place: idle cards receive no more ticks.
+}
 
 function statusFor(canvas) {
   const surface = canvas.closest("[data-player-surface]");
@@ -47,21 +93,13 @@ const observer = new IntersectionObserver(entries => {
     const item = canvases.find(c => c.observationTarget === entry.target);
     if (!item) continue;
     item.visible = entry.isIntersecting;
-    if (item.visible) mount(item); else item.preview?.pauseMedia();
+    if (item.visible) mount(item); else { pauseCard(item); item.preview?.pauseMedia(); }
   }
 }, { rootMargin: "80px" });
 for (const item of canvases) observer.observe(item.observationTarget);
 
-function updatePlayButtons() {
-  for (const button of document.querySelectorAll(".global-play")) {
-    button.textContent = button.classList.contains("icon-button") ? (playing ? "Ⅱ" : "▷") : (playing ? "Ⅱ Pause" : "▷ Play");
-    button.setAttribute("aria-label", playing ? t("アニメーションを停止") : t("アニメーションを再生"));
-  }
-}
-updatePlayButtons();
-document.querySelectorAll(".global-play").forEach(button => button.addEventListener("click", () => { playing = !playing; updatePlayButtons(); }));
 reduceMotion.addEventListener("change", e => {
-  if (e.matches) { playing = false; demoPlaying = false; pauseHero(); updatePlayButtons(); updateDemoPlay(); }
+  if (e.matches) { canvases.forEach(pauseCard); demoPlaying = false; pauseHero(); updateDemoPlay(); }
 });
 function updateHeroPlay() {
   const button = document.querySelector("#hero-play");
@@ -140,7 +178,7 @@ function openDemo(id) {
   dialogCanvas.width = 720;
   statusFor(dialogCanvas)("loading", t("Projectを読み込み中…"));
   updateDemoPlay(); dialog.showModal();
-  canvases.forEach(item => item.preview?.pauseMedia());
+  canvases.forEach(item => { pauseCard(item); item.preview?.pauseMedia(); });
   void mountDialog(++generation, example);
 }
 document.querySelectorAll("[data-demo]").forEach(button => button.addEventListener("click", () => openDemo(button.dataset.demo)));
@@ -179,14 +217,14 @@ function frame(now) {
         document.querySelector("#demo-timecode").textContent = timecode(frame, composition.fps);
       }
     } else {
-      if (playing) time += delta;
       for (const item of canvases) {
         if (item.visible && !item.canvas.closest("[hidden]")) {
           if (item.canvas.closest(".hero-preview")) {
             if (heroPlaying && item.preview?.hasFrame) heroTime += delta;
             item.preview?.tick(heroTime, heroPlaying, now); heroEditor?.tick(heroTime);
-          } else item.preview?.tick(time, playing, now);
+          } else tickCard(item, delta, now);
         }
+        else if (item.card) { if (item.running) pauseCard(item); }
         else item.preview?.pauseMedia();
       }
     }
@@ -196,7 +234,7 @@ function frame(now) {
 if (canvases.length) animation = requestAnimationFrame(frame);
 document.addEventListener("visibilitychange", () => {
   last = performance.now();
-  if (document.hidden) { canvases.forEach(item => item.preview?.pauseMedia()); dialogPreview?.pauseMedia(); }
+  if (document.hidden) { canvases.forEach(item => { pauseCard(item); item.preview?.pauseMedia(); }); dialogPreview?.pauseMedia(); }
 });
 window.addEventListener("pagehide", () => {
   disposed = true; cancelAnimationFrame(animation); observer.disconnect(); generation++;

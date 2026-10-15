@@ -59,7 +59,8 @@ OnlineEditorは `vendor/editor/` の実ブラウザ版エディタを配信し�
 - Playerの配布ファイルは直接編集せず、サイト側のラッパーで対応してください。更新が必要な場合は `npm run sync:macroflush` を使い、続けて `npm run check` を実行します。
 - 同期はPlayerスナップショット、掲載作例のJSON、provenanceを上書きします。作例を独自編集した後に同期する場合は差分を確認してください。
 - 同期元の既定値は `../MacroFlush`。変更する場合は `MACROFLUSH_ROOT=/path/to/MacroFlush npm run sync:macroflush` を使用します。通常のビルドはこのアプリの存在に依存しません。
-- 既存の個別作例はShowcaseと同じオリジナルClipソースを保ちます。新規作例は `projects/<name>/project.json` と `src/examples.js` の登録を追加し、実Playerで確認してください。現在の検証は埋め込みメディアを前提としているため、公開JSONはExport Embedded V2などで自己完結させます。
+- 個別作例は原則Showcaseと同じオリジナルClipソースを保ちます。Triadはユーザーが意図的に編集したサイト版で、`src/examples.js` の `sourcePolicy: "site-edited"` により元ソースとの一致検証から除外し、編集後JSの構文とプロジェクト構造を検証します。Triadを元ソースへ戻さず、同期時にも編集版を保持してください。p5 Orbitsはサイト独自作例（`sourcePolicy: "site-authored"`）で、p5.js 1.11.1をGlobal scriptとして埋め込み、placementとtemplateのLibraries・p5 capabilityを設定済みです。ライセンスと出典は `projects/p5-orbits/` に保持します。同期時も独自作例を保持してください。新規作例は `projects/<name>/project.json` と `src/examples.js` の登録を追加し、実Playerで確認してください。現在の検証は埋め込みメディアを前提としているため、公開JSONはExport Embedded V2などで自己完結させます。
+- Topの作例カードとExamplesのカードは、初回にCompositionの約15フレームまで進めて静止し、ホバーまたはキーボードフォーカスの間だけ再生します。カードごとに時刻を保持し、待機中はPlayerへtickを送りません。reduced-motion時は初期静止画だけを描き、TopのライブEditorと開いたプレビューは独立した操作を保ってください。
 - 音声は初期状態でミュート。画面外の不要な再生を止め、ダイアログを閉じる・ページを離れる際はPlayer、イベント、メディア、Blob URLを解放してください。
 
 ## Topのライブ編集
@@ -76,6 +77,6 @@ APIの説明・コード例・制約は参照元アプリの実装・型定義�
 
 対応環境の案内・比較表は `src/edition-markup.js`、Shader / Feedback / アプリ専用機能は `src/reference-features.js` にあります。Referenceの `environments` は `browser-editor` / `app` / `player` で、指定なしのClip APIは3環境、PlayerグループはホストAPIとしてPlayerに対応します。作成・設定の操作はEditorの2環境、MCP・UDP OSC・LLMアシスタント・ネイティブ動画/連番書き出しはアプリ版だけにしてください。Feedbackは入力データの記録・再生で、Pointer記録は両Editor、OSC記録はアプリ版、記録済みデータの再生はPlayerにも対応します。Shader ClipはWebGL2を必要とし、Pipelineは同一フレーム内の処理です。参照元は `../MacroFlush/README.md` のEffect layers / Recorded data: Feedback / OSC reference / Local AI assistantと `src/core/feedbackContracts.ts` です。機能差を変更するときはアプリの実装とサイトに同梱した配布版の両方を確認してください。
 
-add()・3Dアセットと画像付きTutorialは `src/three-d-content.js` で日英を管理します。Tutorialの画像は `assets/tutorials/timeline-3d/` にある実Editorのキャプチャです。架空のUI画像へ置き換えないでください。手順と `projects/tutorials/timeline-3d/` の開始用・完成JSONを一致させ、更新時は実Editorで描画・Target・Parent・キー・シークを確認してください。Editorで直接開く教材は `src/examples.js` の `editorProjects` に登録し、通常の6作例と区別します。3D配置のrotationはラジアン、2Dのrotationは度です。Geometry / Materialの共有編集と配置ごとの上書き、アセットIDと配置IDを区別してください。
+add()・3Dアセットと画像付きTutorialは `src/three-d-content.js` で日英を管理します。Tutorialの画像は `assets/tutorials/timeline-3d/` にある実Editorのキャプチャです。架空のUI画像へ置き換えないでください。手順と `projects/tutorials/timeline-3d/` の開始用・完成JSONを一致させ、更新時は実Editorで描画・Target・Parent・キー・シークを確認してください。Editorで直接開く教材は `src/examples.js` の `editorProjects` に登録し、通常のExamples作例と区別します。3D配置のrotationはラジアン、2Dのrotationは度です。Geometry / Materialの共有編集と配置ごとの上書き、アセットIDと配置IDを区別してください。
 
 UI変更の確認では、デスクトップと狭い画面、キーボード操作、フォーカス、reduced-motion、ダイアログのCloseボタンを対象にします。Player関連では実プロジェクトの初期描画、再生・停止・シーク、progress、Timeline / Curve切替、キー編集、JSON保存、閉じた後の破棄を変更箇所に応じて確認してください。
