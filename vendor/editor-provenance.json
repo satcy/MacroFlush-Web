@@ -2,16 +2,16 @@
   "source": "MacroFlush/dist",
   "adaptation": "Unmodified browser Editor distribution",
   "files": {
-    "assets/editor-CstKVAEZ.css": "5670c57ae336b5ca83fb631bc52082f0378602346d84b8fa96d72a553bd3436d",
-    "assets/editor-DqdRHIYT.js": "5e9977b3920b1ea001eb4af0a58b0c11ce59c3a51b9be25ce76e75ce18204109",
-    "assets/program-mirror-B_FqWpLX.js": "bd96d114047887a3010375abd52a675913177e1c2a174b62a75e9a6585bf093d",
+    "assets/editor-Bj8NluOv.js": "4789ac687af65c9495ea1a1a4d6fdcbd46bfa4380053caf9b55d283d819a33b8",
+    "assets/editor-CD3COeHp.css": "bc0e89736424684b0ea75a84345d8cec5595c88c0353f624c0441eaa0fb3cce1",
+    "assets/program-mirror-CBYwbgr8.js": "61e65e009e66ac89cce9764bb84f950fe70a376186748b1dd6e946be98d8605a",
     "assets/program-mirror-D6AGCH5q.css": "7cd4dd5b37f0468e57ba9a95c18507c1d847f278eb574caddbd1a2fcfc9afcd3",
-    "assets/protocol-DlEtrE4l.js": "d37be91f4a2acddf8bee92d820e050f03f5850185bf5f1512e72e4cf4dae41b5",
+    "assets/protocol-C9mbLDt2.js": "4e7373e5eb1d5c5f36ec68faaf6e8713c1ae33124aa5e9770df5db4119c9e701",
     "assets/three.global-CckV0DTA.js": "68d9a8e62cf2e51f42048bcf2b28bb250451eb57c3e2e652af0d3853669ca63a",
     "fonts/Playfair_Display/OFL.txt": "4e6be9d19455d7cb092412984ebf3c55d26b19dd8f8452962bf432ec0a9c9dcb",
     "fonts/Playfair_Display/README.txt": "e986de22d65f6cda9ad490c433a4ba1900b9b4b54de07b2d2b844e30738d8132",
     "fonts/Playfair_Display/static/PlayfairDisplay-Regular.ttf": "861f838d481d28cbbd4793e45dc02f01d04c81e06ed98ab2779ca152ace9f27b",
-    "index.html": "40a76e4768703a8132b21f8c357e94108fa0d772a47b7f7204055e1c40f09149",
+    "index.html": "4bf2fecfacb2dc26202b22bc3edc0e70e8e91f0370b34ca1ae0d0788c197d144",
     "media/Torus.obj": "8a84ac4b582c87ccfc7d1528a15aa97b64abdf5798d5f5ddd14ef35f37f9b9a1",
     "media/color_bar.mp4": "141d68975915da518c57ebb716a41b6203347ef015707625f31a91e6b174de65",
     "media/icon.png": "3d5c1af44c180968fb50334fbe872920870cdf20b779d4ef6102fe04e21bafa2",
@@ -21,7 +21,7 @@
     "player/fonts/Playfair_Display/OFL.txt": "4e6be9d19455d7cb092412984ebf3c55d26b19dd8f8452962bf432ec0a9c9dcb",
     "player/fonts/Playfair_Display/README.txt": "e986de22d65f6cda9ad490c433a4ba1900b9b4b54de07b2d2b844e30738d8132",
     "player/fonts/Playfair_Display/static/PlayfairDisplay-Regular.ttf": "861f838d481d28cbbd4793e45dc02f01d04c81e06ed98ab2779ca152ace9f27b",
-    "player/macroflush-player.js": "afec0d86a26aac62828fe9a5285d6ec5a0208e7dc9de9c4b98876b4122981a61",
+    "player/macroflush-player.js": "3602367e5f21cb09f5b3f7a93cf87fa0c6e443a684d9f860d770de75cb59a437",
     "player/media/Torus.obj": "8a84ac4b582c87ccfc7d1528a15aa97b64abdf5798d5f5ddd14ef35f37f9b9a1",
     "player/media/color_bar.mp4": "141d68975915da518c57ebb716a41b6203347ef015707625f31a91e6b174de65",
     "player/media/icon.png": "3d5c1af44c180968fb50334fbe872920870cdf20b779d4ef6102fe04e21bafa2",
@@ -29,6 +29,6 @@
     "player/media/rhi_logo.png": "350ec14860bf5a2e193d98e0f3f64f8d38cc6a00939d910aa3b5e489fed332a5",
     "player/media/step_walk.mp3": "212c4857d1e2b023b9bdf483ab817d93f03cac99b37497c3fd76c427c4a3f398",
     "player/three.global-lsYzNWMC.js": "64ae73d302538212719e260a47a456f0a25f58dd51eaec78555bc1534acd069c",
-    "program-mirror.html": "3166247c0a13391dd65503b214cb213e6127a27fb436683cdbe245222fbce5e8"
+    "program-mirror.html": "f0a1920561f90f0dced8cd467d098dc21e07551404513286e441c70ecbc9d9fd"
   }
 }
