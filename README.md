@@ -66,7 +66,7 @@ Topに対応環境の案内、Aboutに機能比較表、Referenceに項目ごと
 - `scripts/`: ビルド、ローカルHTTPサーバー、検証
 - `scripts/sync-editor.mjs`: MacroFlushのブラウザ版エディタの配布ファイルをそのまま取り込み
 
-本文はローカルMacroFlush 0.3.10のREADMEとランタイム型定義を参照して作成。アプリの更新時はAPIと出力制約を再確認してください。TopとExamplesは `MacroFlush/dist/player` の実Playerを使い、`projects/` のMacroFlush V2プロジェクトJSONを読み込んで再生します。サイト側に代用の描画実装はありません。
+本文はローカルMacroFlush 0.3.14のREADMEとランタイム型定義を参照して作成。アプリの更新時はAPIと出力制約を再確認してください。TopとExamplesは `MacroFlush/dist/player` の実Playerを使い、`projects/` のMacroFlush V2プロジェクトJSONを読み込んで再生します。サイト側に代用の描画実装はありません。
 
 Showcaseはアプリ同梱の `src/sample/sampleProject.json` を元に、リンクメディアを埋め込んだポータブルなプロジェクトです。個別作例は同梱Clipから構成しています。Triadはサイト向けの編集版（`sourcePolicy: "site-edited"`）で、ほかの4作例は元のClipソースを保持します。p5 Orbitsはサイト独自の作例（`sourcePolicy: "site-authored"`）で、`clip.use("p5")`とTimeline同期の`millis()`を使い、p5.js 1.11.1をライセンスとともに埋め込んでいます。Triadとp5 Orbitsの検証では元ソースとの一致ではなく、JavaScriptの構文を確認します。同期時はTriadの編集内容を保持してください。独立した作例の配置を中央へ調整し、Autecは元のcolorキーフレームを保持します。
 

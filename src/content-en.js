@@ -20,7 +20,7 @@ export const groupDescriptions = {
 export const apiDescriptions = {
   ...threeDDescriptions,
   ...featureDescriptions,
-  setup: "Register a Clip initialization callback. Use it to set the canvas size and initial values.",
+  setup: "Register a Clip initialization callback. Use it to set initial values such as variables and the background color. The canvas size cannot be set here: the host reapplies its parameters right after setup(), so set it in the Inspector or call size() in onFrame().",
   onframe: "Called whenever the host delivers a frame. Draw from the supplied time instead of starting a separate animation loop inside the Clip.",
   "composition-time": "Seconds and frames measured from the Composition playhead. These differ from time / frame, which are relative to the Clip's In point. Use composition time to synchronize multiple Clips.",
   defineparams: "Declare the types, defaults and ranges of exposed parameters. Supported types are number, string, boolean, color, vec2, vec3 and select.",
@@ -28,7 +28,7 @@ export const apiDescriptions = {
   comp: "Composition parameters are shared by Clips in the same Composition. Create them in the Inspector with no Clip selected.",
   getparam: "Read an interpolated parameter from another Clip placement in the same Composition, as evaluated at the start of the frame. Supply the placement ID from the Timeline, rather than an asset name.",
   centi: "Enable the Centi Canvas2D helpers. By default, they are available as global functions.",
-  size: "Set the canvas dimensions in pixels. Usually called inside setup().",
+  size: "Set the canvas dimensions in pixels. Set a fixed size in the Inspector, or call size() in onFrame() before drawing. sz(width, height) is the same. A size requested in setup() has no effect, because the host reapplies its parameters right after setup(). A change made in onFrame() updates the Clip's size parameter in the Editor and is saved with the project (a changed value can mark it unsaved). This is separate from p5's createCanvas().",
   color: "bg() clears the canvas with the background color; col() sets the color for subsequent drawing. Both accept CSS colors or RGB(A) values.",
   shapes: "Draw basic shapes. The third argument of oval() is a radius. Switch between fill and stroke modes with fill() / stroke(), and set stroke width with lineWidth().",
   getcontext: "Get Centi's CanvasRenderingContext2D to draw with the standard Canvas2D API.",
@@ -95,7 +95,7 @@ export const lessonTranslations = {
     title: "Create your first Clip", summary: "Draw a circle on a canvas and animate it with the timeline.",
     steps: [
       { title: "Prepare an HTML Clip", text: "Open MacroFlush and create an HTML Clip in the Project panel. Place it on the Composition Timeline and select it. Edit its source in the HTML / CSS / JavaScript tabs. For this example, leave HTML and CSS empty." },
-      { title: "Write the JavaScript", text: "Paste the following code into the JavaScript tab and save. Centi prepares the canvas, and setup() sets its dimensions." },
+      { title: "Write the JavaScript", text: "Paste the following code into the JavaScript tab and save. Centi prepares the canvas, and size() at the start of onFrame() sets its dimensions." },
       { title: "Play and explore time", text: "Press Play on the Timeline to move the circle left and right. Drag the playhead to inspect any time. Because drawing is calculated from time, it does not depend on the previous frame. Use onFrame() rather than requestAnimationFrame() inside the Clip." },
       { title: "Change the example", text: "Try changing the radius from 30 to 60 and the horizontal movement from 120 to 200. In the next tutorial, you will expose these kinds of values as parameters controlled from the Inspector." }
     ]

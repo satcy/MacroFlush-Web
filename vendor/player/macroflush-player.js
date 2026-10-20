@@ -13503,7 +13503,7 @@ function xd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   };
 
   const emitSceneOperation = (operation) => {
-    parent.postMessage({ type: "macroflush:scene", clipId, operation }, "*");
+    parent.postMessage({ type: "macroflush:scene", clipId, documentToken, operation }, "*");
     markFrameDirty();
   };
 
@@ -14964,6 +14964,7 @@ function xd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     parent.postMessage({
       type: "macroflush:scene",
       clipId,
+      documentToken,
       operations: [...pendingSceneOperations.values()]
     }, "*");
     pendingSceneOperations.clear();
@@ -15058,6 +15059,7 @@ function xd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
         helperPlacementId: message.editorHelperPlacementId ?? null,
         time: message.time,
         frameSeq,
+        ...(!isExportFrame && typeof message.liveSourceVisitId === "string" ? { liveSourceVisitId: message.liveSourceVisitId } : {}),
         ...(isExportFrame ? { exportFrameId: message.exportFrameId, exportSceneObjects } : {}),
         bitmap,
         ...(helperBitmap ? { helperBitmap } : {})
@@ -15138,6 +15140,7 @@ function xd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     }
 
     if (message.type === "macroflush:request-scene") {
+      if (message.documentToken !== undefined && message.documentToken !== documentToken) return;
       for (const object of displayObjects.values()) {
         emitSceneOperation({ type: "upsert", object: { ...object } });
       }
@@ -15150,6 +15153,7 @@ function xd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     }
 
     if (message.type === "macroflush:frame-config") {
+      if (message.documentToken !== undefined && message.documentToken !== documentToken) return;
       frameTransfer = {
         enabled: Boolean(message.enabled),
         fps: Math.max(1, Number(message.fps) || 30),
