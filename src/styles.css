@@ -142,3 +142,6 @@ body[data-page=online-editor] main{width:100vw;height:100dvh;overflow-x:auto;ove
 @media(max-width:760px){.tutorial-project-actions .button{width:100%;gap:12px}.tutorial-figure figcaption{padding:11px;font-size:10px}}
 
 .demo-card[data-preview-state=playing]{border-color:#3d687a}
+@media(max-width:760px){.site-header .main-nav{flex-wrap:nowrap;justify-content:space-between!important;gap:0;overflow-x:auto;scrollbar-width:none}.site-header .main-nav::-webkit-scrollbar{display:none}.site-header .main-nav a{flex-shrink:0;white-space:nowrap;padding:5px 6px}}
+@media(max-width:380px){.site-header .main-nav a{padding-inline:4px;font-size:9.5px}}
+@media(max-width:340px){.site-header .main-nav a{padding-inline:3px}}
