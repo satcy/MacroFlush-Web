@@ -59,7 +59,7 @@ OnlineEditorは `vendor/editor/` の実ブラウザ版エディタを配信し�
 - Playerの配布ファイルは直接編集せず、サイト側のラッパーで対応してください。更新が必要な場合は `npm run sync:macroflush` を使い、続けて `npm run check` を実行します。
 - 同期はPlayerスナップショット、掲載作例のJSON、provenanceを上書きします。作例を独自編集した後に同期する場合は差分を確認してください。
 - 同期元の既定値は `../MacroFlush`。変更する場合は `MACROFLUSH_ROOT=/path/to/MacroFlush npm run sync:macroflush` を使用します。通常のビルドはこのアプリの存在に依存しません。
-- 個別作例は原則Showcaseと同じオリジナルClipソースを保ちます。Triadはユーザーが意図的に編集したサイト版で、`src/examples.js` の `sourcePolicy: "site-edited"` により元ソースとの一致検証から除外し、編集後JSの構文とプロジェクト構造を検証します。Triadを元ソースへ戻さず、同期時にも編集版を保持してください。p5 Orbitsはサイト独自作例（`sourcePolicy: "site-authored"`）で、p5.js 1.11.1をGlobal scriptとして埋め込み、placementとtemplateのLibraries・p5 capabilityを設定済みです。ライセンスと出典は `projects/p5-orbits/` に保持します。同期時も独自作例を保持してください。新規作例は `projects/<name>/project.json` と `src/examples.js` の登録を追加し、実Playerで確認してください。現在の検証は埋め込みメディアを前提としているため、公開JSONはExport Embedded V2などで自己完結させます。
+- 個別作例は原則Showcaseと同じオリジナルClipソースを保ちます。TriadとAutecはユーザーが意図的に編集したサイト版で、`src/examples.js` の `sourcePolicy: "site-edited"` により元ソースとの一致検証から除外し、編集後JSの構文とプロジェクト構造を検証します。元ソースへ戻さないでください。`sync:macroflush` は `sourcePolicy` を持つ作例のJSONを上書きしません。p5 Orbitsはサイト独自作例（`sourcePolicy: "site-authored"`）で、p5.js 1.11.1をGlobal scriptとして埋め込み、placementとtemplateのLibraries・p5 capabilityを設定済みです。ライセンスと出典は `projects/p5-orbits/` に保持します。同期時も独自作例を保持してください。新規作例は `projects/<name>/project.json` と `src/examples.js` の登録を追加し、実Playerで確認してください。現在の検証は埋め込みメディアを前提としているため、公開JSONはExport Embedded V2などで自己完結させます。
 - Topの作例カードとExamplesのカードは、初回にCompositionの約15フレームまで進めて静止し、ホバーまたはキーボードフォーカスの間だけ再生します。カードごとに時刻を保持し、待機中はPlayerへtickを送りません。reduced-motion時は初期静止画だけを描き、TopのライブEditorと開いたプレビューは独立した操作を保ってください。
 - 音声は初期状態でミュート。画面外の不要な再生を止め、ダイアログを閉じる・ページを離れる際はPlayer、イベント、メディア、Blob URLを解放してください。
 

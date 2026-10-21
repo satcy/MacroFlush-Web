@@ -15,8 +15,8 @@ assert.equal(valueAtFrame(clip.params.color, track, 59), "#000000");
 assert.equal(valueAtFrame(clip.params.color, track, 361), "#0094f0");
 
 const key = track.find(key => key.frame === 361);
-moveKeyframe(track, key, 373, 719, withComponent(key.value, 200, 0));
-assert.notEqual(key.frame, 373, "Moving onto another key must avoid duplicate frames");
+moveKeyframe(track, key, 480, 719, withComponent(key.value, 200, 0));
+assert.notEqual(key.frame, 480, "Moving onto another key must avoid duplicate frames");
 assert.equal(key.value, "#c894f0", "Curve edit should preserve unedited color channels");
 assert.equal(componentValue(key.value, 1), 148);
 moveKeyframe(track, key, 9999, 719);

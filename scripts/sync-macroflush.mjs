@@ -21,7 +21,7 @@ for (const asset of source.assets) {
   asset.sourceUrl = `data:${mimeTypes[extension] || "application/octet-stream"};base64,${data.toString("base64")}`;
 }
 const root = source.assets.find(a => a.id === source.rootCompositionId);
-for (const example of examples.filter(e => e.id === "showcase" || e.appClip)) {
+for (const example of examples.filter(e => e.id === "showcase" || (e.appClip && !e.sourcePolicy))) {
   let project = source;
   if (example.id !== "showcase") {
     const asset = structuredClone(source.assets.find(a => a.kind === "html-clip" && a.name === example.appClip));
