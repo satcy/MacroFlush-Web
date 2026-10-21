@@ -1,5 +1,4 @@
 {
-  "clipFormatVersion": 2,
   "rootCompositionId": "example-autec",
   "assets": [
     {
@@ -70,8 +69,8 @@
                       540
                     ],
                     "value": [
-                      360,
-                      360
+                      960,
+                      540
                     ],
                     "label": "anchorPoint",
                     "group": "custom",
@@ -135,8 +134,8 @@
                       1080
                     ],
                     "value": [
-                      720,
-                      720
+                      1920,
+                      1080
                     ],
                     "group": "custom",
                     "writable": false,
@@ -153,18 +152,44 @@
                     "writable": false,
                     "interpolable": true,
                     "version": 1
+                  },
+                  "vsize": {
+                    "key": "vsize",
+                    "type": "vec2",
+                    "default": [
+                      720,
+                      720
+                    ],
+                    "value": [
+                      720,
+                      720
+                    ],
+                    "group": "custom",
+                    "writable": true,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "radius": {
+                    "key": "radius",
+                    "type": "number",
+                    "default": 360,
+                    "value": 360,
+                    "group": "custom",
+                    "writable": true,
+                    "interpolable": true,
+                    "version": 1
                   }
                 },
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "clip.use(\"centi\");\nclip.color ??= \"#ffffff\";\nlet shifts=([0,0,0,0]);\nlet scales=([1,1,1,1]);\nlet defscales=([0, 0.7,1,1.1]);\nsetup(() => {\n  size(720, 720);\n  bg(255)\n});\n\nonFrame(({ time, frame }) => {\n  let c = frame;\n  let w = width;\n  let h = height;\n  clr();\n  if(rnd(1)<0.1){\n    let index=floor(rnd(4));\n    shifts[index]=rnd(-1,1);\n    scales[index]=defscales[floor(rnd(4))];\n  }\n  col(clip.color);\n  for(let i=0; i<4; i++){\n    let f=(c/49+shifts[i]*PI);\n    _cos=(cos(f)<0?0:cos(f));\n    push();\n    translate(cx-w/4+w/2*(i%2),cy-h/4+h/2*floor(i/2));\n    rotate(_cos*PI-PI/4);\n    oval(0,0,(h/4)*(_cos==0 ? (sqrt(2)-1-0.02)+1 : scales[i]), _cos*50+4);\n    pop();\n  }\n}\n);"
+                  "js": "clip.use(\"centi\");\nclip.color ??= \"#ffffff\";\nlet shifts=([0,0,0,0,0]);\nlet scales=([1,1,1,1,1]);\nlet defscales=([0, 0.4,0.8,1]);\nclip.radius = 360;\nclip.vsize = [720, 720];\nclip.defineParams({vsize:{interpolable: true}});\nsetup(() => {\n  size(1920, 1080);\n});\n\nonFrame(({ time, frame }) => {\n  let c = frame;\n  let w = clip.vsize[0];\n  let h = clip.vsize[1];\n  const CEP = clip.radius;\n  clr();\n  if(rnd(1)<0.1){\n    let index=floor(rnd(4));\n    shifts[index]=rnd(-1,1);\n    scales[index]=defscales[floor(rnd(4))];\n  }\n  col(255);\n  rect(cx - w/2,cy - h/2,w,h);\n  col(clip.color);\n  const XNUM = floor(w/CEP);\n  const YNUM = floor(h/CEP);\n  const SX = floor(w/XNUM);\n  const SY = floor(h/YNUM);\n  \n  for(let i=0; i<XNUM; i++){\n    for(let j=0; j<YNUM; j++){\n      const IDX = (i + (j * XNUM)) % shifts.length;\n      let f=(c/CEP+shifts[IDX]*PI);\n      _cos=(cos(f)<0?0:cos(f));\n      push();\n      translate(cx-w/2+SX/2+SX*(i),cy-h/2+SY/2+SY*floor(j));\n      rotate(_cos*PI-PI/4);\n      oval(0,0,CEP*0.5*(_cos==0 ? (sqrt(2)-1-0.02)+1 : scales[IDX])-2, _cos*30+4);\n      pop();\n    }\n  }\n}\n);"
                 },
                 "keyframeTracks": {
                   "color": [
                     {
                       "frame": 0,
-                      "value": "#ffffff",
+                      "value": "#000000",
                       "easing": "linear"
                     },
                     {
@@ -193,18 +218,168 @@
                       "easing": "linear"
                     },
                     {
-                      "frame": 373,
-                      "value": "#b3b3b3",
-                      "easing": "linear"
-                    },
-                    {
                       "frame": 480,
                       "value": "#b3b3b3",
                       "easing": "linear"
                     },
                     {
-                      "frame": 486,
+                      "frame": 600,
+                      "value": "#e11414",
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 688,
                       "value": "#000000",
+                      "easing": "linear"
+                    }
+                  ],
+                  "vsize": [
+                    {
+                      "frame": 240,
+                      "value": [
+                        720,
+                        720
+                      ],
+                      "easing": "expoIn"
+                    },
+                    {
+                      "frame": 276,
+                      "value": [
+                        1440,
+                        720
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 300,
+                      "value": [
+                        1440,
+                        720
+                      ],
+                      "easing": "expoIn"
+                    },
+                    {
+                      "frame": 330,
+                      "value": [
+                        1440,
+                        1080
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 540,
+                      "value": [
+                        1440,
+                        1080
+                      ],
+                      "easing": "expoOut"
+                    },
+                    {
+                      "frame": 564,
+                      "value": [
+                        2160,
+                        1080
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 600,
+                      "value": [
+                        2160,
+                        1080
+                      ],
+                      "easing": "expoOut"
+                    },
+                    {
+                      "frame": 619,
+                      "value": [
+                        1080,
+                        1080
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 630,
+                      "value": [
+                        1080,
+                        1080
+                      ],
+                      "easing": "expoOut"
+                    },
+                    {
+                      "frame": 648,
+                      "value": [
+                        1080,
+                        720
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 660,
+                      "value": [
+                        1080,
+                        720
+                      ],
+                      "easing": "expoOut"
+                    },
+                    {
+                      "frame": 679,
+                      "value": [
+                        720,
+                        720
+                      ],
+                      "easing": "linear"
+                    }
+                  ],
+                  "radius": [
+                    {
+                      "frame": 120,
+                      "value": 360,
+                      "easing": "quartOut"
+                    },
+                    {
+                      "frame": 129,
+                      "value": 180,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 144,
+                      "value": 180,
+                      "easing": "sineInOut"
+                    },
+                    {
+                      "frame": 180,
+                      "value": 360,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 420,
+                      "value": 360,
+                      "easing": "quadInOut"
+                    },
+                    {
+                      "frame": 451,
+                      "value": 90,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 463,
+                      "value": 90,
+                      "easing": "expoIn"
+                    },
+                    {
+                      "frame": 480,
+                      "value": 240,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 486,
+                      "value": 240,
+                      "easing": "cubicIn"
+                    },
+                    {
+                      "frame": 520,
+                      "value": 360,
                       "easing": "linear"
                     }
                   ]
@@ -334,8 +509,8 @@
               1080
             ],
             "value": [
-              720,
-              720
+              1920,
+              1080
             ],
             "group": "custom",
             "writable": false,
@@ -352,12 +527,38 @@
             "writable": false,
             "interpolable": true,
             "version": 1
+          },
+          "vsize": {
+            "key": "vsize",
+            "type": "vec2",
+            "default": [
+              720,
+              720
+            ],
+            "value": {
+              "x": 720,
+              "y": 720
+            },
+            "group": "custom",
+            "writable": true,
+            "interpolable": true,
+            "version": 1
+          },
+          "radius": {
+            "key": "radius",
+            "type": "number",
+            "default": 360,
+            "value": 360,
+            "group": "custom",
+            "writable": true,
+            "interpolable": true,
+            "version": 1
           }
         },
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-          "js": "clip.use(\"centi\");\nclip.color ??= \"#ffffff\";\nlet shifts=([0,0,0,0]);\nlet scales=([1,1,1,1]);\nlet defscales=([0, 0.7,1,1.1]);\nsetup(() => {\n  size(720, 720);\n  bg(255)\n});\n\nonFrame(({ time, frame }) => {\n  let c = frame;\n  let w = width;\n  let h = height;\n  clr();\n  if(rnd(1)<0.1){\n    let index=floor(rnd(4));\n    shifts[index]=rnd(-1,1);\n    scales[index]=defscales[floor(rnd(4))];\n  }\n  col(clip.color);\n  for(let i=0; i<4; i++){\n    let f=(c/49+shifts[i]*PI);\n    _cos=(cos(f)<0?0:cos(f));\n    push();\n    translate(cx-w/4+w/2*(i%2),cy-h/4+h/2*floor(i/2));\n    rotate(_cos*PI-PI/4);\n    oval(0,0,(h/4)*(_cos==0 ? (sqrt(2)-1-0.02)+1 : scales[i]), _cos*50+4);\n    pop();\n  }\n}\n);"
+          "js": "clip.use(\"centi\");\nclip.color ??= \"#ffffff\";\nlet shifts=([0,0,0,0,0]);\nlet scales=([1,1,1,1,1]);\nlet defscales=([0, 0.4,0.8,1]);\nclip.radius = 360;\nclip.vsize = [720, 720];\nclip.defineParams({vsize:{interpolable: true}});\nsetup(() => {\n  size(1920, 1080);\n});\n\nonFrame(({ time, frame }) => {\n  let c = frame;\n  let w = clip.vsize[0];\n  let h = clip.vsize[1];\n  const CEP = clip.radius;\n  clr();\n  if(rnd(1)<0.1){\n    let index=floor(rnd(4));\n    shifts[index]=rnd(-1,1);\n    scales[index]=defscales[floor(rnd(4))];\n  }\n  col(255);\n  rect(cx - w/2,cy - h/2,w,h);\n  col(clip.color);\n  const XNUM = floor(w/CEP);\n  const YNUM = floor(h/CEP);\n  const SX = floor(w/XNUM);\n  const SY = floor(h/YNUM);\n  \n  for(let i=0; i<XNUM; i++){\n    for(let j=0; j<YNUM; j++){\n      const IDX = (i + (j * XNUM)) % shifts.length;\n      let f=(c/CEP+shifts[IDX]*PI);\n      _cos=(cos(f)<0?0:cos(f));\n      push();\n      translate(cx-w/2+SX/2+SX*(i),cy-h/2+SY/2+SY*floor(j));\n      rotate(_cos*PI-PI/4);\n      oval(0,0,CEP*0.5*(_cos==0 ? (sqrt(2)-1-0.02)+1 : scales[IDX])-2, _cos*30+4);\n      pop();\n    }\n  }\n}\n);"
         }
       }
     }
@@ -374,5 +575,6 @@
     ],
     "projectAllowlist": [],
     "requireHumanConfirmationForAi": true
-  }
+  },
+  "clipFormatVersion": 2
 }
