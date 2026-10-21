@@ -1,7 +1,7 @@
 export const featureGroups = [
   { id: "shaders", name: "Shader Clips & effects", description: "GLSLでレイヤーの合成結果を加工する。WebGL2対応ブラウザとアプリ版で利用できます。" },
   { id: "feedback", name: "Feedback", description: "Pointer・数値・OSCの記録データを、タイムラインに合わせて再生する。映像の前フレームを戻すShader feedbackとは別の機能です。" },
-  { id: "desktop", name: "Application features", description: "アプリ版専用の動画書き出し、MCP、OSC、LLMアシスタント。ブラウザ版EditorとPlayerでは利用できません。" }
+  { id: "desktop", name: "Application features", description: "アプリ版専用の動画書き出し、MCP、OSC、LLMアシスタント、ステム分離。ブラウザ版EditorとPlayerでは利用できません。" }
 ];
 
 export const featureApi = [
@@ -23,13 +23,14 @@ export const featureApi = [
   { id: "app-export", group: "desktop", name: "Movie / image sequence export", environments: ["app"], text: "アプリ版ではPNG連番、MP4、ProResを書き出せます。Timelineをオフライン評価してフレームを出力します。ブラウザ版Editorはプロジェクトを編集・保存でき、Playerはその再生を担当しますが、これらのネイティブ動画・連番書き出し機能は利用できません。" },
   { id: "app-mcp", group: "desktop", name: "MCP / external automation", environments: ["app"], text: "アプリ上部のMCP: Offから有効にすると、ローカルのAIクライアントがStreamable HTTPで接続できます。Composition、Clipソース、パラメータ、キーフレーム、Cue、保存・書き出しなどを操作します。既定は無効で、endpointはhttp://127.0.0.1:39217/mcpです。ブラウザ版EditorやPlayer自体はMCPサーバーを提供しません。LLMアシスタントの画面やモデルのダウンロードもMCPの操作対象ではありません。" },
   { id: "app-osc", group: "desktop", name: "OSC / sendOsc()", environments: ["app"], text: "アプリのOSCタブで受信portと送信先IPv4 host/portを設定して起動します。受信アドレスからアクティブCompositionのClip・CompositionパラメータとCueを制御でき、ClipからはsendOsc()で明示的に送信します。既定は受信9000、送信127.0.0.1:9001です。OSC停止中は送信されません。ブラウザではUDP OSCの送受信は利用できません。", code: "onCue(({ cueName }) => {\n  sendOsc(\"/visual/cue\", cueName);\n});\n// Receive routes in the app:\n// /<layer>/<clip>/<param>\n// /comp/<param>\n// /cue/<name>" },
-  { id: "app-assistant", group: "desktop", name: "LLM Assistant (experimental)", environments: ["app"], text: "コードエディタのチャットアイコンでAssistantを開き、Clip APIの質問やコード案の作成に使います。設定からBuilt-inモデル、またはOllama / LM StudioなどのローカルOpenAI互換サーバーを選びます。Built-inモデルはダウンロードと起動が必要で、対応状況はOSや実行環境によって異なります。MCPによる外部クライアントの自動操作とは別機能で、ブラウザ版EditorとPlayerでは利用できません。" }
+  { id: "app-assistant", group: "desktop", name: "LLM Assistant (experimental)", environments: ["app"], text: "コードエディタのチャットアイコンでAssistantを開き、Clip APIの質問やコード案の作成に使います。設定からBuilt-inモデル、またはOllama / LM StudioなどのローカルOpenAI互換サーバーを選びます。Built-inモデルはダウンロードと起動が必要で、対応状況はOSや実行環境によって異なります。MCPによる外部クライアントの自動操作とは別機能で、ブラウザ版EditorとPlayerでは利用できません。" },
+  { id: "app-stems", group: "desktop", name: "Stem separation / audioStem()", environments: ["app"], text: "音声アセットのProjectコンテキストメニューSeparate & Attach Stems...で、HT-Demucs ONNXにより音声をdrums・bass・other・vocalsの4つのステムに分離し、自動で取り付けます。MITライセンスのモデル（htdemucs_fp16weights.onnx）は自分でダウンロードして選択します。アプリはその絶対パスだけをElectronのユーザーデータに保存し、モデルの同梱やコピーはしません。分離できるのは1アセットあたり最大5分で、44.1 kHzのステレオWAVが4つ生成されます。コマンドラインのnpm run separate:stemsでも分離できます。ブラウザ版Editorには分離機能がなく、分離済みの4つのWAVをAttach Stems...で取り付けます（WAVはプロジェクトに埋め込まれ、ファイルが大きくなることがあります）。取り付けたステムは、EditorとPlayerのClipからaudioStem()・audioStemPeaks()・audioStemSpectrogram()で読めます。" }
 ];
 
 export const featureGroupDescriptions = {
   shaders: "Process composited layers with GLSL. Available in WebGL2-capable browsers and the app.",
   feedback: "Replay recorded Pointer, numeric and OSC data in sync with the timeline. This is separate from shader feedback that reuses a previous image frame.",
-  desktop: "Movie export, MCP, OSC and the LLM assistant are app features, unavailable in the browser Editor and Player."
+  desktop: "Movie export, MCP, OSC, the LLM assistant and stem separation are app features, unavailable in the browser Editor and Player."
 };
 
 export const featureDescriptions = {
@@ -51,5 +52,6 @@ export const featureDescriptions = {
   "app-export": "The app exports PNG sequences, MP4 and ProRes by evaluating Timeline frames offline. The browser Editor edits and saves projects, and the Player plays them, but neither provides these native movie or image-sequence export features.",
   "app-mcp": "Enable MCP: Off in the app's top bar to connect a local AI client through Streamable HTTP. Tools control Compositions, Clip sources, parameters, keyframes, Cues, saving and export. It is off by default; the default endpoint is http://127.0.0.1:39217/mcp. Neither the browser Editor nor Player provides an MCP server. The LLM assistant UI and model downloads are also outside MCP's tool scope.",
   "app-osc": "Configure the receive port and destination IPv4 host/port in the app's OSC tab, then start OSC. Incoming addresses control Clip and Composition parameters and Cues in the active Composition. Clips explicitly send messages with sendOsc(). Defaults are receive port 9000 and destination 127.0.0.1:9001. Calls do not send while OSC is stopped. Browsers do not provide UDP OSC I/O.",
-  "app-assistant": "Open Assistant with the code editor's chat icon to ask about the Clip API or draft code. Settings offer a Built-in model or a local OpenAI-compatible server such as Ollama / LM Studio. Built-in models require download and startup, with support depending on OS and runtime. This is separate from external-client automation through MCP, and is unavailable in the browser Editor and Player."
+  "app-assistant": "Open Assistant with the code editor's chat icon to ask about the Clip API or draft code. Settings offer a Built-in model or a local OpenAI-compatible server such as Ollama / LM Studio. Built-in models require download and startup, with support depending on OS and runtime. This is separate from external-client automation through MCP, and is unavailable in the browser Editor and Player.",
+  "app-stems": "In the app, an audio asset's Project context menu offers Separate & Attach Stems..., which uses HT-Demucs ONNX to split the audio into four stems (drums, bass, other and vocals) and attaches them automatically. Download the MIT-licensed model (htdemucs_fp16weights.onnx) yourself and select it. The app saves only its absolute path in Electron user data and neither bundles nor copies the model. Separation handles up to five minutes per asset and produces four 44.1 kHz stereo WAVs; the command line (npm run separate:stems) can also separate. The browser Editor has no separation feature: attach four already-separated WAVs with Attach Stems... (the WAVs are embedded in the project, so files can become large). Attached stems can be read from Clips in the Editor and Player with audioStem(), audioStemPeaks() and audioStemSpectrogram().",
 };
