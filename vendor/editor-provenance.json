@@ -2,7 +2,7 @@
   "source": "MacroFlush/dist",
   "adaptation": "Unmodified browser Editor distribution",
   "files": {
-    "assets/editor-DWcByL5F.js": "08d360f56161bd7edde4e23ed574fa597a998e6fec14657cdf6e8b0b24d6e9af",
+    "assets/editor-B9ZEqndk.js": "4920441c1d49b0307d8a73a39851774b176c0a4445e09045ee9b09520160acd2",
     "assets/editor-DqLDvM2P.css": "1e67067f450f9a20761b70dccbbfbdcee33123d27599312faa880a6a6f006059",
     "assets/program-mirror-CBYwbgr8.js": "61e65e009e66ac89cce9764bb84f950fe70a376186748b1dd6e946be98d8605a",
     "assets/program-mirror-D6AGCH5q.css": "7cd4dd5b37f0468e57ba9a95c18507c1d847f278eb574caddbd1a2fcfc9afcd3",
@@ -11,7 +11,7 @@
     "fonts/Playfair_Display/OFL.txt": "4e6be9d19455d7cb092412984ebf3c55d26b19dd8f8452962bf432ec0a9c9dcb",
     "fonts/Playfair_Display/README.txt": "e986de22d65f6cda9ad490c433a4ba1900b9b4b54de07b2d2b844e30738d8132",
     "fonts/Playfair_Display/static/PlayfairDisplay-Regular.ttf": "861f838d481d28cbbd4793e45dc02f01d04c81e06ed98ab2779ca152ace9f27b",
-    "index.html": "df362d6a36373744095ab635c2ee1ea3f7f71eecf31dd8b727200cedf7585228",
+    "index.html": "958a5a5728fbbe69c016d173fba9bc54560672e6cc3fe219aa6b706841bab95f",
     "media/Torus.obj": "8a84ac4b582c87ccfc7d1528a15aa97b64abdf5798d5f5ddd14ef35f37f9b9a1",
     "media/color_bar.mp4": "141d68975915da518c57ebb716a41b6203347ef015707625f31a91e6b174de65",
     "media/icon.png": "3d5c1af44c180968fb50334fbe872920870cdf20b779d4ef6102fe04e21bafa2",

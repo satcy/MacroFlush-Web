@@ -20,7 +20,7 @@ export const groupDescriptions = {
 export const apiDescriptions = {
   ...threeDDescriptions,
   ...featureDescriptions,
-  setup: "Register a Clip initialization callback. Use it to set initial values such as variables and the background color. The canvas size cannot be set here: the host reapplies its parameters right after setup(), so set it in the Inspector or call size() in onFrame().",
+  setup: "Register a Clip initialization callback. Use it to set a fixed canvas size and initial values. A numeric-literal size(720, 405) written directly inside setup() is synchronized to the Inspector size when you edit the source in the Editor. Specify dynamic sizes in onFrame().",
   onframe: "Called whenever the host delivers a frame. Draw from the supplied time instead of starting a separate animation loop inside the Clip.",
   "composition-time": "Seconds and frames measured from the Composition playhead. These differ from time / frame, which are relative to the Clip's In point. Use composition time to synchronize multiple Clips.",
   defineparams: "Declare the types, defaults and ranges of exposed parameters. Supported types are number, string, boolean, color, vec2, vec3 and select.",
@@ -28,12 +28,12 @@ export const apiDescriptions = {
   comp: "Composition parameters are shared by Clips in the same Composition. Create them in the Inspector with no Clip selected.",
   getparam: "Read an interpolated parameter from another Clip placement in the same Composition, as evaluated at the start of the frame. Supply the placement ID from the Timeline, rather than an asset name.",
   centi: "Enable the Centi Canvas2D helpers. By default, they are available as global functions.",
-  size: "Set the canvas dimensions in pixels. Set a fixed size in the Inspector, or call size() in onFrame() before drawing. sz(width, height) is the same. A size requested in setup() has no effect, because the host reapplies its parameters right after setup(). A change made in onFrame() updates the Clip's size parameter in the Editor and is saved with the project (a changed value can mark it unsaved). This is separate from p5's createCanvas().",
+  size: "Set the canvas dimensions in pixels. Set a fixed size in the Inspector, or write it directly inside setup() as two positive numeric literals, such as size(720, 405) (sz is the same). When you edit the source in the Editor and the literals change, the edited placement's Inspector size and its asset template's initial value are updated in one Undo step. Other existing placements are unchanged, and merely opening an existing project does not synchronize. A valid intermediate value can briefly appear in the Preview 300 ms after you type. Not covered: p5, instances, member calls such as c.size(), branches, nested functions and dynamic arguments. At runtime the host reapplies its parameters after setup(), so call dynamic sizes in onFrame() before drawing; those changes update the Clip's size parameter, are saved, and can mark the project unsaved. This is separate from p5's createCanvas().",
   color: "bg() clears the canvas with the background color; col() sets the color for subsequent drawing. Both accept CSS colors or RGB(A) values.",
   shapes: "Draw basic shapes. The third argument of oval() is a radius. Switch between fill and stroke modes with fill() / stroke(), and set stroke width with lineWidth().",
   getcontext: "Get Centi's CanvasRenderingContext2D to draw with the standard Canvas2D API.",
   "centi-dimensions": "Centi canvas dimensions and center coordinates. After size(), width / height are the drawing canvas dimensions in pixels, and cx / cy are half those values. These may differ from the Composition dimensions.",
-  "centi-namespace": "Access helpers through the returned namespace without adding global functions. Useful when your own function names would conflict. This does not allow Centi and p5 global mode to run together in the same Clip.",
+  "centi-namespace": "Access helpers through the returned namespace without adding global functions. Useful when your own function names would conflict. This does not allow Centi and p5 global mode to run together in the same Clip. A member call such as c.size() is not synchronized to the Inspector as a setup() declaration and is overridden after setup() at runtime, so call it in onFrame() before drawing.",
   "centi-rect": "Draw a rectangle using its top-left position, width and height. To center it around an origin, translate first, then use negative half-width and half-height for the position.",
   "centi-oval": "Draw a circle using its center and radius. The third argument is not a diameter. Supply resolution to draw a polygon with that many vertices. Combine with scale(x, y) to draw an ellipse.",
   "centi-line": "Draw a line segment between two endpoints, using the current color and stroke width. ln() is an alias for line().",
@@ -95,7 +95,7 @@ export const lessonTranslations = {
     title: "Create your first Clip", summary: "Draw a circle on a canvas and animate it with the timeline.",
     steps: [
       { title: "Prepare an HTML Clip", text: "Open MacroFlush and create an HTML Clip in the Project panel. Place it on the Composition Timeline and select it. Edit its source in the HTML / CSS / JavaScript tabs. For this example, leave HTML and CSS empty." },
-      { title: "Write the JavaScript", text: "Paste the following code into the JavaScript tab and save. Centi prepares the canvas, and size() at the start of onFrame() sets its dimensions." },
+      { title: "Write the JavaScript", text: "Paste the following code into the JavaScript tab and save. Centi prepares the canvas, and setup() sets its dimensions." },
       { title: "Play and explore time", text: "Press Play on the Timeline to move the circle left and right. Drag the playhead to inspect any time. Because drawing is calculated from time, it does not depend on the previous frame. Use onFrame() rather than requestAnimationFrame() inside the Clip." },
       { title: "Change the example", text: "Try changing the radius from 30 to 60 and the horizontal movement from 120 to 200. In the next tutorial, you will expose these kinds of values as parameters controlled from the Inspector." }
     ]
