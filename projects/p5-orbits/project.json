@@ -1,5 +1,4 @@
 {
-  "clipFormatVersion": 2,
   "rootCompositionId": "example-p5-orbits",
   "assets": [
     {
@@ -73,6 +72,7 @@
                       640,
                       360
                     ],
+                    "label": "anchorPoint",
                     "group": "builtin",
                     "writable": false,
                     "interpolable": true,
@@ -148,11 +148,11 @@
                     "type": "number",
                     "default": 0.78,
                     "value": 0.78,
-                    "min": 0.4,
-                    "max": 1.2,
-                    "step": 0.01,
                     "group": "custom",
-                    "writable": false,
+                    "writable": true,
+                    "min": 0,
+                    "max": 4.2,
+                    "step": 0.01,
                     "interpolable": true,
                     "version": 1
                   },
@@ -161,11 +161,37 @@
                     "type": "number",
                     "default": 1,
                     "value": 1,
+                    "group": "custom",
+                    "writable": true,
                     "min": 0.25,
                     "max": 3,
                     "step": 0.05,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "phase": {
+                    "key": "phase",
+                    "type": "number",
+                    "default": 1,
+                    "value": 0,
                     "group": "custom",
-                    "writable": false,
+                    "writable": true,
+                    "min": 0,
+                    "max": 3,
+                    "step": 0.05,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "local_speed": {
+                    "key": "local_speed",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "custom",
+                    "writable": true,
+                    "min": 0.25,
+                    "max": 10,
+                    "step": 0.05,
                     "interpolable": true,
                     "version": 1
                   }
@@ -173,24 +199,78 @@
                 "source": {
                   "html": "",
                   "css": "html,body{margin:0;overflow:hidden}canvas{display:block}",
-                  "js": "clip.use(\"p5\");\n\nclip.defineParams({\n  spread: { type: \"number\", default: 0.78, min: 0.4,\n    max: 1.2, step: 0.01, interpolable: true },\n  speed: { type: \"number\", default: 1, min: 0.25,\n    max: 3, step: 0.05, interpolable: true }\n});\n\nfunction setup() {\n  createCanvas(windowWidth, windowHeight);\n}\n\nfunction draw() {\n  background(12, 15, 23);\n  const phase = millis() / 8000 * TWO_PI * clip.speed;\n  const radius = min(width * 0.34, height * 0.48) * clip.spread;\n  const palette = [\"#5dd4ff\", \"#ff6b9d\", \"#ffdc63\"];\n\n  translate(width / 2, height / 2);\n  blendMode(SCREEN);\n  for (let orbit = 0; orbit < 7; orbit++) {\n    push();\n    rotate(orbit * PI / 7 + sin(phase) * 0.18);\n    const rx = radius * (0.68 + orbit * 0.045);\n    const ry = rx * 0.38;\n    const ink = color(palette[orbit % palette.length]);\n    ink.setAlpha(135);\n    noFill();\n    stroke(ink);\n    strokeWeight(2.4);\n    ellipse(0, 0, rx * 2, ry * 2);\n\n    // Positions come only from Timeline time, so seeking redraws this frame.\n    const angle = phase * (orbit % 3 + 1) + orbit * TWO_PI / 7;\n    for (let tail = 10; tail >= 0; tail--) {\n      const a = angle - tail * 0.045;\n      const glow = color(palette[orbit % palette.length]);\n      glow.setAlpha(220 * (1 - tail / 11));\n      noStroke();\n      fill(glow);\n      circle(cos(a) * rx, sin(a) * ry, tail === 0 ? 16 : 6);\n    }\n    pop();\n  }\n  noStroke();\n  fill(240, 247, 255);\n  circle(0, 0, 9);\n  blendMode(BLEND);\n}\n"
+                  "js": "clip.use(\"p5\");\n\nclip.defineParams({\n  spread: { type: \"number\", default: 0.78, min: 0.0,\n    max: 4.2, step: 0.01, interpolable: true },\n  speed: { type: \"number\", default: 1, min: 0.25,\n    max: 3, step: 0.05, interpolable: true },\n  local_speed: { type: \"number\", default: 1, min: 0.25,\n    max: 10, step: 0.05, interpolable: true },\n  phase: { type: \"number\", default: 1, min: 0.0,\n    max: 3, step: 0.05, interpolable: true }\n});\n\nfunction setup() {\n  createCanvas(windowWidth, windowHeight);\n}\n\nfunction draw() {\n  background(12, 15, 23);\n  const phase = millis() / 8000 * TWO_PI * clip.speed;\n  const radius = min(width * 0.5, height * 0.5) * clip.spread;\n  const palette = [\"#5dd4ff\", \"#ff6b9d\", \"#ffdc63\"];\n\n  translate(width / 2, height / 2);\n  blendMode(SCREEN);\n  for (let orbit = 0; orbit < 7; orbit++) {\n    push();\n    rotate(orbit * PI / 7 + sin(phase) * 0.18);\n    const rx = radius * (0.68 + orbit * 0.045 * 0);\n    const ry = rx * 0.38;\n    const ink = color(palette[orbit % palette.length]);\n    ink.setAlpha(135);\n    noFill();\n    stroke(ink);\n    strokeWeight(2.4);\n    ellipse(0, 0, rx * 2, ry * 2);\n\n    // Positions come only from Timeline time, so seeking redraws this frame.\n    const angle = phase * clip.local_speed + clip.phase * orbit * TWO_PI / 7;\n    for (let tail = 10; tail >= 0; tail--) {\n      const a = angle - tail * 0.045;\n      const glow = color(palette[orbit % palette.length]);\n      glow.setAlpha(220 * (1 - tail / 11));\n      noStroke();\n      fill(glow);\n      circle(cos(a) * rx, sin(a) * ry, tail === 0 ? 16 : 6);\n    }\n    pop();\n  }\n  noStroke();\n  fill(240, 247, 255);\n  circle(0, 0, 9);\n  blendMode(BLEND);\n}\n"
                 },
                 "keyframeTracks": {
                   "spread": [
                     {
                       "frame": 0,
-                      "value": 0.78,
+                      "value": 0,
+                      "easing": "quartOut"
+                    },
+                    {
+                      "frame": 30,
+                      "value": 0.9,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 240,
+                      "value": 1.2,
                       "easing": "sineInOut"
+                    },
+                    {
+                      "frame": 468,
+                      "value": 0.7808793746724909,
+                      "easing": "quartIn"
+                    },
+                    {
+                      "frame": 479,
+                      "value": 4.2,
+                      "easing": "linear"
+                    }
+                  ],
+                  "phase": [
+                    {
+                      "frame": 120,
+                      "value": 0,
+                      "easing": "linear"
                     },
                     {
                       "frame": 240,
                       "value": 1,
-                      "easing": "sineInOut"
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 400,
+                      "value": 1,
+                      "easing": "linear"
                     },
                     {
                       "frame": 479,
-                      "value": 0.78,
-                      "easing": "sineInOut"
+                      "value": 0,
+                      "easing": "linear"
+                    }
+                  ],
+                  "local_speed": [
+                    {
+                      "frame": 183,
+                      "value": 1,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 245,
+                      "value": 2,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 424,
+                      "value": 2,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 479,
+                      "value": 3,
+                      "easing": "linear"
                     }
                   ]
                 },
@@ -263,6 +343,7 @@
               640,
               360
             ],
+            "label": "anchorPoint",
             "group": "builtin",
             "writable": false,
             "interpolable": true,
@@ -338,11 +419,11 @@
             "type": "number",
             "default": 0.78,
             "value": 0.78,
-            "min": 0.4,
-            "max": 1.2,
-            "step": 0.01,
             "group": "custom",
-            "writable": false,
+            "writable": true,
+            "min": 0,
+            "max": 4.2,
+            "step": 0.01,
             "interpolable": true,
             "version": 1
           },
@@ -351,11 +432,76 @@
             "type": "number",
             "default": 1,
             "value": 1,
+            "group": "custom",
+            "writable": true,
             "min": 0.25,
             "max": 3,
             "step": 0.05,
+            "interpolable": true,
+            "version": 1
+          },
+          "pa": {
+            "key": "pa",
+            "type": "number",
+            "default": 1,
+            "value": 1,
             "group": "custom",
-            "writable": false,
+            "writable": true,
+            "min": 0.25,
+            "max": 3,
+            "step": 0.05,
+            "interpolable": true,
+            "version": 1
+          },
+          "p": {
+            "key": "p",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "custom",
+            "writable": true,
+            "min": 0.25,
+            "max": 3,
+            "step": 0.05,
+            "interpolable": true,
+            "version": 1
+          },
+          "phase": {
+            "key": "phase",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "custom",
+            "writable": true,
+            "min": 0,
+            "max": 3,
+            "step": 0.05,
+            "interpolable": true,
+            "version": 1
+          },
+          "localspeed": {
+            "key": "localspeed",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "custom",
+            "writable": true,
+            "min": 0.25,
+            "max": 3,
+            "step": 0.05,
+            "interpolable": true,
+            "version": 1
+          },
+          "local_speed": {
+            "key": "local_speed",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "custom",
+            "writable": true,
+            "min": 0.25,
+            "max": 10,
+            "step": 0.05,
             "interpolable": true,
             "version": 1
           }
@@ -363,7 +509,7 @@
         "source": {
           "html": "",
           "css": "html,body{margin:0;overflow:hidden}canvas{display:block}",
-          "js": "clip.use(\"p5\");\n\nclip.defineParams({\n  spread: { type: \"number\", default: 0.78, min: 0.4,\n    max: 1.2, step: 0.01, interpolable: true },\n  speed: { type: \"number\", default: 1, min: 0.25,\n    max: 3, step: 0.05, interpolable: true }\n});\n\nfunction setup() {\n  createCanvas(windowWidth, windowHeight);\n}\n\nfunction draw() {\n  background(12, 15, 23);\n  const phase = millis() / 8000 * TWO_PI * clip.speed;\n  const radius = min(width * 0.34, height * 0.48) * clip.spread;\n  const palette = [\"#5dd4ff\", \"#ff6b9d\", \"#ffdc63\"];\n\n  translate(width / 2, height / 2);\n  blendMode(SCREEN);\n  for (let orbit = 0; orbit < 7; orbit++) {\n    push();\n    rotate(orbit * PI / 7 + sin(phase) * 0.18);\n    const rx = radius * (0.68 + orbit * 0.045);\n    const ry = rx * 0.38;\n    const ink = color(palette[orbit % palette.length]);\n    ink.setAlpha(135);\n    noFill();\n    stroke(ink);\n    strokeWeight(2.4);\n    ellipse(0, 0, rx * 2, ry * 2);\n\n    // Positions come only from Timeline time, so seeking redraws this frame.\n    const angle = phase * (orbit % 3 + 1) + orbit * TWO_PI / 7;\n    for (let tail = 10; tail >= 0; tail--) {\n      const a = angle - tail * 0.045;\n      const glow = color(palette[orbit % palette.length]);\n      glow.setAlpha(220 * (1 - tail / 11));\n      noStroke();\n      fill(glow);\n      circle(cos(a) * rx, sin(a) * ry, tail === 0 ? 16 : 6);\n    }\n    pop();\n  }\n  noStroke();\n  fill(240, 247, 255);\n  circle(0, 0, 9);\n  blendMode(BLEND);\n}\n"
+          "js": "clip.use(\"p5\");\n\nclip.defineParams({\n  spread: { type: \"number\", default: 0.78, min: 0.0,\n    max: 4.2, step: 0.01, interpolable: true },\n  speed: { type: \"number\", default: 1, min: 0.25,\n    max: 3, step: 0.05, interpolable: true },\n  local_speed: { type: \"number\", default: 1, min: 0.25,\n    max: 10, step: 0.05, interpolable: true },\n  phase: { type: \"number\", default: 1, min: 0.0,\n    max: 3, step: 0.05, interpolable: true }\n});\n\nfunction setup() {\n  createCanvas(windowWidth, windowHeight);\n}\n\nfunction draw() {\n  background(12, 15, 23);\n  const phase = millis() / 8000 * TWO_PI * clip.speed;\n  const radius = min(width * 0.5, height * 0.5) * clip.spread;\n  const palette = [\"#5dd4ff\", \"#ff6b9d\", \"#ffdc63\"];\n\n  translate(width / 2, height / 2);\n  blendMode(SCREEN);\n  for (let orbit = 0; orbit < 7; orbit++) {\n    push();\n    rotate(orbit * PI / 7 + sin(phase) * 0.18);\n    const rx = radius * (0.68 + orbit * 0.045 * 0);\n    const ry = rx * 0.38;\n    const ink = color(palette[orbit % palette.length]);\n    ink.setAlpha(135);\n    noFill();\n    stroke(ink);\n    strokeWeight(2.4);\n    ellipse(0, 0, rx * 2, ry * 2);\n\n    // Positions come only from Timeline time, so seeking redraws this frame.\n    const angle = phase * clip.local_speed + clip.phase * orbit * TWO_PI / 7;\n    for (let tail = 10; tail >= 0; tail--) {\n      const a = angle - tail * 0.045;\n      const glow = color(palette[orbit % palette.length]);\n      glow.setAlpha(220 * (1 - tail / 11));\n      noStroke();\n      fill(glow);\n      circle(cos(a) * rx, sin(a) * ry, tail === 0 ? 16 : 6);\n    }\n    pop();\n  }\n  noStroke();\n  fill(240, 247, 255);\n  circle(0, 0, 9);\n  blendMode(BLEND);\n}\n"
         },
         "keyframeTracks": {
           "spread": [
@@ -413,5 +559,6 @@
     ],
     "projectAllowlist": [],
     "requireHumanConfirmationForAi": true
-  }
+  },
+  "clipFormatVersion": 2
 }

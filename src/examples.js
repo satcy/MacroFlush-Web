@@ -6,7 +6,8 @@ export const examples = [
   { id: "sin", title: "Sin", appClip: "Sin", category: "Lines", number: "04", projectUrl: new URL("../projects/sin/project.json", import.meta.url).href, description: "同梱プロジェクトのSin Clip。位相の異なる正弦波で線を描きます。" },
   { id: "gradient", title: "Gradient", appClip: "Gradient", category: "Color", number: "05", projectUrl: new URL("../projects/gradient/project.json", import.meta.url).href, description: "同梱プロジェクトのGradient Clip。回転するグラデーションをlightenで合成。" },
   { id: "boxes", title: "Boxes", appClip: "Boxes", category: "3D", number: "06", projectUrl: new URL("../projects/boxes/project.json", import.meta.url).href, description: "同梱プロジェクトのBoxes Clip。Centi3DとThree.jsで3Dボックスを動かします。" },
-  { id: "p5-orbits", sourcePolicy: "site-authored", title: "p5 Orbits", category: "p5.js", number: "07", projectUrl: new URL("../projects/p5-orbits/project.json", import.meta.url).href, description: "clip.use(\"p5\")で描く光の軌道。millis()をTimelineに同期し、広がりをキーフレームで動かします。p5.jsを埋め込んだプロジェクトです。" }
+  { id: "p5-orbits", sourcePolicy: "site-authored", title: "p5 Orbits", category: "p5.js", number: "07", projectUrl: new URL("../projects/p5-orbits/project.json", import.meta.url).href, description: "clip.use(\"p5\")で描く光の軌道。millis()をTimelineに同期し、広がりをキーフレームで動かします。p5.jsを埋め込んだプロジェクトです。" },
+  { id: "p5-balls", sourcePolicy: "site-authored", title: "p5 Balls", category: "p5.js", number: "08", projectUrl: new URL("../projects/p5-balls/project.json", import.meta.url).href, description: "p5.jsで描く5つの円。壁や円同士で跳ね返り、色を変えながら軌跡を残します。p5.jsを埋め込んだプロジェクトです。" }
 ];
 
 // Additional editor-only projects used by the illustrated tutorial.

@@ -237,5 +237,6 @@ export const englishUI = {
   "同梱プロジェクトのSin Clip。位相の異なる正弦波で線を描きます。": "The Sin Clip from the bundled project, drawing lines with sine waves at different phases.",
   "同梱プロジェクトのGradient Clip。回転するグラデーションをlightenで合成。": "The Gradient Clip from the bundled project, compositing rotating gradients with lighten blending.",
   "同梱プロジェクトのBoxes Clip。Centi3DとThree.jsで3Dボックスを動かします。": "The Boxes Clip from the bundled project, animating 3D boxes with Centi3D and Three.js.",
-  "clip.use(\"p5\")で描く光の軌道。millis()をTimelineに同期し、広がりをキーフレームで動かします。p5.jsを埋め込んだプロジェクトです。": "Orbits drawn with clip.use(\"p5\"). millis() follows the Timeline, while keyframes animate their spread. Includes the embedded p5.js library."
+  "clip.use(\"p5\")で描く光の軌道。millis()をTimelineに同期し、広がりをキーフレームで動かします。p5.jsを埋め込んだプロジェクトです。": "Orbits drawn with clip.use(\"p5\"). millis() follows the Timeline, while keyframes animate their spread. Includes the embedded p5.js library.",
+  "p5.jsで描く5つの円。壁や円同士で跳ね返り、色を変えながら軌跡を残します。p5.jsを埋め込んだプロジェクトです。": "Five circles drawn with p5.js bounce off the walls and each other, leaving trails as their colors shift. Includes the embedded p5.js library."
 };

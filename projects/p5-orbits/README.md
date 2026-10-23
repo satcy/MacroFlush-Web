@@ -4,11 +4,11 @@
 
 - `setup()`でCanvasを作成し、`draw()`で7本の軌道と光点を描きます。
 - `millis()`はMacroFlushのClipローカル時間に同期します。軌道・残像とも時間から直接計算し、各フレームで背景を塗り直すので、シーク先でも同じ状態を描けます。
-- Inspectorの`spread`は軌道の広がりで、0 / 240 / 479フレームにキーがあります。`speed`は回転速度です。
+- Inspectorの`spread`は軌道の広がりで、0 / 30 / 240 / 468 / 479フレームにキーがあります。`speed`は全体の回転速度、`local_speed`は光点の周回速度、`phase`は軌道ごとの光点の位相差です。`local_speed`と`phase`にもキーがあります。
 - placementとHTMLアセットに`capabilities: ["p5"]`、`libraries: ["p5-library"]`を設定済みです。Editorで開いた後の追加設定は不要です。
 - p5.js本体はGlobal scriptアセットとしてJSONへ埋め込んでいます。実行時のCDNアクセスはありません。
 
-Created for this site using `clip.use("p5")`, native `setup()` / `draw()`, Timeline-driven `millis()` and an animated `spread` parameter. The embedded library and p5 capability are configured for both the placement and template. Open the JSON in the Editor to inspect code and keyframes; no additional library setup or CDN request is needed.
+Created for this site using `clip.use("p5")`, native `setup()` / `draw()`, and Timeline-driven `millis()`. Keyframes animate `spread` (orbit size), `local_speed` (light-point speed), and `phase` (phase offset between orbits); `speed` controls the overall rotation speed. The embedded library and p5 capability are configured for both the placement and template. Open the JSON in the Editor to inspect code and keyframes; no additional library setup or CDN request is needed.
 
 ## Embedded library
 
