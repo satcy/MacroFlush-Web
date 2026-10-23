@@ -9,7 +9,7 @@ export async function build() {
   await rm("dist", { recursive: true, force: true });
   await mkdir("dist/assets", { recursive: true });
   await cp("assets", "dist/assets", { recursive: true });
-  for (const file of ["styles.css", "client.js", "examples.js", "project-player.js", "hero-editor.js", "timeline-model.js", "locale.js", "ui-en.js", "editor-example-loader.js"]) await cp(`src/${file}`, `dist/assets/${file}`);
+  for (const file of ["styles.css", "client.js", "examples.js", "project-player.js", "hero-editor.js", "playback-ui.js", "timeline-model.js", "locale.js", "ui-en.js", "editor-example-loader.js"]) await cp(`src/${file}`, `dist/assets/${file}`);
   await cp("vendor/player", "dist/player", { recursive: true });
   await cp("vendor/editor", "dist/editor", { recursive: true });
   const editorEntry = await readFile("vendor/editor/index.html", "utf8");

@@ -3,6 +3,7 @@ import { readFile, readdir, stat } from "node:fs/promises";
 import { resolve, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { build } from "./build.mjs";
 import { examples } from "../src/examples.js";
 import { api, groups, lessons } from "../src/content.js";
@@ -160,3 +161,6 @@ for (const example of examples.filter(e => e.id !== "showcase")) {
 console.log(`Verified ${htmlFiles.length} pages, links, original Player bytes, and ${examples.length} portable MacroFlush projects; original Clip sources match except declared site edits and new examples.`);
 console.log(`Verified ${Object.keys(editorProvenance.files).length} original Editor files and both OnlineEditor pages.`);
 await import("./check-timeline.mjs");
+execFileSync(process.execPath, ["--experimental-vm-modules", "scripts/check-previews.mjs"], {
+  stdio: "inherit", env: { ...process.env, NODE_NO_WARNINGS: "1" }
+});

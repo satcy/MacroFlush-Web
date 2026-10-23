@@ -1,6 +1,6 @@
 import { translate as t } from "./locale.js";
 import { examples } from "./examples.js";
-import { HeroEditor, updateProgress, timecode } from "./hero-editor.js";
+import { updateProgress, timecode } from "./playback-ui.js";
 
 // Keep the current Reference anchor when switching language.
 function updateLanguageLinks() {
@@ -19,7 +19,11 @@ let heroTime = 0;
 let heroPlaying = !reduceMotion.matches;
 let heroEditor;
 const getRuntime = () => runtime ??= import("./project-player.js");
-const canvases = [...document.querySelectorAll("canvas[data-project]")].map(canvas => ({ canvas, card: canvas.closest(".demo-card"), observationTarget: canvas.closest(".hero-preview") || canvas, example: examples.find(e => e.id === canvas.dataset.project), visible: false, time: 0, warmed: false, hovered: false, keyboardFocus: false, running: false }));
+const canvases = [...document.querySelectorAll("canvas[data-project]")].map(canvas => ({ canvas, card: canvas.closest(".demo-card"), hero: Boolean(canvas.closest(".hero-preview")), observationTarget: canvas.closest(".hero-preview") || canvas, example: examples.find(e => e.id === canvas.dataset.project), visible: false, time: 0, warmed: false, hovered: false, keyboardFocus: false, running: false }));
+const observedItems = new Map(canvases.map(item => [item.observationTarget, item]));
+const activeItems = new Set();
+const cardInteractive = item => !reduceMotion.matches && (item.hovered || item.keyboardFocus);
+const needsRender = preview => preview?.initialized && !preview.failed && (!preview.hasFrame || preview.dirty);
 
 function pauseCard(item) {
   if (!item.card) return;
@@ -29,7 +33,7 @@ function pauseCard(item) {
 }
 for (const item of canvases.filter(item => item.card)) {
   item.card.addEventListener("pointerenter", event => {
-    if (event.pointerType !== "touch") item.hovered = true;
+    if (event.pointerType !== "touch") { item.hovered = true; requestFrame(); }
   });
   item.card.addEventListener("pointerleave", () => {
     if (item.hovered) item.warmed = true;
@@ -38,6 +42,7 @@ for (const item of canvases.filter(item => item.card)) {
   });
   item.card.addEventListener("focusin", event => {
     item.keyboardFocus = event.target.matches(":focus-visible");
+    if (item.keyboardFocus) requestFrame();
   });
   item.card.addEventListener("focusout", event => {
     if (item.card.contains(event.relatedTarget)) return;
@@ -51,7 +56,7 @@ function tickCard(item, delta, now) {
   const preview = item.preview;
   if (!preview?.initialized || preview.failed) return;
   const posterTime = Math.min(15, preview.composition.durationFrames - 1) / preview.composition.fps;
-  const interactive = !reduceMotion.matches && (item.hovered || item.keyboardFocus);
+  const interactive = cardInteractive(item);
   // Wait for an actual bitmap before advancing this card's independent clock.
   if (!preview.hasFrame) {
     if (reduceMotion.matches) { item.time = posterTime; item.warmed = true; }
@@ -60,8 +65,9 @@ function tickCard(item, delta, now) {
   }
   if (interactive || (!item.warmed && !reduceMotion.matches)) {
     item.time = interactive ? item.time + delta : Math.min(posterTime, item.time + delta);
+    const state = interactive ? "playing" : "warming";
+    if (item.card.dataset.previewState !== state) item.card.dataset.previewState = state;
     item.running = true;
-    item.card.dataset.previewState = interactive ? "playing" : "warming";
     preview.tick(item.time, true, now);
     if (item.time >= posterTime) item.warmed = true;
     if (!interactive && item.warmed) pauseCard(item);
@@ -72,34 +78,45 @@ function tickCard(item, delta, now) {
 function statusFor(canvas) {
   const surface = canvas.closest("[data-player-surface]");
   const label = surface.querySelector(".player-status");
-  return (state, text) => { surface.dataset.state = state; label.textContent = text; label.hidden = state === "ready"; };
+  return (state, text) => { surface.dataset.state = state; label.textContent = text; label.hidden = state === "ready"; requestFrame(); };
 }
 async function mount(item) {
   if (item.preview || item.loading) return;
   item.loading = true;
   try {
     const { ProjectPreview } = await getRuntime();
-    if (disposed) return;
-    const isHero = Boolean(item.canvas.closest(".hero-preview"));
-    item.preview = new ProjectPreview(item.canvas, item.example, { fps: isHero ? 30 : 15, editable: isHero, onStatus: statusFor(item.canvas) });
-    if (isHero) {
-      await item.preview.loading;
+    if (disposed || document.hidden || dialog.open || !activeItems.has(item)) return;
+    item.preview = new ProjectPreview(item.canvas, item.example, { fps: item.hero ? 30 : 15, editable: item.hero, onStatus: statusFor(item.canvas), onInvalidate: requestFrame });
+    if (item.hero) {
+      const [{ HeroEditor }] = await Promise.all([import("./hero-editor.js"), item.preview.loading]);
       if (!disposed && !item.preview.failed) heroEditor = new HeroEditor({ preview: item.preview, root: document.querySelector("#hero-editor"), getTime: () => heroTime, seek: value => { heroTime = value; item.preview.requestRender(); }, pause: pauseHero });
     }
   } catch (error) { statusFor(item.canvas)("error", error.message); }
+  finally { item.loading = false; }
+}
+function updateActive(item) {
+  if (item.visible && !item.card?.hidden) {
+    activeItems.add(item);
+    if (!document.hidden && !dialog.open) void mount(item);
+  } else {
+    activeItems.delete(item);
+    if (item.card) pauseCard(item); else item.preview?.pauseMedia();
+  }
 }
 const observer = new IntersectionObserver(entries => {
   for (const entry of entries) {
-    const item = canvases.find(c => c.observationTarget === entry.target);
+    const item = observedItems.get(entry.target);
     if (!item) continue;
     item.visible = entry.isIntersecting;
-    if (item.visible) mount(item); else { pauseCard(item); item.preview?.pauseMedia(); }
+    updateActive(item);
   }
+  requestFrame();
 }, { rootMargin: "80px" });
 for (const item of canvases) observer.observe(item.observationTarget);
 
 reduceMotion.addEventListener("change", e => {
   if (e.matches) { canvases.forEach(pauseCard); demoPlaying = false; pauseHero(); updateDemoPlay(); }
+  requestFrame();
 });
 function updateHeroPlay() {
   const button = document.querySelector("#hero-play");
@@ -107,7 +124,7 @@ function updateHeroPlay() {
 }
 function pauseHero() { heroPlaying = false; updateHeroPlay(); }
 updateHeroPlay();
-document.querySelector("#hero-play")?.addEventListener("click", () => { heroPlaying = !heroPlaying; updateHeroPlay(); });
+document.querySelector("#hero-play")?.addEventListener("click", () => { heroPlaying = !heroPlaying; updateHeroPlay(); requestFrame(); });
 document.querySelector("#hero-rewind")?.addEventListener("click", () => { pauseHero(); heroTime = 0; heroEditor?.preview.requestRender(); });
 document.querySelector("#hero-seek")?.addEventListener("input", event => {
   pauseHero(); heroTime = Number(event.target.value) / (heroEditor?.composition.fps || 60); heroEditor?.preview.requestRender();
@@ -121,6 +138,7 @@ const sourceClip = document.querySelector("#source-clip");
 const sourceTab = document.querySelector("#source-tab");
 const audioButton = document.querySelector("#demo-audio");
 const demoSeek = document.querySelector("#demo-seek");
+const demoTimecode = document.querySelector("#demo-timecode");
 let selected = null;
 let dialogPreview;
 let generation = 0;
@@ -142,8 +160,8 @@ sourceTab.addEventListener("change", showSource);
 async function mountDialog(token, example) {
   try {
     const { ProjectPreview, loadProject, getComposition } = await getRuntime();
-    if (token !== generation || !dialog.open) return;
-    const preview = new ProjectPreview(dialogCanvas, example, { fps: 30, onStatus: statusFor(dialogCanvas) });
+    if (disposed || token !== generation || !dialog.open) return;
+    const preview = new ProjectPreview(dialogCanvas, example, { fps: 30, onStatus: statusFor(dialogCanvas), onInvalidate: requestFrame });
     dialogPreview = preview;
     preview.setMuted(audioButton.getAttribute("aria-pressed") !== "true");
     const project = await loadProject(example.projectUrl);
@@ -180,20 +198,24 @@ function openDemo(id) {
   updateDemoPlay(); dialog.showModal();
   canvases.forEach(item => { pauseCard(item); item.preview?.pauseMedia(); });
   void mountDialog(++generation, example);
+  requestFrame();
 }
 document.querySelectorAll("[data-demo]").forEach(button => button.addEventListener("click", () => openDemo(button.dataset.demo)));
 document.querySelector("#dialog-close").addEventListener("click", () => dialog.close());
 dialog.addEventListener("click", e => {
   if (e.target === dialog) { const rect = dialog.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close(); }
 });
-dialog.addEventListener("close", () => { generation++; dialogPreview?.destroy(); dialogPreview = null; selected = null; demoPlaying = false; });
-demoPlay.addEventListener("click", () => { demoPlaying = !demoPlaying; updateDemoPlay(); if (!demoPlaying) dialogPreview?.pauseMedia(); });
+dialog.addEventListener("close", () => {
+  generation++; dialogPreview?.destroy(); dialogPreview = null; selected = null; demoPlaying = false;
+  activeItems.forEach(item => void mount(item)); requestFrame();
+});
+demoPlay.addEventListener("click", () => { demoPlaying = !demoPlaying; updateDemoPlay(); if (!demoPlaying) dialogPreview?.pauseMedia(); requestFrame(); });
 document.querySelector("#demo-reset").addEventListener("click", () => {
   demoTime = 0; dialogPreview?.destroy(); dialogPreview = null;
   statusFor(dialogCanvas)("loading", t("Projectを読み込み中…"));
   if (selected) void mountDialog(++generation, selected);
 });
-speed.addEventListener("input", () => { document.querySelector("#speed-output").textContent = `${Number(speed.value).toFixed(1)}×`; });
+speed.addEventListener("input", () => { document.querySelector("#speed-output").textContent = `${Number(speed.value).toFixed(1)}×`; requestFrame(); });
 demoSeek.addEventListener("input", () => {
   demoPlaying = false; demoTime = Number(demoSeek.value) / (dialogPreview?.composition?.fps || 60);
   updateDemoPlay(); dialogPreview?.requestRender(); dialogPreview?.pauseMedia();
@@ -204,37 +226,50 @@ audioButton.addEventListener("click", () => {
   dialogPreview?.setMuted(!enabled);
 });
 
-let animation;
+let animation = null;
+function requestFrame() {
+  if (disposed || document.hidden || animation !== null) return;
+  last = performance.now();
+  animation = requestAnimationFrame(frame);
+}
+function needsFrames() {
+  if (dialog.open) return dialogPreview?.initialized && !dialogPreview.failed && (needsRender(dialogPreview) || demoPlaying && Number(speed.value) > 0);
+  for (const item of activeItems) {
+    const preview = item.preview;
+    if (needsRender(preview) || preview?.initialized && !preview.failed && (item.hero ? heroPlaying : cardInteractive(item) || !item.warmed && !reduceMotion.matches)) return true;
+  }
+  return false;
+}
 function frame(now) {
+  animation = null;
   const delta = Math.min((now - last) / 1000, 0.1); last = now;
   if (!document.hidden) {
     if (dialog.open && selected) {
-      if (demoPlaying) demoTime += delta * Number(speed.value);
-      dialogPreview?.tick(demoTime, demoPlaying, now);
+      const playing = demoPlaying && Number(speed.value) > 0;
+      if (playing) demoTime += delta * Number(speed.value);
+      dialogPreview?.tick(demoTime, playing, now);
       if (dialogPreview?.composition) {
         const composition = dialogPreview.composition;
         const frame = updateProgress(demoSeek, demoTime, composition.fps, composition.durationFrames);
-        document.querySelector("#demo-timecode").textContent = timecode(frame, composition.fps);
+        const label = timecode(frame, composition.fps);
+        if (demoTimecode.textContent !== label) demoTimecode.textContent = label;
       }
     } else {
-      for (const item of canvases) {
-        if (item.visible && !item.canvas.closest("[hidden]")) {
-          if (item.canvas.closest(".hero-preview")) {
-            if (heroPlaying && item.preview?.hasFrame) heroTime += delta;
-            item.preview?.tick(heroTime, heroPlaying, now); heroEditor?.tick(heroTime);
-          } else tickCard(item, delta, now);
-        }
-        else if (item.card) { if (item.running) pauseCard(item); }
-        else item.preview?.pauseMedia();
+      for (const item of activeItems) {
+        if (item.hero) {
+          if (heroPlaying && item.preview?.hasFrame) heroTime += delta;
+          item.preview?.tick(heroTime, heroPlaying, now); heroEditor?.tick(heroTime);
+        } else tickCard(item, delta, now);
       }
     }
   }
-  animation = requestAnimationFrame(frame);
+  if (!disposed && !document.hidden && animation === null && needsFrames()) animation = requestAnimationFrame(frame);
 }
-if (canvases.length) animation = requestAnimationFrame(frame);
 document.addEventListener("visibilitychange", () => {
-  last = performance.now();
-  if (document.hidden) { canvases.forEach(item => { pauseCard(item); item.preview?.pauseMedia(); }); dialogPreview?.pauseMedia(); }
+  if (document.hidden) {
+    cancelAnimationFrame(animation); animation = null;
+    canvases.forEach(item => { pauseCard(item); item.preview?.pauseMedia(); }); dialogPreview?.pauseMedia();
+  } else { activeItems.forEach(item => void mount(item)); requestFrame(); }
 });
 window.addEventListener("pagehide", () => {
   disposed = true; cancelAnimationFrame(animation); observer.disconnect(); generation++;
@@ -253,7 +288,9 @@ document.querySelectorAll("[data-filter]").forEach(button => button.addEventList
   document.querySelectorAll("[data-filter]").forEach(b => b.setAttribute("aria-pressed", String(b === button)));
   let count = 0;
   document.querySelectorAll(".examples-grid .demo-card").forEach(card => { card.hidden = button.dataset.filter !== "All" && card.dataset.category !== button.dataset.filter; if (!card.hidden) count++; });
+  for (const item of canvases) updateActive(item);
   document.querySelector("#example-count").textContent = `${count} EXAMPLES`;
+  requestFrame();
 }));
 const search = document.querySelector("#reference-search");
 if (search) {

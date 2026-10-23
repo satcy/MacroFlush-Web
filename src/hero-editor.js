@@ -1,23 +1,12 @@
 import { translate as t } from "./locale.js";
 import { clamp, frameAtTime, componentValue, withComponent, valueAtFrame, moveKeyframe, snapshotClip, restoreClip } from "./timeline-model.js";
+import { updateProgress, timecode } from "./playback-ui.js";
 
 const svgNode = (tag, attrs = {}) => {
   const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
   for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
   return node;
 };
-export function updateProgress(input, time, fps, durationFrames) {
-  const frame = frameAtTime(time, fps, durationFrames);
-  if (document.activeElement !== input) input.value = String(frame);
-  input.style.setProperty("--progress", `${frame / Math.max(1, durationFrames - 1) * 100}%`);
-  input.setAttribute("aria-valuetext", `${frame} frame / ${(frame / fps).toFixed(2)} sec`);
-  return frame;
-}
-export function timecode(frame, fps) {
-  const seconds = Math.floor(frame / fps);
-  return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}:${String(frame % fps).padStart(2, "0")}`;
-}
-
 export class HeroEditor {
   constructor({ preview, root, getTime, seek, pause }) {
     this.preview = preview; this.root = root; this.getTime = getTime; this.seek = seek; this.pause = pause;

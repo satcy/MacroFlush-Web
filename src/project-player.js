@@ -23,15 +23,17 @@ export function getComposition(project) {
 }
 
 export class ProjectPreview {
-  constructor(canvas, example, { fps = 20, onStatus = () => {}, editable = false } = {}) {
+  constructor(canvas, example, { fps = 20, onStatus = () => {}, onInvalidate = () => {}, editable = false } = {}) {
     this.canvas = canvas;
     this.example = example;
     this.fps = fps;
     this.onStatus = onStatus;
+    this.onInvalidate = onInvalidate;
     this.editable = editable;
     this.destroyed = false;
     this.hasFrame = false;
     this.muted = true;
+    this.mediaPlaying = false;
     this.blobUrls = [];
     this.abort = new AbortController();
     this.lastTick = -Infinity;
@@ -39,7 +41,10 @@ export class ProjectPreview {
     this.host = document.createElement("div");
     this.host.className = "macroflush-runtime";
     document.body.append(this.host);
-    this.mediaObserver = new MutationObserver(() => this.setMuted(this.muted));
+    this.mediaObserver = new MutationObserver(() => {
+      this.setMuted(this.muted);
+      if (!this.mediaPlaying) this.pauseHostMedia();
+    });
     this.mediaObserver.observe(this.host, { childList: true, subtree: true });
     this.setStatus("loading", t("Projectを読み込み中…"));
     this.loading = this.initialize();
@@ -52,7 +57,9 @@ export class ProjectPreview {
 
   async initialize() {
     try {
-      const project = structuredClone(await loadProject(this.example.projectUrl));
+      const source = await loadProject(this.example.projectUrl);
+      if (this.destroyed) return;
+      const project = structuredClone(source);
       this.document = project;
       const url = new URL(this.example.projectUrl, location.href);
       const composition = getComposition(project);
@@ -80,7 +87,7 @@ export class ProjectPreview {
         : project;
       this.runtimeProject = runtimeProject;
       this.player = createClipPlayer({
-        project: runtimeProject, canvas: this.canvas, iframeHost: this.host,
+        project: runtimeProject, canvas: this.canvas, iframeHost: this.host, mediaPlaying: false,
         assetBaseUrl: new URL(".", url).href, frameTransferFps: this.fps,
         onError: error => this.fail(error),
         onComposite: () => {
@@ -110,6 +117,7 @@ export class ProjectPreview {
       this.initialized = true;
       this.setMuted(this.muted);
       this.startupActiveMs = 0;
+      this.onInvalidate();
     } catch (error) { if (!this.destroyed) this.fail(error); }
   }
 
@@ -130,7 +138,8 @@ export class ProjectPreview {
       this.startupActiveMs += Math.min(now - this.lastTick, 1000 / this.tickFps);
       if (this.startupActiveMs > 15000) { this.fail(new Error(t("Playerの描画が完了しませんでした"))); return; }
     }
-    if (!playing && this.hasFrame && this.lastTime === time && !this.dirty) { this.pauseMedia(); return; }
+    this.setPlaying(playing);
+    if (!playing && this.hasFrame && this.lastTime === time && !this.dirty) return;
     this.lastTick = now;
     this.lastTime = time;
     try {
@@ -150,7 +159,6 @@ export class ProjectPreview {
       }
     }
     catch (error) { this.fail(error); }
-    if (!playing) this.pauseMedia();
   }
 
   requestRender() {
@@ -160,9 +168,17 @@ export class ProjectPreview {
     if (this.editable && this.runtimeProject?.layers) this.runtimeProject.layers = [...this.runtimeProject.layers];
     this.dirty = true;
     this.pendingCapture = null;
+    if (!this.destroyed) this.onInvalidate();
   }
 
-  pauseMedia() { this.host.querySelectorAll("audio,video").forEach(media => media.pause()); }
+  setPlaying(playing) {
+    if (this.mediaPlaying === playing) return;
+    this.mediaPlaying = playing;
+    this.player?.setMediaPlaying(playing);
+    if (!playing) this.pauseHostMedia();
+  }
+  pauseHostMedia() { this.host.querySelectorAll("audio,video").forEach(media => { if (!media.paused) media.pause(); }); }
+  pauseMedia() { this.setPlaying(false); }
   setMuted(muted) { this.muted = muted; this.host.querySelectorAll("audio,video").forEach(media => { media.muted = muted; }); }
   releaseBlobs() { this.blobUrls.forEach(url => URL.revokeObjectURL(url)); this.blobUrls = []; }
   destroy() {
