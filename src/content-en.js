@@ -117,12 +117,12 @@ export const lessonTranslations = {
     ]
   },
   export: {
-    title: "Export your motion", summary: "Export PNG sequences, MP4 and ProRes from the desktop app.",
+    title: "Export your motion", summary: "Export PNG sequences and H.264 from the browser Editor and the app, and ProRes from the app.",
     steps: [
-      { title: "Check the Composition", text: "Open your project in the Electron version of MacroFlush and select the Composition to export. Preview the first, middle and last frames. This tutorial covers HTML Clips drawing with Centi's canvas." },
-      { title: "Open Export Media", text: "Choose a format under File > Export Media. PNG Sequence exports image sequences, H.264 MP4 exports video, and Apple ProRes MOV exports video for editing. Set the frame range and output resolution, then export." },
-      { title: "Choose output settings", text: "For MP4, adjust quality with CRF or a target bitrate. For transparency, choose PNG or ProRes 4444 / 4444 XQ, which retain alpha. Audio Clips placed on the Timeline can be mixed into the output." },
-      { title: "Review the files", text: "Check the exported resolution, duration, audio and alpha when needed. Current export support has Clip-specific limits. Check the app's README for support for nested Compositions, WGSL, DOM-only HTML Clips and other formats." }
+      { title: "Check the Composition", text: "Open your project in the browser Editor (OnlineEditor) or the MacroFlush app and select the Composition to export. ProRes requires the app. Preview the first, middle and last frames. This tutorial covers HTML Clips drawing with Centi's canvas." },
+      { title: "Open Export Media", text: "Choose a format under File > Export Media. PNG Sequence exports image sequences and H.264 MP4 exports video. Apple ProRes MOV exports video for editing and is available only in the app. Set the frame range and output resolution, then export." },
+      { title: "Choose output settings", text: "For MP4, adjust quality with the target bitrate (Mbps, default 8). H.264 needs an even width and height of at least 2, and transparency is flattened onto black. For transparency, choose PNG or ProRes 4444 / 4444 XQ (app), which retain alpha. Audio Clips placed on the Timeline can be mixed into the output." },
+      { title: "Review the files", text: "Check the exported resolution, duration, audio and alpha when needed. In the browser, files are saved directly to a folder or file when the browser allows it; otherwise an MP4 or a ZIP of PNGs is downloaded (limited to 128 MiB when direct saving is unavailable). Current export support has Clip-specific limits. Check the app's README for support for nested Compositions, WGSL, DOM-only HTML Clips and other formats." }
     ]
   }
 };

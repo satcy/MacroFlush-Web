@@ -52,11 +52,11 @@ export const lessons = [
     { title: "透明な背景にする", text: "上に重ねるClipではbg(0, 0)で背景色を透明に設定し、毎フレームclear()で描き直します。背景を不透明に塗るfillRect()も外すと、下のレイヤーが見えるようになります。Inspectorでposition、scale、rotation、opacityを調整して配置を整えます。", code: "// CentiのClipで透明にクリアする\nonFrame(({ time }) => {\n  clear();\n  col(\"#ff6c9a\");\n  oval(360, 202, 40 + Math.sin(time) * 20);\n});" },
     { title: "Cueで区間を決める", text: "コードエディタのCuesタブにCueを記述します。通常のClipのJavaScriptではなく、コンポジション全体に属する定義です。Timelineへ反映されたCueの区間とmodeを確認してください。", code: "cue(\"Intro\", 0, { mode: \"none\", endFrame: 180 });\ncue(\"Loop\", 180, { mode: \"loop\", endFrame: 360 });" }
   ] },
-  { id: "export", number: "04", title: "映像を書き出す", level: "Export", summary: "デスクトップ版でPNG連番・MP4・ProResを出力する。", steps: [
-    { title: "出力するコンポジションを確認する", text: "Electron版MacroFlushでプロジェクトを開き、出力するコンポジションを選択します。プレビューで先頭・中間・最後のフレームを確認します。このチュートリアルではCentiのCanvasを使ったHTML Clipを対象にします。" },
-    { title: "Export Mediaを開く", text: "File > Export Mediaから形式を選びます。PNG Sequenceは連番画像、H.264 MP4は動画、Apple ProRes MOVは編集向けの動画形式です。フレーム範囲と出力解像度を設定して書き出します。" },
-    { title: "用途に合わせて設定する", text: "MP4はCRFまたは目標ビットレートで品質を調整できます。透明背景が必要ならPNG、またはアルファを保持するProRes 4444 / 4444 XQを選びます。音声はTimelineに配置した音声Clipをミックスできます。" },
-    { title: "ファイルを確認する", text: "出力したファイルの解像度、尺、音声、必要な場合はアルファを確認します。現行の書き出しには対象Clipの制約があります。ネストしたCompositionやWGSL、DOMのみのHTML Clipなどは対応状況をアプリのREADMEで確認してください。" }
+  { id: "export", number: "04", title: "映像を書き出す", level: "Export", summary: "ブラウザ版EditorとアプリでPNG連番・H.264を、アプリでProResを出力する。", steps: [
+    { title: "出力するコンポジションを確認する", text: "ブラウザ版Editor（OnlineEditor）またはアプリ版MacroFlushでプロジェクトを開き、出力するコンポジションを選択します。ProResを使う場合はアプリ版が必要です。プレビューで先頭・中間・最後のフレームを確認します。このチュートリアルではCentiのCanvasを使ったHTML Clipを対象にします。" },
+    { title: "Export Mediaを開く", text: "File > Export Mediaから形式を選びます。PNG Sequenceは連番画像、H.264 MP4は動画です。Apple ProRes MOVは編集向けの動画形式で、アプリ版だけで書き出せます。フレーム範囲と出力解像度を設定して書き出します。" },
+    { title: "用途に合わせて設定する", text: "MP4は目標ビットレート（Mbps、既定8）で品質を調整します。H.264は幅と高さが2以上の偶数で、透明部分は黒に合成されます。透明背景が必要ならPNG、またはアルファを保持するProRes 4444 / 4444 XQ（アプリ版）を選びます。音声はTimelineに配置した音声Clipをミックスできます。" },
+    { title: "ファイルを確認する", text: "出力したファイルの解像度、尺、音声、必要な場合はアルファを確認します。ブラウザ版では、ブラウザが許せばフォルダやファイルへ直接保存され、そうでなければMP4または連番PNGのZIPがダウンロードされます（直接保存できないときは128 MiBまで）。現行の書き出しには対象Clipの制約があります。ネストしたCompositionやWGSL、DOMのみのHTML Clipなどは対応状況をアプリのREADMEで確認してください。" }
   ] },
   threeDLesson
 ];
