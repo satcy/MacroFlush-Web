@@ -41,7 +41,7 @@ Topの「はじめる」はOnlineEditorを開きます。各作例の「Editor�
 
 エディタだけをアプリの最新ビルドから取り込むには `npm run sync:editor`、続けて `npm run check` を実行します。既定の参照先は `../MacroFlush/dist` です。`MACROFLUSH_ROOT` でアプリの場所を指定できます。取り込んだ各ファイルのSHA-256は `vendor/editor-provenance.json` に記録します。ビルド・GitHub Pagesの公開時にアプリ本体は不要です。
 
-Topに対応環境の案内、Aboutに機能比較表、Referenceに項目ごとの対応環境ラベルを表示します。ProRes書き出し、MCP、UDP OSC、LLMアシスタント、ステム分離はアプリ版の機能です。H.264動画とPNG連番の書き出しはブラウザ版Editorでも使えます。Shader Clipと記録済みFeedbackはブラウザでも再生できます。FeedbackのPointer記録はEditor、OSC記録はアプリ版で使用します。
+Topに対応環境の案内、Aboutに機能比較表、Referenceに項目ごとの対応環境ラベルを表示します。ProRes書き出し、MCP、UDP OSC、LLMアシスタント、ステム分離はアプリ版の機能です。H.264動画とPNG連番の書き出しはブラウザ版Editorでも使えます。Shader Clipと記録済みFeedbackはブラウザでも再生できます。FeedbackのPointer記録とFeedback EditorはEditor（ブラウザ版Editorの編集はアプリ側で未検証）、OSC記録はアプリ版で使用します。
 
 画像付きの `/tutorials/timeline-3d/` ではScene・Mesh・Camera・Light・NullをTimelineで配置し、rotationキーで動かす手順を紹介します。`assets/tutorials/timeline-3d/` の5枚は同梱の実Editorを操作した画面です。開始用・完成版JSONは `projects/tutorials/timeline-3d/`、Editor起動用カタログは `src/examples.js` の `editorProjects` に保持します。
 
@@ -66,7 +66,7 @@ Topに対応環境の案内、Aboutに機能比較表、Referenceに項目ごと
 - `scripts/`: ビルド、ローカルHTTPサーバー、検証
 - `scripts/sync-editor.mjs`: MacroFlushのブラウザ版エディタの配布ファイルをそのまま取り込み
 
-本文はローカルMacroFlush 0.3.17のREADMEとランタイム型定義を参照して作成。アプリの更新時はAPIと出力制約を再確認してください。TopとExamplesは `MacroFlush/dist/player` の実Playerを使い、`projects/` のMacroFlush V2プロジェクトJSONを読み込んで再生します。サイト側に代用の描画実装はありません。
+本文はローカルMacroFlush 0.3.18のREADMEとランタイム型定義を参照して作成。アプリの更新時はAPIと出力制約を再確認してください。TopとExamplesは `MacroFlush/dist/player` の実Playerを使い、`projects/` のMacroFlush V2プロジェクトJSONを読み込んで再生します。サイト側に代用の描画実装はありません。
 
 Showcaseはアプリ同梱の `src/sample/sampleProject.json` を元に、リンクメディアを埋め込んだポータブルなプロジェクトです。個別作例は同梱Clipから構成しています。Triadはサイト向けの編集版（`sourcePolicy: "site-edited"`）で、ほかの4作例は元のClipソースを保持します。p5 Orbitsはサイト独自の作例（`sourcePolicy: "site-authored"`）で、`clip.use("p5")`とTimeline同期の`millis()`を使い、p5.js 1.11.1をライセンスとともに埋め込んでいます。Triadとp5 Orbitsの検証では元ソースとの一致ではなく、JavaScriptの構文を確認します。同期時はTriadの編集内容を保持してください。独立した作例の配置を中央へ調整し、Autecは元のcolorキーフレームを保持します。
 

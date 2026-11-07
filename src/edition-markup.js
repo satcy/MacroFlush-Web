@@ -19,6 +19,7 @@ export function editionOverview({ compact = false } = {}) {
     ["Shader Clip / Effectの再生", "対応", "対応", "対応"],
     ["記録済みFeedbackの再生", "対応", "対応", "対応"],
     ["FeedbackのPointer記録", "対応", "非対応", "対応"],
+    ["Feedbackの編集", "対応", "非対応", "対応"],
     ["動画（H.264）・PNG連番の書き出し", "対応", "非対応", "対応"],
     ["ProResの書き出し", "非対応", "非対応", "対応"],
     ["MCPによる外部自動操作", "非対応", "非対応", "対応"],

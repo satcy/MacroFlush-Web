@@ -491,20 +491,31 @@ function Ie(e, t, n) {
 	Ee(r, [
 		"assetId",
 		"pointerChannelId",
+		"inputMode",
+		"pointerChannelIds",
 		"space",
 		"offset",
 		"rate",
 		"loop"
-	], "Clip binding"), De(r.assetId, "binding.assetId"), Ce.has(String(r.space)) || M("invalid-value", "Unknown Feedback coordinate space.");
-	let i = t.find((e) => e.id === r.assetId);
-	if ((!i || i.kind !== "feedback") && M("missing-asset", `Binding asset ${r.assetId} is not Feedback.`), Fe({
+	], "Clip binding");
+	let i = "inputMode" in r || "pointerChannelIds" in r;
+	if (i) {
+		("pointerChannelId" in r || r.inputMode !== "touch" || !Array.isArray(r.pointerChannelIds)) && M("invalid-format", "Touch binding requires inputMode 'touch' and pointerChannelIds, without pointerChannelId.");
+		let e = r.pointerChannelIds;
+		(!e.length || e.length > A.maxChannels) && M("size-limit", "Touch binding requires 1..32 pointer channels."), e.forEach((e) => De(e, "binding.pointerChannelIds entry")), new Set(e).size !== e.length && M("invalid-format", "Touch binding contains duplicate pointer channel IDs.");
+	}
+	De(r.assetId, "binding.assetId"), Ce.has(String(r.space)) || M("invalid-value", "Unknown Feedback coordinate space.");
+	let a = t.find((e) => e.id === r.assetId);
+	(!a || a.kind !== "feedback") && M("missing-asset", `Binding asset ${r.assetId} is not Feedback.`), Fe({
 		offset: r.offset,
 		rate: r.rate,
 		loop: r.loop
-	}, i.recording), r.pointerChannelId !== void 0) {
-		De(r.pointerChannelId, "binding.pointerChannelId");
-		let e = i.recording.channels.find((e) => e.id === r.pointerChannelId);
-		e || M("missing-channel", `Pointer channel ${r.pointerChannelId} is missing.`), e.kind !== "pointer" && M("unsupported-channel", `Channel ${r.pointerChannelId} is not pointer input.`);
+	}, a.recording);
+	let o = i ? r.pointerChannelIds : r.pointerChannelId === void 0 ? [] : [r.pointerChannelId];
+	for (let e of o) {
+		De(e, "binding.pointerChannelId");
+		let t = a.recording.channels.find((t) => t.id === e);
+		t || M("missing-channel", `Pointer channel ${e} is missing.`), t.kind !== "pointer" && M("unsupported-channel", `Channel ${e} is not pointer input.`);
 	}
 	n === "isolated-replay" && M("unsupported-playback", "Feedback input in isolated replay requires P4.");
 }
@@ -12067,13 +12078,14 @@ function dd(e) {
 		"touchstart",
 		"touchmove",
 		"touchend",
+		...e.input?.kind === "touch" ? ["touchcancel"] : [],
 		"devicemotion",
 		"deviceorientation",
 		"focus",
 		"blur",
 		"resize"
 	], C = (t) => {
-		e.input?.owns(t) || t.stopImmediatePropagation();
+		(e.input?.kind === "touch" || !e.input?.owns(t)) && t.stopImmediatePropagation();
 	}, w = [
 		"mouseX",
 		"mouseY",
@@ -12102,7 +12114,7 @@ function dd(e) {
 			"pRotationY",
 			"pRotationZ"
 		]) (!e.input || !w.includes(t)) && x(t, 0);
-		e.input || x("mouseIsPressed", !1), x("keyIsPressed", !1), x("isKeyPressed", !1), x("key", ""), x("touches", []), x("focused", !0), e.input || x("mouseButton", s.LEFT), x("deviceOrientation", s.LANDSCAPE);
+		e.input || x("mouseIsPressed", !1), x("keyIsPressed", !1), x("isKeyPressed", !1), x("key", ""), e.input?.kind !== "touch" && x("touches", []), x("focused", !0), e.input || x("mouseButton", s.LEFT), x("deviceOrientation", s.LANDSCAPE);
 	}, E = () => {
 		x("windowWidth", p.compositionWidth), x("windowHeight", p.compositionHeight);
 	}, D = (e) => {
@@ -12361,7 +12373,7 @@ function fd(e, t) {
 }
 //#endregion
 //#region src/runtime/vendor/feedback.global.js?raw
-var pd = "\"use strict\";var MacroFlushFeedbackKernel=(()=>{var T=Object.defineProperty;var Z=Object.getOwnPropertyDescriptor;var ee=Object.getOwnPropertyNames;var ne=Object.prototype.hasOwnProperty;var te=(e,r,n)=>r in e?T(e,r,{enumerable:!0,configurable:!0,writable:!0,value:n}):e[r]=n;var re=(e,r)=>{for(var n in r)T(e,n,{get:r[n],enumerable:!0})},ae=(e,r,n,l)=>{if(r&&typeof r==\"object\"||typeof r==\"function\")for(let c of ee(r))!ne.call(e,c)&&c!==n&&T(e,c,{get:()=>r[c],enumerable:!(l=Z(r,c))||l.enumerable});return e};var oe=e=>ae(T({},\"__esModule\",{value:!0}),e);var M=(e,r,n)=>te(e,typeof r!=\"symbol\"?r+\"\":r,n);var se={};re(se,{FEEDBACK_LIMITS:()=>f,createFeedbackDeliveryCursor:()=>G,createFeedbackInputIndex:()=>Q,createFeedbackSampler:()=>X,planFeedbackInput:()=>W,validateFeedbackDeliveryContext:()=>B});var f=Object.freeze({maxAssetBytes:16777216,maxProjectBytes:67108864,maxAssets:64,maxChannels:32,maxRecords:5e5,maxDurationUs:36e8,maxStringBytes:1024,maxRecordBytes:16384,maxArgs:16,maxValue:1e9,maxEventsPerTick:4096,maxLoopBoundariesPerTick:16,maxPointerHz:120,maxOscMessagesPerSecond:1e3,maxPageRecords:1e3,maxPageBytes:1048576,maxResourceCloneBytes:67108864,maxJsonDepth:32}),N=Object.freeze({offset:0,rate:1,loop:!1}),b=class extends Error{constructor(n,l,c={}){super(`Feedback: ${l}`);M(this,\"code\");M(this,\"assetId\");M(this,\"channelId\");this.name=\"FeedbackError\",this.code=n,this.assetId=c.assetId,this.channelId=c.channelId}};function D(e){return e.kind===\"pointer\"||e.kind===\"number\"||e.kind===\"osc\"}var J=new TextEncoder,ie=new Set([\"move\",\"down\",\"up\",\"enter\",\"leave\",\"cancel\",\"click\",\"double-click\",\"wheel\"]);var de=new Set([\"__proto__\",\"prototype\",\"constructor\"]);function s(e,r){throw new b(e,r)}function A(e,r){return(!e||typeof e!=\"object\"||Array.isArray(e))&&s(\"invalid-format\",`${r} must be an object.`),e}function E(e,r,n){Object.keys(e).some(l=>!r.includes(l))&&s(\"invalid-format\",`${n} contains an unknown field.`)}function j(e,r){(typeof e!=\"string\"||!e.trim()||e.includes(\"\\0\")||J.encode(e).length>f.maxStringBytes)&&s(\"invalid-value\",`${r} must be a non-empty string of at most ${f.maxStringBytes} UTF-8 bytes.`)}function O(e,r){(typeof e!=\"number\"||!Number.isFinite(e)||Math.abs(e)>f.maxValue)&&s(\"invalid-value\",`${r} is out of range.`)}function $(e,r,n,l){(typeof e!=\"number\"||!Number.isSafeInteger(e)||e<r||e>n)&&s(\"invalid-time\",`${l} must be an integer in range.`)}function K(e,r){O(e.x,`${r}.x`),O(e.y,`${r}.y`),(typeof e.buttons!=\"number\"||!Number.isInteger(e.buttons)||e.buttons<0||e.buttons>31||typeof e.inside!=\"boolean\")&&s(\"invalid-value\",`${r} has invalid buttons/inside.`)}function L(e){return Array.isArray(e)?((!e.length||e.length>f.maxArgs)&&s(\"invalid-value\",\"Numeric vectors require 1..16 values.\"),e.forEach(r=>O(r,\"Numeric vector value\")),e):(O(e,\"Numeric value\"),e)}function z(e,r=f.maxAssetBytes){let n=0,l=new Set,c=u=>{n+=u,n>r&&s(\"size-limit\",`JSON exceeds ${r} bytes.`)},C=u=>{u.length>r-n&&s(\"size-limit\",`JSON exceeds ${r} bytes.`),c(J.encode(JSON.stringify(u)).length)},h=(u,v)=>{if(v>f.maxJsonDepth&&s(\"size-limit\",\"JSON nesting is too deep.\"),u===null){c(4);return}if(typeof u==\"string\"){C(u);return}if(typeof u==\"boolean\"){c(u?4:5);return}if(typeof u==\"number\"&&Number.isFinite(u)){c(JSON.stringify(u).length);return}(!u||typeof u!=\"object\")&&s(\"invalid-format\",\"Expected finite, plain JSON data.\"),l.has(u)&&s(\"invalid-format\",\"JSON contains a cycle.\");let i=Object.getPrototypeOf(u);if((Array.isArray(u)?i!==Array.prototype:i!==Object.prototype&&i!==null)&&s(\"invalid-format\",\"JSON must use plain objects/arrays.\"),Object.getOwnPropertySymbols(u).length&&s(\"invalid-format\",\"JSON cannot contain symbol keys.\"),l.add(u),c(2),Array.isArray(u)){u.length>f.maxRecords&&s(\"size-limit\",\"JSON array exceeds the record limit.\"),Object.getOwnPropertyNames(u).length!==u.length+1&&s(\"invalid-format\",\"JSON arrays cannot have holes or extra properties.\");for(let o=0;o<u.length;o++){o&&c(1);let t=Object.getOwnPropertyDescriptor(u,String(o));(!t||!t.enumerable||!(\"value\"in t))&&s(\"invalid-format\",\"JSON cannot contain accessors or sparse arrays.\"),h(t.value,v+1)}}else Object.getOwnPropertyNames(u).forEach((t,m)=>{de.has(t)&&s(\"invalid-format\",\"JSON contains a reserved object key.\");let d=Object.getOwnPropertyDescriptor(u,t);(!d.enumerable||!(\"value\"in d))&&s(\"invalid-format\",\"JSON cannot contain accessors or hidden fields.\"),m&&c(1),C(t),c(1),h(d.value,v+1)});l.delete(u)};return h(e,0),n}function _(e){return e&&typeof e==\"object\"&&(Object.values(e).forEach(_),Object.freeze(e)),e}function H(e){let r=z(e),n=A(e,\"Feedback document\");E(n,[\"formatVersion\",\"timeUnit\",\"durationUs\",\"source\",\"channels\"],\"Feedback document\"),n.formatVersion!==1&&s(\"unsupported-version\",\"Only Feedback formatVersion 1 is supported.\"),n.timeUnit!==\"us\"&&s(\"invalid-time\",\"Feedback timeUnit must be us.\"),$(n.durationUs,0,f.maxDurationUs,\"durationUs\");let l=n.durationUs,c=A(n.source,\"source\");E(c,[\"compositionId\",\"width\",\"height\"],\"source\"),O(c.width,\"source.width\"),O(c.height,\"source.height\"),(c.width<1||c.height<1)&&s(\"invalid-value\",\"Source dimensions must be at least one logical pixel.\"),c.compositionId!==void 0&&j(c.compositionId,\"source.compositionId\"),Array.isArray(n.channels)||s(\"invalid-format\",\"Feedback requires a channels array.\"),n.channels.length>f.maxChannels&&s(\"size-limit\",\"Feedback requires at most 32 channels.\");let C=new Set,h=new Set,u=[],v=0,i=n.channels.map(o=>{let t=A(o,\"channel\");j(t.id,\"channel.id\"),j(t.kind,\"channel.kind\"),C.has(t.id)&&s(\"invalid-format\",`Duplicate channel ${t.id}.`),C.add(t.id);let m=[\"pointer\",\"number\",\"osc\"].includes(t.kind);if(!m)return t.records!==void 0&&!Array.isArray(t.records)&&s(\"invalid-format\",`Unknown channel ${t.id} has invalid records.`),v+=Array.isArray(t.records)?t.records.length:0,Array.isArray(t.records)&&t.records.forEach(y=>z(y,f.maxRecordBytes)),v>f.maxRecords&&s(\"size-limit\",\"Feedback exceeds 500,000 records.\"),u.push({code:\"unsupported-channel\",channelId:t.id,message:`Channel ${t.id} (${t.kind}) is retained but cannot be used.`}),{id:t.id,kind:t.kind,supported:m,records:Array.isArray(t.records)?t.records.length:0};E(t,t.kind===\"pointer\"?[\"id\",\"kind\",\"initial\",\"records\"]:t.kind===\"number\"?[\"id\",\"kind\",\"interpolation\",\"initial\",\"records\"]:[\"id\",\"kind\",\"address\",\"records\"],`Channel ${t.id}`),Array.isArray(t.records)||s(\"invalid-format\",`Channel ${t.id} requires records.`),v+=t.records.length,v>f.maxRecords&&s(\"size-limit\",\"Feedback exceeds 500,000 records.\");let d=-1;if(t.kind===\"pointer\"){let y=A(t.initial,\"pointer.initial\");E(y,[\"x\",\"y\",\"buttons\",\"inside\"],\"pointer.initial\"),K(y,\"pointer.initial\")}else if(t.kind===\"number\"){t.interpolation!==\"linear\"&&t.interpolation!==\"hold\"&&s(\"invalid-value\",\"Numeric interpolation must be linear or hold.\");let y=L(t.initial);d=Array.isArray(y)?y.length:-1}else j(t.address,\"OSC address\"),t.address.startsWith(\"/\")||s(\"invalid-value\",\"OSC address must start with /.\");let F=-1,g=-1;for(let y of t.records){let a=A(y,`Channel ${t.id} record`);if(z(a,f.maxRecordBytes),$(a.t,0,l,`Channel ${t.id} time`),$(a.seq,0,Number.MAX_SAFE_INTEGER,`Channel ${t.id} seq`),(a.t<F||a.seq<=g||h.has(a.seq))&&s(\"invalid-time\",`Channel ${t.id} has unordered or duplicate records.`),h.add(a.seq),F=a.t,g=a.seq,t.kind===\"pointer\"){E(a,[\"t\",\"seq\",\"x\",\"y\",\"buttons\",\"inside\",\"event\",\"button\",\"deltaX\",\"deltaY\"],\"pointer record\"),K(a,\"pointer record\"),a.event!==null&&(typeof a.event!=\"string\"||!ie.has(a.event))&&s(\"invalid-value\",\"Invalid pointer event.\");let k=[\"down\",\"up\",\"click\",\"double-click\"].includes(String(a.event));(k||a.button!==void 0)&&(typeof a.button!=\"number\"||!Number.isInteger(a.button)||a.button<0||a.button>4)&&s(\"invalid-value\",\"Invalid pointer button.\"),!k&&a.button!==void 0&&s(\"invalid-value\",\"Only button events may contain button.\"),(a.event===\"down\"&&!(a.buttons&[1,4,2,8,16][a.button])||a.event===\"up\"&&a.buttons&[1,4,2,8,16][a.button]||a.event===\"cancel\"&&a.buttons!==0||a.event===\"enter\"&&a.inside!==!0||a.event===\"leave\"&&a.inside!==!1)&&s(\"invalid-value\",\"Pointer event/state disagree.\"),a.event===\"wheel\"?(O(a.deltaX,\"deltaX\"),O(a.deltaY,\"deltaY\")):(a.deltaX!==void 0||a.deltaY!==void 0)&&s(\"invalid-value\",\"Only wheel events may contain deltas.\")}else if(t.kind===\"number\"){E(a,[\"t\",\"seq\",\"value\"],\"number record\");let k=L(a.value);(Array.isArray(k)?k.length:-1)!==d&&s(\"invalid-value\",\"Numeric values must have a fixed shape.\")}else{E(a,[\"t\",\"seq\",\"args\"],\"OSC record\"),(!Array.isArray(a.args)||a.args.length>f.maxArgs)&&s(\"invalid-value\",\"OSC requires at most 16 args.\");for(let k of a.args)typeof k==\"number\"?O(k,\"OSC arg\"):typeof k==\"string\"?(k.includes(\"\\0\")||J.encode(k).length>f.maxStringBytes)&&s(\"invalid-value\",\"OSC string is too large or contains NUL.\"):typeof k!=\"boolean\"&&s(\"invalid-value\",\"OSC args must be numbers, strings or booleans.\")}}return{id:t.id,kind:t.kind,supported:m,records:t.records.length}});return _({document:JSON.parse(JSON.stringify(e)),summary:{bytes:r,duration:n.durationUs/1e6,records:v,channels:i},warnings:u})}function q(e=N,r){let n=A(e,\"mapping\");E(n,[\"offset\",\"rate\",\"loop\"],\"mapping\"),(typeof n.offset!=\"number\"||!Number.isFinite(n.offset)||Math.abs(n.offset)>3600||typeof n.rate!=\"number\"||!Number.isFinite(n.rate)||Math.abs(n.rate)>16||typeof n.loop!=\"boolean\")&&s(\"invalid-time\",\"Mapping requires offset (-3600..3600), rate (-16..16), and loop.\"),n.loop&&r&&(r.durationUs||s(\"invalid-time\",\"Cannot loop an empty Feedback duration.\"),r.channels.some(l=>D(l)&&l.records.some(c=>c.t===r.durationUs&&(l.kind===\"osc\"||l.kind===\"pointer\"&&\"event\"in c&&c.event!==null)))&&s(\"invalid-time\",\"Looping Feedback cannot contain an event at its exact endpoint.\"))}function P(e){let r=Math.round(e*1e6);if(!Number.isFinite(e)||!Number.isSafeInteger(r))throw new b(\"invalid-time\",\"Time must be finite seconds within the safe microsecond range.\");return r}function V(e,r,n=N){if(q(n),!Number.isFinite(e))throw new b(\"invalid-time\",\"Clip-local time must be finite seconds.\");if(!Number.isSafeInteger(r)||r<0||r>f.maxDurationUs)throw new b(\"invalid-time\",\"Invalid Feedback duration.\");let l=P(e*n.rate+n.offset);if(n.loop){if(!r)throw new b(\"invalid-time\",\"Cannot loop an empty Feedback duration.\");return(l%r+r)%r}return Math.min(r,Math.max(0,l))}function U(e,r){let n=0,l=e.length;for(;n<l;){let c=Math.floor((n+l)/2);e[c].t<=r?n=c+1:l=c}return n}function X(e){let r=H(e),n=r.document,l=n.channels.some(i=>D(i)&&i.records.some(o=>o.t===n.durationUs&&(i.kind===\"osc\"||i.kind===\"pointer\"&&\"event\"in o&&o.event!==null))),c=new Map(n.channels.map(i=>[i.id,i])),C=i=>{let o=c.get(i);if(!o)throw new b(\"missing-channel\",`Channel ${i} is missing.`,{channelId:i});if(!D(o))throw new b(\"unsupported-channel\",`Channel ${i} (${o.kind}) cannot be read.`,{channelId:i});return o},h=(i,o)=>{let t=i.space??\"composition\";if(t===\"composition\")return[1,1];if(t===\"normalized\")return[1/n.source.width,1/n.source.height];if(t!==\"clip\"||!o||![o.clipWidth,o.clipHeight].every(m=>Number.isFinite(m)&&m>0&&m<=f.maxValue))throw new b(\"invalid-value\",\"Clip space requires positive logical Clip dimensions.\");return[o.clipWidth/n.source.width,o.clipHeight/n.source.height]},u=(i,o,t)=>{let[m,d]=h(o,t);return{kind:\"pointer\",x:i.x*m,y:i.y*d,buttons:i.buttons,inside:i.inside}},v=(i,o,t={},m)=>{let d=C(i);if(d.kind!==\"pointer\"&&t.space!==void 0)throw new b(\"invalid-value\",\"Only pointer channels accept a coordinate space.\");let F=U(d.records,o)-1;if(d.kind===\"osc\"){let p=d.records[F];return p?{kind:\"osc\",address:d.address,args:[...p.args]}:null}let g=d.records[F],y=d.records[F+1],a=y?Math.max(0,Math.min(1,(o-(g?.t??0))/Math.max(1,y.t-(g?.t??0)))):0;if(d.kind===\"pointer\"){let p=d.records[F]??d.initial,w=d.records[F+1],I=w&&p.inside&&w.inside&&w.event!==\"cancel\"&&!(\"event\"in p&&p.event===\"cancel\");return u({...p,x:I?p.x+(w.x-p.x)*a:p.x,y:I?p.y+(w.y-p.y)*a:p.y},t,m)}let k=d.records[F]?.value??d.initial,x=d.records[F+1]?.value,S=(p,w)=>d.interpolation===\"linear\"?p+(w-p)*a:p;return{kind:\"number\",value:Array.isArray(k)?k.map((p,w)=>x===void 0?p:S(p,x[w])):x===void 0?k:S(k,x)}};return{document:n,summary:r.summary,warnings:r.warnings,validateMapping(i){if(q(i),i.loop&&(!n.durationUs||l))throw new b(\"invalid-time\",\"Cannot loop empty Feedback or an endpoint event.\")},at(i,o,t={},m){return v(i,Math.min(n.durationUs,Math.max(0,P(o))),t,m)},sample(i,o,t=N,m={},d){if(q(t),t.loop&&l)throw new b(\"invalid-time\",\"Looping Feedback cannot contain an event at its exact endpoint.\");return v(i,V(o,n.durationUs,t),m,d)},events(i,o,t,m={},d){if(o>t)throw new b(\"invalid-time\",\"Event range must be ascending.\");let F=P(o),g=P(t),y=C(i);if(y.kind!==\"pointer\"&&m.space!==void 0)throw new b(\"invalid-value\",\"Only pointer channels accept a coordinate space.\");y.kind===\"pointer\"&&h(m,d);let a=[];if(y.kind===\"number\")return a;let k=U(y.records,F),x=U(y.records,g);for(let S=k;S<x;S++){let R=y.records[S];if(y.kind===\"pointer\"){let p=y.records[S];if(p.event===null)continue;let[w,I]=h(m,d);a.push({...u(p,m,d),channelId:i,time:p.t/1e6,seq:p.seq,event:p.event,...p.button===void 0?{}:{button:p.button},...p.deltaX===void 0?{}:{deltaX:p.deltaX*w},...p.deltaY===void 0?{}:{deltaY:p.deltaY*I}})}else a.push({kind:\"osc\",channelId:i,time:R.t/1e6,seq:R.seq,address:y.address,args:[...y.records[S].args]});if(a.length>f.maxEventsPerTick)throw new b(\"event-budget\",`Channel ${i} exceeds the event limit; request a smaller interval.`,{channelId:i})}return a}}}function Y(e,r){if(!Number.isSafeInteger(e)||e<1)throw new b(\"invalid-time\",`Invalid ${r}.`);return e}function B(e){if(!e||Object.getPrototypeOf(e)!==Object.prototype)throw new b(\"invalid-format\",\"Invalid input delivery context.\");if(Object.getOwnPropertySymbols(e).length)throw new b(\"invalid-format\",\"Invalid input delivery symbol field.\");let r=[\"transportEpoch\",\"deliveryId\",\"mode\",\"previousLocalTime\"];for(let[n,l]of Object.entries(Object.getOwnPropertyDescriptors(e)))if(!r.includes(n)||!l.enumerable||!(\"value\"in l))throw new b(\"invalid-format\",\"Invalid input delivery field.\");if(Y(e.transportEpoch,\"transport epoch\"),Y(e.deliveryId,\"delivery ID\"),e.mode===\"historical\")throw new b(\"unsupported-playback\",\"Historical input delivery requires P4.\");if(![\"sample-only\",\"continuous\"].includes(e.mode))throw new b(\"invalid-value\",\"Invalid input delivery mode.\");if(e.previousLocalTime!==void 0&&P(e.previousLocalTime),e.mode===\"continuous\"&&e.previousLocalTime===void 0)throw new b(\"invalid-time\",\"Continuous input requires a previous local time.\")}function G(){let e=0,r=0;return{consume(n){if(B(n),n.transportEpoch<e||n.transportEpoch===e&&n.deliveryId<r)throw new b(\"invalid-time\",\"Stale input delivery.\");return n.transportEpoch===e&&n.deliveryId===r?!1:(e=n.transportEpoch,r=n.deliveryId,!0)}}}function W(e){let{sampler:r,binding:n,time:l,fps:c,coordinates:C,delivery:h}=e,u={offset:n.offset,rate:n.rate,loop:n.loop};if(P(l),!Number.isFinite(c)||c<=0)throw new b(\"invalid-value\",\"Input requires a positive FPS.\");h&&B(h),r.validateMapping(u);let v=h?Object.freeze({...h}):void 0;if(n.pointerChannelId===void 0)return Object.freeze({current:null,previousNominal:null,events:Object.freeze([]),delivery:v});let i=n.pointerChannelId,o={space:n.space},t=y=>{let a=r.sample(i,y,u,o,C);if(!a||a.kind!==\"pointer\")throw new b(\"unsupported-channel\",`Channel ${i} is not pointer input.`,{channelId:i});return Object.freeze(a)},m=t(l),d=t(Math.max(0,l-1/c)),F=[],g=(y,a,k)=>{for(let x of r.events(i,y/1e6,a/1e6,o,C)){if(x.kind!==\"pointer\")throw new b(\"unsupported-channel\",\"Only pointer events can be standard input.\");if(F.length>=f.maxEventsPerTick)throw new b(\"event-budget\",\"Input interval exceeds the event limit.\",{channelId:i});F.push(Object.freeze({cycle:k,event:Object.freeze(x)}))}};if(h?.mode===\"continuous\"&&n.rate>0){let y=h.previousLocalTime;if(y>l)throw new b(\"invalid-time\",\"Continuous input cannot move backwards.\");let a=P(y*n.rate+n.offset),k=P(l*n.rate+n.offset);if(!n.loop)g(a,k,0);else if(k>a){let x=r.document.durationUs,S=Math.floor(a/x),p=Math.floor(k/x)-S;if(p>f.maxLoopBoundariesPerTick)throw new b(\"event-budget\",\"Input interval exceeds the loop-boundary limit.\",{channelId:i});let w=I=>(I%x+x)%x;for(let I=0;I<=p;I++)g(I===0?w(a):-1,I===p?w(k):x-1,S+I)}}return Object.freeze({current:m,previousNominal:d,events:Object.freeze(F),delivery:v})}function Q(e,r){let n=e.document.channels.find(o=>o.id===r);if(!n||n.kind!==\"pointer\")throw new b(\"unsupported-channel\",\"Standard input requires a pointer channel.\");let l=n,c=l.records.filter(o=>o.event!==null),C=c.filter(o=>o.event===\"down\"),h=new Map,u=l.initial;for(let o of c)h.set(o.seq,u),u=o;let v=(o,t,m)=>{let d=e.document.source,F=t===\"clip\"?m.clipWidth/d.width:t===\"normalized\"?1/d.width:1,g=t===\"clip\"?m.clipHeight/d.height:t===\"normalized\"?1/d.height:1;return{...o,x:o.x*F,y:o.y*g}},i=(o,t)=>{let m=0,d=C.length;for(;m<d;){let F=Math.floor((m+d)/2),g=C[F];g.t<o||g.t===o&&g.seq<=t?m=F+1:d=F}return C[m-1]?.button??0};return{previous(o,t,m){let d=h.get(o);if(!d)throw new b(\"invalid-value\",\"Input event is not in the recording.\");return v(d,t,m)},eventButton(o){return i(o.t,o.seq)},button(o,t){return i(V(o,e.document.durationUs,{offset:t.offset,rate:t.rate,loop:t.loop}),1/0)}}}return oe(se);})();\n";
+var pd = "\"use strict\";var MacroFlushFeedbackKernel=(()=>{var q=Object.defineProperty;var ae=Object.getOwnPropertyDescriptor;var ie=Object.getOwnPropertyNames;var de=Object.prototype.hasOwnProperty;var se=(e,t,n)=>t in e?q(e,t,{enumerable:!0,configurable:!0,writable:!0,value:n}):e[t]=n;var ce=(e,t)=>{for(var n in t)q(e,n,{get:t[n],enumerable:!0})},le=(e,t,n,l)=>{if(t&&typeof t==\"object\"||typeof t==\"function\")for(let u of ie(t))!de.call(e,u)&&u!==n&&q(e,u,{get:()=>t[u],enumerable:!(l=ae(t,u))||l.enumerable});return e};var ue=e=>le(q({},\"__esModule\",{value:!0}),e);var B=(e,t,n)=>se(e,typeof t!=\"symbol\"?t+\"\":t,n);var me={};ce(me,{FEEDBACK_LIMITS:()=>g,createFeedbackDeliveryCursor:()=>Q,createFeedbackInputIndex:()=>ee,createFeedbackSampler:()=>Y,createFeedbackTouchIndex:()=>te,feedbackTouchClientCoordinates:()=>re,planFeedbackInput:()=>Z,planFeedbackTouchInput:()=>oe,validateFeedbackDeliveryContext:()=>A});var g=Object.freeze({maxAssetBytes:16777216,maxProjectBytes:67108864,maxAssets:64,maxChannels:32,maxRecords:5e5,maxDurationUs:36e8,maxStringBytes:1024,maxRecordBytes:16384,maxArgs:16,maxValue:1e9,maxEventsPerTick:4096,maxLoopBoundariesPerTick:16,maxPointerHz:120,maxOscMessagesPerSecond:1e3,maxPageRecords:1e3,maxPageBytes:1048576,maxResourceCloneBytes:67108864,maxJsonDepth:32}),N=Object.freeze({offset:0,rate:1,loop:!1}),b=class extends Error{constructor(n,l,u={}){super(`Feedback: ${l}`);B(this,\"code\");B(this,\"assetId\");B(this,\"channelId\");this.name=\"FeedbackError\",this.code=n,this.assetId=u.assetId,this.channelId=u.channelId}};function R(e){return e.kind===\"pointer\"||e.kind===\"number\"||e.kind===\"osc\"}var V=new TextEncoder,pe=new Set([\"move\",\"down\",\"up\",\"enter\",\"leave\",\"cancel\",\"click\",\"double-click\",\"wheel\"]);var be=new Set([\"__proto__\",\"prototype\",\"constructor\"]);function h(e,t){throw new b(e,t)}function M(e,t){return(!e||typeof e!=\"object\"||Array.isArray(e))&&h(\"invalid-format\",`${t} must be an object.`),e}function E(e,t,n){Object.keys(e).some(l=>!t.includes(l))&&h(\"invalid-format\",`${n} contains an unknown field.`)}function $(e,t){(typeof e!=\"string\"||!e.trim()||e.includes(\"\\0\")||V.encode(e).length>g.maxStringBytes)&&h(\"invalid-value\",`${t} must be a non-empty string of at most ${g.maxStringBytes} UTF-8 bytes.`)}function O(e,t){(typeof e!=\"number\"||!Number.isFinite(e)||Math.abs(e)>g.maxValue)&&h(\"invalid-value\",`${t} is out of range.`)}function U(e,t,n,l){(typeof e!=\"number\"||!Number.isSafeInteger(e)||e<t||e>n)&&h(\"invalid-time\",`${l} must be an integer in range.`)}function _(e,t){O(e.x,`${t}.x`),O(e.y,`${t}.y`),(typeof e.buttons!=\"number\"||!Number.isInteger(e.buttons)||e.buttons<0||e.buttons>31||typeof e.inside!=\"boolean\")&&h(\"invalid-value\",`${t} has invalid buttons/inside.`)}function H(e){return Array.isArray(e)?((!e.length||e.length>g.maxArgs)&&h(\"invalid-value\",\"Numeric vectors require 1..16 values.\"),e.forEach(t=>O(t,\"Numeric vector value\")),e):(O(e,\"Numeric value\"),e)}function D(e,t=g.maxAssetBytes){let n=0,l=new Set,u=i=>{n+=i,n>t&&h(\"size-limit\",`JSON exceeds ${t} bytes.`)},x=i=>{i.length>t-n&&h(\"size-limit\",`JSON exceeds ${t} bytes.`),u(V.encode(JSON.stringify(i)).length)},v=(i,y)=>{if(y>g.maxJsonDepth&&h(\"size-limit\",\"JSON nesting is too deep.\"),i===null){u(4);return}if(typeof i==\"string\"){x(i);return}if(typeof i==\"boolean\"){u(i?4:5);return}if(typeof i==\"number\"&&Number.isFinite(i)){u(JSON.stringify(i).length);return}(!i||typeof i!=\"object\")&&h(\"invalid-format\",\"Expected finite, plain JSON data.\"),l.has(i)&&h(\"invalid-format\",\"JSON contains a cycle.\");let o=Object.getPrototypeOf(i);if((Array.isArray(i)?o!==Array.prototype:o!==Object.prototype&&o!==null)&&h(\"invalid-format\",\"JSON must use plain objects/arrays.\"),Object.getOwnPropertySymbols(i).length&&h(\"invalid-format\",\"JSON cannot contain symbol keys.\"),l.add(i),u(2),Array.isArray(i)){i.length>g.maxRecords&&h(\"size-limit\",\"JSON array exceeds the record limit.\"),Object.getOwnPropertyNames(i).length!==i.length+1&&h(\"invalid-format\",\"JSON arrays cannot have holes or extra properties.\");for(let d=0;d<i.length;d++){d&&u(1);let r=Object.getOwnPropertyDescriptor(i,String(d));(!r||!r.enumerable||!(\"value\"in r))&&h(\"invalid-format\",\"JSON cannot contain accessors or sparse arrays.\"),v(r.value,y+1)}}else Object.getOwnPropertyNames(i).forEach((r,c)=>{be.has(r)&&h(\"invalid-format\",\"JSON contains a reserved object key.\");let a=Object.getOwnPropertyDescriptor(i,r);(!a.enumerable||!(\"value\"in a))&&h(\"invalid-format\",\"JSON cannot contain accessors or hidden fields.\"),c&&u(1),x(r),u(1),v(a.value,y+1)});l.delete(i)};return v(e,0),n}function X(e){return e&&typeof e==\"object\"&&(Object.values(e).forEach(X),Object.freeze(e)),e}function W(e){let t=D(e),n=M(e,\"Feedback document\");E(n,[\"formatVersion\",\"timeUnit\",\"durationUs\",\"source\",\"channels\"],\"Feedback document\"),n.formatVersion!==1&&h(\"unsupported-version\",\"Only Feedback formatVersion 1 is supported.\"),n.timeUnit!==\"us\"&&h(\"invalid-time\",\"Feedback timeUnit must be us.\"),U(n.durationUs,0,g.maxDurationUs,\"durationUs\");let l=n.durationUs,u=M(n.source,\"source\");E(u,[\"compositionId\",\"width\",\"height\"],\"source\"),O(u.width,\"source.width\"),O(u.height,\"source.height\"),(u.width<1||u.height<1)&&h(\"invalid-value\",\"Source dimensions must be at least one logical pixel.\"),u.compositionId!==void 0&&$(u.compositionId,\"source.compositionId\"),Array.isArray(n.channels)||h(\"invalid-format\",\"Feedback requires a channels array.\"),n.channels.length>g.maxChannels&&h(\"size-limit\",\"Feedback requires at most 32 channels.\");let x=new Set,v=new Set,i=[],y=0,o=n.channels.map(d=>{let r=M(d,\"channel\");$(r.id,\"channel.id\"),$(r.kind,\"channel.kind\"),x.has(r.id)&&h(\"invalid-format\",`Duplicate channel ${r.id}.`),x.add(r.id);let c=[\"pointer\",\"number\",\"osc\"].includes(r.kind);if(!c)return r.records!==void 0&&!Array.isArray(r.records)&&h(\"invalid-format\",`Unknown channel ${r.id} has invalid records.`),y+=Array.isArray(r.records)?r.records.length:0,Array.isArray(r.records)&&r.records.forEach(m=>D(m,g.maxRecordBytes)),y>g.maxRecords&&h(\"size-limit\",\"Feedback exceeds 500,000 records.\"),i.push({code:\"unsupported-channel\",channelId:r.id,message:`Channel ${r.id} (${r.kind}) is retained but cannot be used.`}),{id:r.id,kind:r.kind,supported:c,records:Array.isArray(r.records)?r.records.length:0};E(r,r.kind===\"pointer\"?[\"id\",\"kind\",\"initial\",\"records\"]:r.kind===\"number\"?[\"id\",\"kind\",\"interpolation\",\"initial\",\"records\"]:[\"id\",\"kind\",\"address\",\"records\"],`Channel ${r.id}`),Array.isArray(r.records)||h(\"invalid-format\",`Channel ${r.id} requires records.`),y+=r.records.length,y>g.maxRecords&&h(\"size-limit\",\"Feedback exceeds 500,000 records.\");let a=-1;if(r.kind===\"pointer\"){let m=M(r.initial,\"pointer.initial\");E(m,[\"x\",\"y\",\"buttons\",\"inside\"],\"pointer.initial\"),_(m,\"pointer.initial\")}else if(r.kind===\"number\"){r.interpolation!==\"linear\"&&r.interpolation!==\"hold\"&&h(\"invalid-value\",\"Numeric interpolation must be linear or hold.\");let m=H(r.initial);a=Array.isArray(m)?m.length:-1}else $(r.address,\"OSC address\"),r.address.startsWith(\"/\")||h(\"invalid-value\",\"OSC address must start with /.\");let p=-1,f=-1;for(let m of r.records){let s=M(m,`Channel ${r.id} record`);if(D(s,g.maxRecordBytes),U(s.t,0,l,`Channel ${r.id} time`),U(s.seq,0,Number.MAX_SAFE_INTEGER,`Channel ${r.id} seq`),(s.t<p||s.seq<=f||v.has(s.seq))&&h(\"invalid-time\",`Channel ${r.id} has unordered or duplicate records.`),v.add(s.seq),p=s.t,f=s.seq,r.kind===\"pointer\"){E(s,[\"t\",\"seq\",\"x\",\"y\",\"buttons\",\"inside\",\"event\",\"button\",\"deltaX\",\"deltaY\"],\"pointer record\"),_(s,\"pointer record\"),s.event!==null&&(typeof s.event!=\"string\"||!pe.has(s.event))&&h(\"invalid-value\",\"Invalid pointer event.\");let k=[\"down\",\"up\",\"click\",\"double-click\"].includes(String(s.event));(k||s.button!==void 0)&&(typeof s.button!=\"number\"||!Number.isInteger(s.button)||s.button<0||s.button>4)&&h(\"invalid-value\",\"Invalid pointer button.\"),!k&&s.button!==void 0&&h(\"invalid-value\",\"Only button events may contain button.\"),(s.event===\"down\"&&!(s.buttons&[1,4,2,8,16][s.button])||s.event===\"up\"&&s.buttons&[1,4,2,8,16][s.button]||s.event===\"cancel\"&&s.buttons!==0||s.event===\"enter\"&&s.inside!==!0||s.event===\"leave\"&&s.inside!==!1)&&h(\"invalid-value\",\"Pointer event/state disagree.\"),s.event===\"wheel\"?(O(s.deltaX,\"deltaX\"),O(s.deltaY,\"deltaY\")):(s.deltaX!==void 0||s.deltaY!==void 0)&&h(\"invalid-value\",\"Only wheel events may contain deltas.\")}else if(r.kind===\"number\"){E(s,[\"t\",\"seq\",\"value\"],\"number record\");let k=H(s.value);(Array.isArray(k)?k.length:-1)!==a&&h(\"invalid-value\",\"Numeric values must have a fixed shape.\")}else{E(s,[\"t\",\"seq\",\"args\"],\"OSC record\"),(!Array.isArray(s.args)||s.args.length>g.maxArgs)&&h(\"invalid-value\",\"OSC requires at most 16 args.\");for(let k of s.args)typeof k==\"number\"?O(k,\"OSC arg\"):typeof k==\"string\"?(k.includes(\"\\0\")||V.encode(k).length>g.maxStringBytes)&&h(\"invalid-value\",\"OSC string is too large or contains NUL.\"):typeof k!=\"boolean\"&&h(\"invalid-value\",\"OSC args must be numbers, strings or booleans.\")}}return{id:r.id,kind:r.kind,supported:c,records:r.records.length}});return X({document:JSON.parse(JSON.stringify(e)),summary:{bytes:t,duration:n.durationUs/1e6,records:y,channels:o},warnings:i})}function J(e=N,t){let n=M(e,\"mapping\");E(n,[\"offset\",\"rate\",\"loop\"],\"mapping\"),(typeof n.offset!=\"number\"||!Number.isFinite(n.offset)||Math.abs(n.offset)>3600||typeof n.rate!=\"number\"||!Number.isFinite(n.rate)||Math.abs(n.rate)>16||typeof n.loop!=\"boolean\")&&h(\"invalid-time\",\"Mapping requires offset (-3600..3600), rate (-16..16), and loop.\"),n.loop&&t&&(t.durationUs||h(\"invalid-time\",\"Cannot loop an empty Feedback duration.\"),t.channels.some(l=>R(l)&&l.records.some(u=>u.t===t.durationUs&&(l.kind===\"osc\"||l.kind===\"pointer\"&&\"event\"in u&&u.event!==null)))&&h(\"invalid-time\",\"Looping Feedback cannot contain an event at its exact endpoint.\"))}function S(e){let t=Math.round(e*1e6);if(!Number.isFinite(e)||!Number.isSafeInteger(t))throw new b(\"invalid-time\",\"Time must be finite seconds within the safe microsecond range.\");return t}function j(e,t,n=N){if(J(n),!Number.isFinite(e))throw new b(\"invalid-time\",\"Clip-local time must be finite seconds.\");if(!Number.isSafeInteger(t)||t<0||t>g.maxDurationUs)throw new b(\"invalid-time\",\"Invalid Feedback duration.\");let l=S(e*n.rate+n.offset);if(n.loop){if(!t)throw new b(\"invalid-time\",\"Cannot loop an empty Feedback duration.\");return(l%t+t)%t}return Math.min(t,Math.max(0,l))}function L(e,t){let n=0,l=e.length;for(;n<l;){let u=Math.floor((n+l)/2);e[u].t<=t?n=u+1:l=u}return n}function Y(e){let t=W(e),n=t.document,l=n.channels.some(o=>R(o)&&o.records.some(d=>d.t===n.durationUs&&(o.kind===\"osc\"||o.kind===\"pointer\"&&\"event\"in d&&d.event!==null))),u=new Map(n.channels.map(o=>[o.id,o])),x=o=>{let d=u.get(o);if(!d)throw new b(\"missing-channel\",`Channel ${o} is missing.`,{channelId:o});if(!R(d))throw new b(\"unsupported-channel\",`Channel ${o} (${d.kind}) cannot be read.`,{channelId:o});return d},v=(o,d)=>{let r=o.space??\"composition\";if(r===\"composition\")return[1,1];if(r===\"normalized\")return[1/n.source.width,1/n.source.height];if(r!==\"clip\"||!d||![d.clipWidth,d.clipHeight].every(c=>Number.isFinite(c)&&c>0&&c<=g.maxValue))throw new b(\"invalid-value\",\"Clip space requires positive logical Clip dimensions.\");return[d.clipWidth/n.source.width,d.clipHeight/n.source.height]},i=(o,d,r)=>{let[c,a]=v(d,r);return{kind:\"pointer\",x:o.x*c,y:o.y*a,buttons:o.buttons,inside:o.inside}},y=(o,d,r={},c)=>{let a=x(o);if(a.kind!==\"pointer\"&&r.space!==void 0)throw new b(\"invalid-value\",\"Only pointer channels accept a coordinate space.\");let p=L(a.records,d)-1;if(a.kind===\"osc\"){let F=a.records[p];return F?{kind:\"osc\",address:a.address,args:[...F.args]}:null}let f=a.records[p],m=a.records[p+1],s=m?Math.max(0,Math.min(1,(d-(f?.t??0))/Math.max(1,m.t-(f?.t??0)))):0;if(a.kind===\"pointer\"){let F=a.records[p]??a.initial,I=a.records[p+1],P=I&&F.inside&&I.inside&&I.event!==\"cancel\"&&!(\"event\"in F&&F.event===\"cancel\");return i({...F,x:P?F.x+(I.x-F.x)*s:F.x,y:P?F.y+(I.y-F.y)*s:F.y},r,c)}let k=a.records[p]?.value??a.initial,C=a.records[p+1]?.value,w=(F,I)=>a.interpolation===\"linear\"?F+(I-F)*s:F;return{kind:\"number\",value:Array.isArray(k)?k.map((F,I)=>C===void 0?F:w(F,C[I])):C===void 0?k:w(k,C)}};return{document:n,summary:t.summary,warnings:t.warnings,validateMapping(o){if(J(o),o.loop&&(!n.durationUs||l))throw new b(\"invalid-time\",\"Cannot loop empty Feedback or an endpoint event.\")},at(o,d,r={},c){return y(o,Math.min(n.durationUs,Math.max(0,S(d))),r,c)},sample(o,d,r=N,c={},a){if(J(r),r.loop&&l)throw new b(\"invalid-time\",\"Looping Feedback cannot contain an event at its exact endpoint.\");return y(o,j(d,n.durationUs,r),c,a)},events(o,d,r,c={},a){if(d>r)throw new b(\"invalid-time\",\"Event range must be ascending.\");let p=S(d),f=S(r),m=x(o);if(m.kind!==\"pointer\"&&c.space!==void 0)throw new b(\"invalid-value\",\"Only pointer channels accept a coordinate space.\");m.kind===\"pointer\"&&v(c,a);let s=[];if(m.kind===\"number\")return s;let k=L(m.records,p),C=L(m.records,f);for(let w=k;w<C;w++){let z=m.records[w];if(m.kind===\"pointer\"){let F=m.records[w];if(F.event===null)continue;let[I,P]=v(c,a);s.push({...i(F,c,a),channelId:o,time:F.t/1e6,seq:F.seq,event:F.event,...F.button===void 0?{}:{button:F.button},...F.deltaX===void 0?{}:{deltaX:F.deltaX*I},...F.deltaY===void 0?{}:{deltaY:F.deltaY*P}})}else s.push({kind:\"osc\",channelId:o,time:z.t/1e6,seq:z.seq,address:m.address,args:[...m.records[w].args]});if(s.length>g.maxEventsPerTick)throw new b(\"event-budget\",`Channel ${o} exceeds the event limit; request a smaller interval.`,{channelId:o})}return s}}}function G(e,t){if(!Number.isSafeInteger(e)||e<1)throw new b(\"invalid-time\",`Invalid ${t}.`);return e}function A(e){if(!e||Object.getPrototypeOf(e)!==Object.prototype)throw new b(\"invalid-format\",\"Invalid input delivery context.\");if(Object.getOwnPropertySymbols(e).length)throw new b(\"invalid-format\",\"Invalid input delivery symbol field.\");let t=[\"transportEpoch\",\"deliveryId\",\"mode\",\"previousLocalTime\"];for(let[n,l]of Object.entries(Object.getOwnPropertyDescriptors(e)))if(!t.includes(n)||!l.enumerable||!(\"value\"in l))throw new b(\"invalid-format\",\"Invalid input delivery field.\");if(G(e.transportEpoch,\"transport epoch\"),G(e.deliveryId,\"delivery ID\"),e.mode===\"historical\")throw new b(\"unsupported-playback\",\"Historical input delivery requires P4.\");if(![\"sample-only\",\"continuous\"].includes(e.mode))throw new b(\"invalid-value\",\"Invalid input delivery mode.\");if(e.previousLocalTime!==void 0&&S(e.previousLocalTime),e.mode===\"continuous\"&&e.previousLocalTime===void 0)throw new b(\"invalid-time\",\"Continuous input requires a previous local time.\")}function Q(){let e=0,t=0;return{consume(n){if(A(n),n.transportEpoch<e||n.transportEpoch===e&&n.deliveryId<t)throw new b(\"invalid-time\",\"Stale input delivery.\");return n.transportEpoch===e&&n.deliveryId===t?!1:(e=n.transportEpoch,t=n.deliveryId,!0)}}}function Z(e){let{sampler:t,binding:n,time:l,fps:u,coordinates:x,delivery:v}=e,i={offset:n.offset,rate:n.rate,loop:n.loop};if(S(l),!Number.isFinite(u)||u<=0)throw new b(\"invalid-value\",\"Input requires a positive FPS.\");v&&A(v),t.validateMapping(i);let y=v?Object.freeze({...v}):void 0;if(n.pointerChannelId===void 0)return Object.freeze({current:null,previousNominal:null,events:Object.freeze([]),delivery:y});let o=n.pointerChannelId,d={space:n.space},r=m=>{let s=t.sample(o,m,i,d,x);if(!s||s.kind!==\"pointer\")throw new b(\"unsupported-channel\",`Channel ${o} is not pointer input.`,{channelId:o});return Object.freeze(s)},c=r(l),a=r(Math.max(0,l-1/u)),p=[],f=(m,s,k)=>{for(let C of t.events(o,m/1e6,s/1e6,d,x)){if(C.kind!==\"pointer\")throw new b(\"unsupported-channel\",\"Only pointer events can be standard input.\");if(p.length>=g.maxEventsPerTick)throw new b(\"event-budget\",\"Input interval exceeds the event limit.\",{channelId:o});p.push(Object.freeze({cycle:k,event:Object.freeze(C)}))}};if(v?.mode===\"continuous\"&&n.rate>0){let m=v.previousLocalTime;if(m>l)throw new b(\"invalid-time\",\"Continuous input cannot move backwards.\");let s=S(m*n.rate+n.offset),k=S(l*n.rate+n.offset);if(!n.loop)f(s,k,0);else if(k>s){let C=t.document.durationUs,w=Math.floor(s/C),F=Math.floor(k/C)-w;if(F>g.maxLoopBoundariesPerTick)throw new b(\"event-budget\",\"Input interval exceeds the loop-boundary limit.\",{channelId:o});let I=P=>(P%C+C)%C;for(let P=0;P<=F;P++)f(P===0?I(s):-1,P===F?I(k):C-1,w+P)}}return Object.freeze({current:c,previousNominal:a,events:Object.freeze(p),delivery:y})}function ee(e,t){let n=e.document.channels.find(d=>d.id===t);if(!n||n.kind!==\"pointer\")throw new b(\"unsupported-channel\",\"Standard input requires a pointer channel.\");let l=n,u=l.records.filter(d=>d.event!==null),x=u.filter(d=>d.event===\"down\"),v=new Map,i=l.initial;for(let d of u)v.set(d.seq,i),i=d;let y=(d,r,c)=>{let a=e.document.source,p=r===\"clip\"?c.clipWidth/a.width:r===\"normalized\"?1/a.width:1,f=r===\"clip\"?c.clipHeight/a.height:r===\"normalized\"?1/a.height:1;return{...d,x:d.x*p,y:d.y*f}},o=(d,r)=>{let c=0,a=x.length;for(;c<a;){let p=Math.floor((c+a)/2),f=x[p];f.t<d||f.t===d&&f.seq<=r?c=p+1:a=p}return x[c-1]?.button??0};return{previous(d,r,c){let a=v.get(d);if(!a)throw new b(\"invalid-value\",\"Input event is not in the recording.\");return y(a,r,c)},eventButton(d){return o(d.t,d.seq)},button(d,r){return o(j(d,e.document.durationUs,{offset:r.offset,rate:r.rate,loop:r.loop}),1/0)}}}function K(e,t,n=1/0){let l=0,u=e.length;for(;l<u;){let x=Math.floor((l+u)/2),v=e[x];v.t<t||v.t===t&&v.seq<=n?l=x+1:u=x}return l}var ne=(e,t)=>e.t>t.t||e.t===t.t&&e.seq>t.seq;function T(e,t){throw new b(\"unsupported-playback\",`Touch channel ${e}: ${t}`,{channelId:e})}function te(e,t){if(D(t,g.maxRecordBytes),!Array.isArray(t)||!t.length||t.length>g.maxChannels)throw new b(\"size-limit\",\"Touch input requires 1..32 channels.\");if(t.some(i=>typeof i!=\"string\"||!i.trim()||i.includes(\"\\0\")||new TextEncoder().encode(i).length>g.maxStringBytes)||new Set(t).size!==t.length)throw new b(\"invalid-format\",\"Touch channel IDs must be nonempty, unique strings.\");let n=Object.freeze([...t]),l=Object.freeze(n.map((i,y)=>{let o=e.document.channels.find(a=>a.id===i);if(!o)throw new b(\"missing-channel\",`Touch channel ${i} is missing.`,{channelId:i});o.kind!==\"pointer\"&&T(i,\"not a pointer channel.\");let d=o;d.initial.buttons!==0&&T(i,\"the recording starts pressed.\");let r=!1,c=[];for(let a of d.records)[null,\"down\",\"move\",\"up\",\"cancel\"].includes(a.event)||T(i,`event ${a.event} is not supported touch input.`),(a.buttons!==0&&a.buttons!==1||a.button!==void 0&&a.button!==0)&&T(i,\"only button 0 with state 0/1 is supported.\"),a.event===\"down\"?(r&&T(i,\"a down occurs before the previous contact ends.\"),r=!0):(a.event===\"up\"||a.event===\"cancel\")&&(r||T(i,\"an ending event has no matching down.\"),r=!1),a.buttons!==(r?1:0)&&T(i,\"button state changes without a contact boundary.\"),(a.event===\"down\"||a.event===\"up\"||a.event===\"cancel\"||a.event===\"move\"&&r)&&c.push(a);return r&&T(i,\"a contact has no up or cancel event.\"),Object.freeze({id:y+1,channel:d,events:Object.freeze(c),owns:new WeakSet(c)})})),u=(i,y,o,d)=>{let r=e.document.source,c=o===\"clip\"?d.clipWidth/r.width:o===\"normalized\"?1/r.width:1,a=o===\"clip\"?d.clipHeight/r.height:o===\"normalized\"?1/r.height:1;return Object.freeze({id:i.id,channelId:i.channel.id,x:y.x*c,y:y.y*a})},x=(i,y)=>{if(![\"composition\",\"normalized\",\"clip\"].includes(i)||![y.clipWidth,y.clipHeight].every(o=>Number.isFinite(o)&&o>0&&o<=g.maxValue))throw new b(\"invalid-value\",\"Touch input requires a known space and positive logical dimensions.\")},v=(i,y,o,d,r)=>{x(o,d);let c=[],a;for(let f of l){let m=f.channel.records[K(f.channel.records,i,y)-1]??f.channel.initial;if(m.buttons!==0)if(r){let k=e.sample(f.channel.id,r.time,r.mapping,{space:o},d);k?.kind!==\"pointer\"&&T(f.channel.id,\"the current sample is not pointer input.\"),c.push(Object.freeze({id:f.id,channelId:f.channel.id,x:k.x,y:k.y}))}else c.push(u(f,m,o,d));let s=f.events[K(f.events,i,y)-1];s&&(!a||ne(s,a.record))&&(a={entry:f,record:s})}let p=c[0]??(a?u(a.entry,a.record,o,d):u(l[0],l[0].channel.initial,o,d));return Object.freeze({touches:Object.freeze(c),mouse:p,mouseIsPressed:c.length!==0})};return Object.freeze({channelIds:n,durationUs:e.document.durationUs,eventCount:l.reduce((i,y)=>i+y.events.length,0),validateMapping:i=>e.validateMapping(i),sample(i,y,o,d){let r=j(i,e.document.durationUs,y);return v(r,1/0,o,d,{time:i,mapping:y})},eventState(i,y,o,d){if(!Number.isSafeInteger(i)||i<0||i>e.document.durationUs||!Number.isSafeInteger(y)||y<-1)throw new b(\"invalid-time\",\"Invalid touch event state cut.\");return v(i,y,o,d)},*events(i,y){if(![i,y].every(Number.isSafeInteger)||i>y)throw new b(\"invalid-time\",\"Touch event range must be ascending integer microseconds.\");let o=[],d=(c,a)=>ne(a.record,c.record),r=c=>{let a=o.length;for(o.push(c);a>0;){let p=Math.floor((a-1)/2);if(!d(o[a],o[p]))break;[o[a],o[p]]=[o[p],o[a]],a=p}};for(let c of l){let a=K(c.events,i),p=c.events[a];p&&p.t<=y&&r({entry:c,offset:a,record:p})}for(;o.length;){let c=o[0],a=o.pop();if(o.length){o[0]=a;let m=0;for(;;){let s=m*2+1,k=s+1,C=m;if(s<o.length&&d(o[s],o[C])&&(C=s),k<o.length&&d(o[k],o[C])&&(C=k),C===m)break;[o[m],o[C]]=[o[C],o[m]],m=C}}yield Object.freeze({id:c.entry.id,channelId:c.entry.channel.id,record:c.record});let p=c.offset+1,f=c.entry.events[p];f&&f.t<=y&&r({entry:c.entry,offset:p,record:f})}},point(i,y,o){x(y,o);let d=l[i.id-1];if(!d||d.channel.id!==i.channelId||!d.owns.has(i.record))throw new b(\"invalid-value\",\"Touch event belongs to another index.\");return u(d,i.record,y,o)}})}function re(e,t,n){if(![t.clipWidth,t.clipHeight].every(x=>Number.isFinite(x)&&x>0&&x<=g.maxValue)||![e.x,e.y,n.left,n.top,n.width,n.height].every(Number.isFinite)||n.width<0||n.height<0)throw new b(\"invalid-value\",\"Invalid touch client coordinate context.\");let l=n.left+e.x*n.width/t.clipWidth,u=n.top+e.y*n.height/t.clipHeight;if(![l,u].every(Number.isFinite))throw new b(\"invalid-value\",\"Touch client coordinates overflow.\");return Object.freeze({clientX:l,clientY:u})}function oe(e){let{index:t,binding:n,time:l,fps:u,coordinates:x,delivery:v}=e;if(S(l),!Number.isFinite(u)||u<=0)throw new b(\"invalid-value\",\"Touch input requires a positive FPS.\");if(v&&A(v),n.inputMode!==\"touch\"||\"pointerChannelId\"in n||!Array.isArray(n.pointerChannelIds)||n.pointerChannelIds.length!==t.channelIds.length||n.pointerChannelIds.some((a,p)=>a!==t.channelIds[p]))throw new b(\"invalid-format\",\"Touch binding must match its ordered channel index.\");let i={offset:n.offset,rate:n.rate,loop:n.loop};t.validateMapping(i);let y=t.sample(l,i,n.space,x),o=t.sample(Math.max(0,l-1/u),i,n.space,x),d=[],r=(a,p,f)=>{for(let m of t.events(a,p)){if(d.length>=g.maxEventsPerTick)throw new b(\"event-budget\",\"Touch interval exceeds the shared event limit.\",{channelId:m.channelId});d.push({cycle:f,row:m})}};if(v?.mode===\"continuous\"&&n.rate>0){let a=v.previousLocalTime;if(a>l)throw new b(\"invalid-time\",\"Continuous touch input cannot move backwards.\");let p=S(a*n.rate+n.offset),f=S(l*n.rate+n.offset);if(!n.loop)r(p,f,0);else if(f>p){let m=t.durationUs,s=Math.floor(p/m),k=Math.floor(f/m);if(k-s>g.maxLoopBoundariesPerTick)throw new b(\"event-budget\",\"Touch interval exceeds the shared loop-boundary limit.\");let C=w=>(w%m+m)%m;for(let w=s;w<=k;w++)r(w===s?C(p):-1,w===k?C(f):m-1,w)}}let c=d.map(({cycle:a,row:p})=>{let f=p.record.event,m=f===\"down\"?\"touchstart\":f===\"move\"?\"touchmove\":f===\"up\"?\"touchend\":\"touchcancel\",s=f===\"down\"?\"touchStarted\":f===\"move\"?\"touchMoved\":\"touchEnded\";return Object.freeze({cycle:a,timeUs:p.record.t,seq:p.record.seq,channelId:p.channelId,type:m,callback:s,state:t.eventState(p.record.t,p.record.seq,n.space,x),changed:t.point(p,n.space,x),previousMouse:t.eventState(p.record.t,p.record.seq-1,n.space,x).mouse})});return Object.freeze({current:y,previousNominal:o,events:Object.freeze(c),delivery:v?Object.freeze({...v}):void 0})}return ue(me);})();\n";
 //#endregion
 //#region src/runtime/feedbackRuntime.ts
 function md(e) {
@@ -12658,8 +12670,201 @@ function gd(e) {
 	};
 }
 //#endregion
+//#region src/runtime/feedbackP5TouchInput.ts
+function _d() {
+	let e = window, t = [
+		"touchStarted",
+		"touchMoved",
+		"touchEnded"
+	], n = e.Touch, r = e.TouchEvent, i, a, o, s = (e) => {
+		throw Object.assign(/* @__PURE__ */ Error("Feedback p5 touch: " + e), { feedbackInputCode: "unsupported-playback" });
+	}, c = () => {
+		if (o) throw o;
+		(!i || !["1.11.1", "1.11.11"].includes(e.p5?.VERSION) || !i._isGlobal || i._setProperty !== a || typeof a != "function" || e.p5.instance !== i) && s("unsupported global p5 instance or changed property hook."), (typeof n != "function" || typeof r != "function" || e.Touch !== n || e.TouchEvent !== r) && s("Touch/TouchEvent constructors are unavailable or changed.");
+		for (let n of t) e[n]?.constructor?.name === "AsyncFunction" && s(n + "() must be synchronous.");
+	}, l = (e, t, i, a, o) => {
+		c();
+		try {
+			let c = (e) => new n({
+				identifier: e.id,
+				target: a,
+				...o(e)
+			}), l = t.map(c), u = new r(e, {
+				bubbles: !0,
+				cancelable: !0,
+				touches: l,
+				targetTouches: l,
+				changedTouches: i.map(c)
+			});
+			return (u.isTrusted !== !1 || u.target !== null || u.currentTarget !== null) && s("unexpected constructed TouchEvent identity."), u;
+		} catch (e) {
+			return s("TouchEvent construction failed: " + String(e));
+		}
+	};
+	return {
+		kind: "touch",
+		attach(e) {
+			i = e, a = e?._setProperty;
+			try {
+				c(), l("touchstart", [], [], i.canvas ?? document.createElement("canvas"), () => ({
+					clientX: 0,
+					clientY: 0
+				}));
+			} catch (e) {
+				o = e;
+			}
+		},
+		qualify: c,
+		eventFor: l,
+		set(e, t, n) {
+			c();
+			let r = e.mouse, a = n(r), o = n(t), s = {
+				touches: e.touches.map((e) => {
+					let t = n(e);
+					return {
+						id: e.id,
+						x: e.x,
+						y: e.y,
+						winX: t.clientX,
+						winY: t.clientY
+					};
+				}),
+				mouseX: r.x,
+				mouseY: r.y,
+				pmouseX: t.x,
+				pmouseY: t.y,
+				movedX: r.x - t.x,
+				movedY: r.y - t.y,
+				winMouseX: a.clientX,
+				winMouseY: a.clientY,
+				pwinMouseX: o.clientX,
+				pwinMouseY: o.clientY,
+				mouseIsPressed: e.mouseIsPressed,
+				mouseButton: i.LEFT
+			};
+			for (let [e, t] of Object.entries(s)) i._setProperty(e, t);
+		},
+		deliver(t, n) {
+			c();
+			let r = e[t];
+			if (typeof r != "function") return;
+			let i = r.call(e, n);
+			i && typeof i.then == "function" && (Promise.resolve(i).catch(() => void 0), s(t + "() must be synchronous.")), i === !1 && n.preventDefault();
+		},
+		dispose() {
+			i = void 0, a = void 0, o = /* @__PURE__ */ Error("Feedback p5 touch: disposed.");
+		}
+	};
+}
+//#endregion
+//#region src/runtime/feedbackTouchInput.ts
+function vd(e) {
+	let { kernel: t, binding: n, p5: r } = e, i, a, o, s, c = t.createFeedbackDeliveryCursor(), l, u = () => {
+		let r = e.snapshot(n.assetId);
+		return i !== r.sampler && (a = t.createFeedbackTouchIndex(r.sampler, n.pointerChannelIds), i = r.sampler), r.sampler.validateMapping({
+			offset: n.offset,
+			rate: n.rate,
+			loop: n.loop
+		}), r;
+	}, d = () => {
+		let n = e.dimensions(), r = e.canvas(), i = r?.getBoundingClientRect() ?? {
+			left: 0,
+			top: 0,
+			width: 0,
+			height: 0
+		};
+		return {
+			canvas: r,
+			dimensions: n,
+			client: (e) => t.feedbackTouchClientCoordinates(e, n, i)
+		};
+	}, f = (e) => {
+		u(), r.qualify();
+		let i = d(), o = t.planFeedbackTouchInput({
+			index: a,
+			binding: n,
+			time: e.time,
+			fps: e.fps,
+			coordinates: i.dimensions
+		});
+		r.set(o.current, o.previousNominal.mouse, i.client);
+	};
+	return {
+		qualify() {
+			try {
+				u(), r.qualify();
+			} catch (e) {
+				throw Object.assign(/* @__PURE__ */ Error("Feedback touch " + n.assetId + ": " + String(e)), { feedbackInputCode: e?.feedbackInputCode ?? e?.code ?? "input-failed" });
+			}
+		},
+		revision() {
+			try {
+				return e.snapshot(n.assetId).revision;
+			} catch {
+				return null;
+			}
+		},
+		prime(e) {
+			f({
+				time: 0,
+				fps: e
+			});
+		},
+		restore(e) {
+			f(e);
+		},
+		prepare(i) {
+			let f = i.feedbackDelivery?.transportEpoch;
+			try {
+				let p = u(), m = d();
+				if (!m.canvas) throw Error("p5 touch requires a canvas.");
+				r.qualify();
+				let h = JSON.stringify([
+					p.revision,
+					n,
+					m.dimensions,
+					i.fps
+				]), g = o !== h || s !== m.canvas;
+				if (g && (c = t.createFeedbackDeliveryCursor(), o = h, s = m.canvas, l = void 0), l?.epoch === f && l) throw l.error;
+				i.feedbackDelivery && t.validateFeedbackDeliveryContext(i.feedbackDelivery);
+				let _ = g && i.feedbackDelivery ? {
+					...i.feedbackDelivery,
+					mode: "sample-only"
+				} : i.feedbackDelivery, v = t.planFeedbackTouchInput({
+					index: a,
+					binding: n,
+					time: i.time,
+					fps: i.fps,
+					coordinates: m.dimensions,
+					delivery: _
+				}), y = v.events.map((e) => ({
+					item: e,
+					event: r.eventFor(e.type, e.state.touches, [e.changed], m.canvas, m.client)
+				}));
+				for (let e of [
+					v.current,
+					v.previousNominal,
+					...v.events.map((e) => e.state)
+				]) m.client(e.mouse), e.touches.forEach(m.client);
+				if (v.events.forEach((e) => m.client(e.previousMouse)), i.feedbackDelivery && c.consume(i.feedbackDelivery)) for (let { item: t, event: n } of y) e.owned.add(n), r.set(t.state, t.previousMouse, m.client), r.deliver(t.callback, n);
+				r.set(v.current, v.previousNominal.mouse, m.client), l = void 0;
+			} catch (e) {
+				if (l?.error === e) throw e;
+				let t = e?.feedbackInputCode ?? e?.code ?? "input-failed", r = Object.assign(/* @__PURE__ */ Error("Feedback touch " + n.assetId + ": " + String(e instanceof Error ? e.message : e)), { feedbackInputCode: t });
+				throw l = {
+					epoch: f,
+					error: r
+				}, r;
+			}
+		},
+		dispose() {
+			i = void 0, o = void 0, s = void 0, l = void 0;
+		}
+	};
+}
+//#endregion
 //#region src/runtime/feedbackHtml.ts
-function _d(e, t = "") {
+function yd(e, t = "") {
 	let n = [], r = [], i = /* @__PURE__ */ new Set([
 		"text/javascript",
 		"application/javascript",
@@ -12717,41 +12922,41 @@ function _d(e, t = "") {
 }
 //#endregion
 //#region src/runtime/createClipDocument.ts
-var vd = /\.use\(\s*["']centi3d["']/;
-function yd(e) {
-	return vd.test(e.js);
+var bd = /\.use\(\s*["']centi3d["']/;
+function xd(e) {
+	return bd.test(e.js);
 }
-async function bd() {
+async function Sd() {
 	return (await import("./three.global-lsYzNWMC.js")).default;
 }
-function xd(e, t, n, r, i = [], a = !1, o = {}) {
-	return Cd(e, t, n, r, i, "", !1, a, o);
+function Cd(e, t, n, r, i = [], a = !1, o = {}) {
+	return Td(e, t, n, r, i, "", !1, a, o);
 }
-async function Sd(e, t, n, r, i = [], a = !1, o = !1, s = {}) {
-	return Cd(e, t, n, r, i, yd(t) ? await bd() : "", a, o, s);
+async function wd(e, t, n, r, i = [], a = !1, o = !1, s = {}) {
+	return Td(e, t, n, r, i, xd(t) ? await Sd() : "", a, o, s);
 }
-function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
+function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
 	i = di(i, c.libraries);
-	let l = c.capabilities?.includes("p5") === !0, u = l && c.p5Playback === "isolated-replay", d = !u && (c.hasFeedback === !0 || i.some((e) => e.kind === "feedback")), f = d && c.feedbackInputEnabled === !0 && c.feedback?.pointerChannelId !== void 0, p = ld(t.html, r, i.filter((e) => e.scriptMode === "global" && e.scriptOrigin).map((e) => e.scriptOrigin)), m = p.resources.length > 0 || p.errors.length > 0, h = d ? _d(p.html, c.documentToken ?? "") : {
-		html: p.html,
+	let l = c.capabilities?.includes("p5") === !0, u = l && c.p5Playback === "isolated-replay", d = !u && (c.hasFeedback === !0 || i.some((e) => e.kind === "feedback")), f = d && c.feedbackInputEnabled === !0 && c.feedback?.inputMode === "touch" && l && !u, p = f || d && c.feedbackInputEnabled === !0 && c.feedback?.pointerChannelId !== void 0 && c.feedback.inputMode === void 0, m = ld(t.html, r, i.filter((e) => e.scriptMode === "global" && e.scriptOrigin).map((e) => e.scriptOrigin)), h = m.resources.length > 0 || m.errors.length > 0, g = d ? yd(m.html, c.documentToken ?? "") : {
+		html: m.html,
 		scripts: []
 	};
 	if (u) {
 		if (!c.p5ReplayBudget) throw Error(`P5 replay ${e}: an explicit replay budget is required.`);
-		if (i.filter((e) => e.kind === "script" && e.scriptMode === "global").length + p.resources.filter((e) => e.kind === "script").length !== 1) throw Error(`P5 replay ${e}: exactly one p5 Script is supported; extra executable Libraries are unsupported.`);
+		if (i.filter((e) => e.kind === "script" && e.scriptMode === "global").length + m.resources.filter((e) => e.kind === "script").length !== 1) throw Error(`P5 replay ${e}: exactly one p5 Script is supported; extra executable Libraries are unsupported.`);
 		let t = (n) => {
 			if (!("tagName" in n && n.tagName === "template")) {
 				if ("tagName" in n && n.tagName === "script") throw Error(`P5 replay ${e}: authored HTML script tags are unsupported.`);
 				"childNodes" in n && n.childNodes.forEach(t);
 			}
 		};
-		t(Nu(p.html));
+		t(Nu(m.html));
 	}
-	let g = nd([
+	let _ = nd([
 		t.js,
-		...h.scripts.map((e) => e.source),
+		...g.scripts.map((e) => e.source),
 		...i.filter((e) => e.kind === "script").map((e) => e.scriptSource ?? "")
-	]), _ = Object.fromEntries(Object.entries(Bu).map(([e, t]) => [e, {
+	]), v = Object.fromEntries(Object.entries(Bu).map(([e, t]) => [e, {
 		type: t.type,
 		default: t.default,
 		value: t.value,
@@ -12765,7 +12970,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
 		interpolable: t.interpolable,
 		space: t.space,
 		version: t.version
-	}])), v = `
+	}])), y = `
 (() => {
   const p5Enabled = ${l};
   const p5Isolated = ${u};
@@ -12799,7 +13004,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   const nativeMathRandom = Math.random;
   const reconcileManagedThreeDObjects = (${Pu.toString()});
   const readThreeDFrameInput = (${Fu.toString()});
-  const builtinDefinitions = ${JSON.stringify(_)};
+  const builtinDefinitions = ${JSON.stringify(v)};
   const hostParamDefinitions = ${JSON.stringify(n)};
   const assetDescriptors = ${JSON.stringify(i)};
   const modelRegistry = typeof THREE === "undefined" ? null : (${Lu.toString()})(THREE, assetDescriptors);
@@ -13023,12 +13228,14 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   let feedbackSetupFailure = null;
   let feedbackPreparationFailure = null;
   let feedbackInputStatusKey = "";
+  let feedbackTouchRevision = null;
+  let feedbackTouchQualified = false;
   const reportFeedbackInputStatus = issue => {
-    if (!${f}) return;
-    const key = JSON.stringify(issue || null);
+    if (!${p}) return;
+    const key = JSON.stringify(${f ? "[issue || null, feedbackTouchRevision]" : "issue || null"});
     if (key === feedbackInputStatusKey) return;
     feedbackInputStatusKey = key;
-    parent.postMessage({ type: "macroflush:feedback-input-status", clipId, documentToken, issue: issue || null }, "*");
+    parent.postMessage({ type: "macroflush:feedback-input-status", clipId, documentToken, issue: issue || null${f ? ", revision: feedbackTouchRevision" : ""} }, "*");
   };
   const unresolvedSourceUses = new Map();
   const setupSourceUses = new Map();
@@ -13053,12 +13260,12 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       frame,
       error: phase ? phase + ": " + message : message,
       ...(phase?.startsWith("feedback") || error?.name === "FeedbackError" ? { feedbackError: true } : {}),
-      ...(${f} && (setupError || phase?.startsWith("feedback") || error?.feedbackInputCode || error?.name === "FeedbackError") ? { feedbackInputDiagnostic: true } : {}),
+      ...(${p} && (setupError || phase?.startsWith("feedback") || error?.feedbackInputCode || error?.name === "FeedbackError") ? { feedbackInputDiagnostic: true } : {}),
       ...(p5Isolated && error?.p5ReplayCode ? { p5ReplayCode: error.p5ReplayCode } : {}),
       stack: error instanceof Error ? error.stack : undefined
     }, "*");
   };
-  ${m ? `const remotePreparation = (${ud.toString()})(${Td(p.resources)}, ${Td(p.errors)}, imageWorkTimers, message => {
+  ${h ? `const remotePreparation = (${ud.toString()})(${Dd(m.resources)}, ${Dd(m.errors)}, imageWorkTimers, message => {
     setupFailure = message;
     reportRuntimeError(message, hasFeedback ? "feedback external resource" : "external resource");
     notifyDocumentReady();
@@ -13188,7 +13395,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
 
   window.addEventListener("error", (event) => {
     if (stagingScript) return;
-    ${m ? `if (!activeGlobalLibrary && ${Td(p.resources.filter((e) => e.kind === "script").map((e) => e.url))}.includes(event.filename || document.currentScript?.src)) {
+    ${h ? `if (!activeGlobalLibrary && ${Dd(m.resources.filter((e) => e.kind === "script").map((e) => e.url))}.includes(event.filename || document.currentScript?.src)) {
       remotePreparation.fail("External script " + (event.filename || document.currentScript?.src) + ": " + (event.message || "initializer failed"));
       return;
     }` : ""}
@@ -13375,11 +13582,11 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
 
   let p5IsolatedGuards;
   const feedbackOwnedEvents = new WeakSet();
-  const feedbackP5Input = ${f && l ? `(${gd.toString()})(event => feedbackOwnedEvents.has(event))` : "null"};
+  const feedbackP5Input = ${f ? `(${_d.toString()})()` : p && l ? `(${gd.toString()})(event => feedbackOwnedEvents.has(event))` : "null"};
   const p5Adapter = p5Enabled ? (${dd.toString()})({ clip: window.clip,
-    input: feedbackP5Input ? { owns: event => feedbackOwnedEvents.has(event), attach: sketch => feedbackP5Input.attach(sketch), dispose: () => feedbackP5Input.dispose() } : undefined,
+    input: feedbackP5Input ? { ${f ? "kind: \"touch\"," : ""} owns: event => feedbackOwnedEvents.has(event), attach: sketch => feedbackP5Input.attach(sketch), dispose: () => feedbackP5Input.dispose() } : undefined,
     beforeSetup: message => { feedbackTime = 0; feedbackInput?.prime(message.fps); },
-    context: ${Td(c.runtimeContext ?? null)}, seed: hashExportRandomSeed(${Td(c.p5SeedIdentity ?? e)}, 0), markDirty: markFrameDirty,
+    context: ${Dd(c.runtimeContext ?? null)}, seed: hashExportRandomSeed(${Dd(c.p5SeedIdentity ?? e)}, 0), markDirty: markFrameDirty,
     afterSetup: message => {
       feedbackTime = message.time;
       if (!p5Isolated) return;
@@ -13398,14 +13605,16 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       if (setupFailure) throw new Error(setupFailure);
       if (${!!c.capabilities?.includes("centi3d")}) throw new Error("MacroFlush: p5 and centi3d capabilities cannot both be active on the same Clip.");
       p5Adapter.prepare();
-      if (p5Isolated) p5IsolatedGuards = (${fd.toString()})(clipId, ${Td(c.p5ReplayBudget ?? null)});
+      if (p5Isolated) p5IsolatedGuards = (${fd.toString()})(clipId, ${Dd(c.p5ReplayBudget ?? null)});
     };
     window.__macroflushValidateP5 = () => {
       if (setupFailure) throw new Error(setupFailure);
       p5Adapter.validate();
+      ${f ? "feedbackInput.qualify(); feedbackTouchQualified = true; feedbackTouchRevision = feedbackInput.revision(); reportFeedbackInputStatus(null);" : ""}
     };
     window.__macroflushObserveP5 = name => p5Adapter.observeLibrary(name);
     window.__macroflushFailP5 = error => {
+      ${f ? "if (String(error?.message).startsWith(\"MacroFlush p5:\")) error = Object.assign(new Error(error.message), { feedbackInputCode: \"unsupported-playback\" });" : ""}
       reportRuntimeError(error, "p5 preparation");
       p5Adapter.dispose();
     };
@@ -13443,7 +13652,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   };
 
   const feedbackKernel = ${d ? `(() => { ${pd}; return MacroFlushFeedbackKernel; })()` : "null"};
-  const feedbackBinding = ${Td(c.feedback ?? null)};
+  const feedbackBinding = ${Dd(c.feedback ?? null)};
   const feedbackDimensions = () => {
     const p5Size = p5Adapter?.logicalSize;
     const canvas = p5Adapter?.canvas || document.querySelector("#canvas") || document.querySelector("canvas");
@@ -13460,11 +13669,15 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     time: () => feedbackTime,
     dimensions: feedbackDimensions
   });
-  const feedbackInput = ${f ? `(${hd.toString()})({ kernel: feedbackKernel, binding: feedbackBinding,
+  const feedbackInput = ${f ? `(${vd.toString()})({ kernel: feedbackKernel, binding: feedbackBinding,
+    snapshot: id => feedbackState.snapshot(id), owned: feedbackOwnedEvents, p5: feedbackP5Input,
+    canvas: () => p5Adapter?.canvas, dimensions: feedbackDimensions })` : p ? `(${hd.toString()})({ kernel: feedbackKernel, binding: feedbackBinding,
     snapshot: id => feedbackState.snapshot(id), owned: feedbackOwnedEvents, p5: feedbackP5Input,
     canvas: () => p5Adapter?.canvas,
     dimensions: feedbackDimensions })` : "null"};
   window.addEventListener("pagehide", () => feedbackInput?.dispose());
+  ${f ? "const requalifyFeedbackTouch = () => {\n    if (!feedbackTouchQualified) return;\n    feedbackTouchRevision = feedbackInput.revision();\n    if (!feedbackTouchRevision) { reportFeedbackInputStatus({ code: \"resource-not-ready\", message: \"Waiting for matching touch resources and asset definitions.\" }); return; }\n    try { feedbackInput.qualify(); reportFeedbackInputStatus(null); }\n    catch (error) { reportRuntimeError(error, \"feedback touch qualification\"); }\n  };" : ""}
+
   let feedbackResolve, feedbackReject;
   const feedbackReady = hasFeedback ? new Promise((resolve, reject) => { feedbackResolve = resolve; feedbackReject = reject; }) : Promise.resolve();
   void feedbackReady.catch(() => undefined);
@@ -13513,7 +13726,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     await assetImages.load(name);
     return assetImages.texture(name, options);
   });
-  window.__macroflushImagesReady = window.__macroflushAssetsReady.then(() => assetImages.preload(${JSON.stringify(g)}));
+  window.__macroflushImagesReady = window.__macroflushAssetsReady.then(() => assetImages.preload(${JSON.stringify(_)}));
 
   const queueSceneOperation = (operation) => {
     if (operation.type === "upsert" && !displayObjects.has(operation.object.id)) return;
@@ -13947,7 +14160,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     const asset = resolveAssetName(name, false);
     if (asset.kind === "feedback") throw new Error("Feedback assets are read with feedback(name), not placed with add().");
     const state = {
-      id: ${Td(c.displayObjectIdentity ?? e)} + ":display:" + nextDisplayObjectId++,
+      id: ${Dd(c.displayObjectIdentity ?? e)} + ":display:" + nextDisplayObjectId++,
       assetId: asset.id,
       x: Number(options.x) || 0,
       y: Number(options.y) || 0,
@@ -14781,6 +14994,48 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
         area /= 2;
         return area ? { x: x / (6 * area), y: y / (6 * area) } : { x: 0, y: 0 };
       },
+      strk2fill(a, wid, sub) {
+        if ( !a ) return [];
+        const l=a.length;
+        if ( l == 0 ) return [];
+        wid = wid || 1;
+        sub = parseInt(sub) || 1;
+        if ( sub <= 0 ) sub = 1;
+        let pre;
+        const left = [];
+        const right = [];
+        for ( let i=0; i<l; i+=sub ) {
+          if ( pre ) {
+            const pt = a[i];
+            const vec = api.Vec2(pre.y-pt.y, pt.x-pre.x).normalized();
+
+            const pt1 = api.Vec2(pt.x + vec.x*wid/2, pt.y + vec.y*wid/2);
+            const pt2 = api.Vec2(pt.x - vec.x*wid/2, pt.y - vec.y*wid/2);
+
+            const pt3 = api.Vec2(pre.x + vec.x*wid/2, pre.y + vec.y*wid/2);
+            const pt4 = api.Vec2(pre.x - vec.x*wid/2, pre.y - vec.y*wid/2);
+            if ( i == sub ) {
+              left.push(pt3);
+              right.unshift(pt4);
+            } else if ( i > sub ) {
+              const pre1 = left[left.length - 1];
+              const pre2 = right[0];
+              left[left.length - 1].x = (pre1.x + pt3.x)/2;
+              left[left.length - 1].y = (pre1.y + pt3.y)/2;
+
+              right[0].x = (pre2.x + pt4.x)/2;
+              right[0].y = (pre2.y + pt4.y)/2;
+
+            }
+            left.push(pt1);
+            right.unshift(pt2);
+            pre = pt;
+          } else {
+            pre = a[i];
+          }
+        }
+        return left.concat(right);
+      },
       getPointOnCubicBezier(t, a, b, c, d) { return pointOnCubicBezier(t, a, b, c, d); },
       getPointsOnCurve(divisions, x1, y1, cp1x, cp1y, cp2x, cp2y, x2, y2) {
         const count = Math.max(2, divisions); const points = [];
@@ -14891,6 +15146,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       api[key] = Math[key].bind(Math);
     }
     Object.assign(api, centiMathConstants);
+    CentiNamespace.strk2fill = api.strk2fill;
     api.Centi = CentiNamespace;
     api.ease = ease;
     api.Linear = ease.Linear.None;
@@ -14947,7 +15203,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   };
 
   const installCentiGlobals = (api) => {
-    for (const key of ["getContext", "setup", "size", "sz", "clear", "clr", "bg", "col", "hcol", "hexToInt", "intToHex", "fill", "stroke", "strk", "lineWidth", "lw", "lineJoin", "lj", "lineCap", "lc", "blendMode", "bm", "pixel", "rect", "oval", "arc", "tri", "line", "ln", "beginShape", "endShape", "moveTo", "lineTo", "curveTo", "curve", "lines", "font", "text", "textFit", "push", "pop", "rotate", "scale", "translate", "transform", "grad", "gradR", "gradColor", "gradHex", "rnd", "rand", "nz", "noise", "interp", "dist", "wrap", "minMax", "minmax", "map", "zmap", "avg", "r2d", "radToDeg", "d2r", "degToRad", "loop", "sortNum", "reverse", "fold", "remove", "leave", "Vec2", "vec2", "Rectangle", "Matrix", "boundingBox", "cent", "getPointOnCubicBezier", "getPointsOnCurve", "curves", "n2f", "noteToFreq", "grid", "tree", "nears", "seg", "segs", "shrink", "mosaic", "crash", "tween", "bmFont", "bitmapFont", "bmTxt", "bitmapText", "bm5x8", "bm5by8", "bitmap5by8", "getBitmapFontCode", "ease", "Linear", "QuadIn", "QuadOut", "QuadInOut", "CubicIn", "CubicOut", "CubicInOut", "QuartIn", "QuartOut", "QuartInOut", "QuintIn", "QuintOut", "QuintInOut", "CircIn", "CircOut", "CircInOut", "BackIn", "BackOut", "BackInOut", "ElasticIn", "ElasticOut", "ElasticInOut", "BounceIn", "BounceOut", "BounceInOut", "SmoothStep", "SmootherStep", "SineIn", "SineOut", "SineInOut", "ExpoIn", "ExpoOut", "ExpoInOut"]) {
+    for (const key of ["getContext", "setup", "size", "sz", "clear", "clr", "bg", "col", "hcol", "hexToInt", "intToHex", "fill", "stroke", "strk", "lineWidth", "lw", "lineJoin", "lj", "lineCap", "lc", "blendMode", "bm", "pixel", "rect", "oval", "arc", "tri", "line", "ln", "beginShape", "endShape", "moveTo", "lineTo", "curveTo", "curve", "lines", "font", "text", "textFit", "push", "pop", "rotate", "scale", "translate", "transform", "grad", "gradR", "gradColor", "gradHex", "rnd", "rand", "nz", "noise", "interp", "dist", "wrap", "minMax", "minmax", "map", "zmap", "avg", "r2d", "radToDeg", "d2r", "degToRad", "loop", "sortNum", "reverse", "fold", "remove", "leave", "Vec2", "vec2", "Rectangle", "Matrix", "boundingBox", "cent", "strk2fill", "getPointOnCubicBezier", "getPointsOnCurve", "curves", "n2f", "noteToFreq", "grid", "tree", "nears", "seg", "segs", "shrink", "mosaic", "crash", "tween", "bmFont", "bitmapFont", "bmTxt", "bitmapText", "bm5x8", "bm5by8", "bitmap5by8", "getBitmapFontCode", "ease", "Linear", "QuadIn", "QuadOut", "QuadInOut", "CubicIn", "CubicOut", "CubicInOut", "QuartIn", "QuartOut", "QuartInOut", "QuintIn", "QuintOut", "QuintInOut", "CircIn", "CircOut", "CircInOut", "BackIn", "BackOut", "BackInOut", "ElasticIn", "ElasticOut", "ElasticInOut", "BounceIn", "BounceOut", "BounceInOut", "SmoothStep", "SmootherStep", "SineIn", "SineOut", "SineInOut", "ExpoIn", "ExpoOut", "ExpoInOut"]) {
       if (!macroFlushReservedGlobals.has(key)) window[key] = api[key];
     }
     for (const key of centiMathFunctions) {
@@ -14966,7 +15222,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   const installBaseMathGlobals = () => {
     // Creating the Centi API only captures helpers; it does not acquire the 2D canvas context.
     const api = createCentiApi();
-    const keys = ["nz", "noise", "rnd", "rand", "interp", "dist", "wrap", "minMax", "minmax", "map", "zmap", "avg", "r2d", "radToDeg", "d2r", "degToRad", "loop", "sortNum", "reverse", "fold", "remove", "leave", "Vec2", "vec2", "Rectangle", "boundingBox", "cent", "getPointOnCubicBezier", "getPointsOnCurve", "curves", "n2f", "noteToFreq", "grid", "tree", "nears", "tween", "ease", "Linear", "QuadIn", "QuadOut", "QuadInOut", "CubicIn", "CubicOut", "CubicInOut", "QuartIn", "QuartOut", "QuartInOut", "QuintIn", "QuintOut", "QuintInOut", "CircIn", "CircOut", "CircInOut", "BackIn", "BackOut", "BackInOut", "ElasticIn", "ElasticOut", "ElasticInOut", "BounceIn", "BounceOut", "BounceInOut", "SmoothStep", "SmootherStep", "SineIn", "SineOut", "SineInOut", "ExpoIn", "ExpoOut", "ExpoInOut"];
+    const keys = ["nz", "noise", "rnd", "rand", "interp", "dist", "wrap", "minMax", "minmax", "map", "zmap", "avg", "r2d", "radToDeg", "d2r", "degToRad", "loop", "sortNum", "reverse", "fold", "remove", "leave", "Vec2", "vec2", "Rectangle", "boundingBox", "cent", "strk2fill", "getPointOnCubicBezier", "getPointsOnCurve", "curves", "n2f", "noteToFreq", "grid", "tree", "nears", "tween", "ease", "Linear", "QuadIn", "QuadOut", "QuadInOut", "CubicIn", "CubicOut", "CubicInOut", "QuartIn", "QuartOut", "QuartInOut", "QuintIn", "QuintOut", "QuintInOut", "CircIn", "CircOut", "CircInOut", "BackIn", "BackOut", "BackInOut", "ElasticIn", "ElasticOut", "ElasticInOut", "BounceIn", "BounceOut", "BounceInOut", "SmoothStep", "SmootherStep", "SineIn", "SineOut", "SineInOut", "ExpoIn", "ExpoOut", "ExpoInOut"];
     for (const key of keys) window[key] = api[key];
     for (const key of centiMathFunctions) window[key] = api[key];
     for (const [key, value] of Object.entries(centiMathConstants)) window[key] = value;
@@ -15053,7 +15309,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     if (!isExportFrame && p5Enabled && failure) return;
     if (!isExportFrame && canvasSizeFailure) return;
     if (!isExportFrame && (feedbackFrameFailure || feedbackSetupFailure || feedbackPreparationFailure)) return;
-    ${m ? "if (!isExportFrame && remotePreparation.failed) return;" : ""}
+    ${h ? "if (!isExportFrame && remotePreparation.failed) return;" : ""}
     if (!isExportFrame && (!frameTransfer.enabled || (!liveTransaction && frameTransfer.dirtyOnly && !frameDirty && !captureEpochChanged))) return;
     // The host already owns a bitmap it has not composited yet. Keep the dirty state
     // so the latest render is transferred on the next tick with available capacity.
@@ -15148,7 +15404,9 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     if (message.type === "macroflush:feedback-resources") {
       if (!hasFeedback || message.documentToken !== documentToken) return;
       try {
-        if (feedbackState.receive(message)) { feedbackPreparationFailure = null; feedbackInputStatusKey = ""; if (feedbackTimer !== null) imageWorkTimers.cancel(feedbackTimer); feedbackResolve?.(); markFrameDirty(); }
+        if (feedbackState.receive(message)) { feedbackPreparationFailure = null; feedbackInputStatusKey = ""; if (feedbackTimer !== null) imageWorkTimers.cancel(feedbackTimer); feedbackResolve?.();
+          ${f ? "requalifyFeedbackTouch();" : ""}
+          markFrameDirty(); }
       } catch (error) { feedbackPreparationFailure = String(error); feedbackReject?.(error); reportRuntimeError(error, "feedback resources"); }
       return;
     }
@@ -15164,6 +15422,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       assetDescriptors.splice(0, assetDescriptors.length, ...message.assets);
       assetImages.refresh();
       assetVersion = message.version;
+      ${f ? "requalifyFeedbackTouch();" : ""}
       initialAssetsResolve?.();
       markFrameDirty();
       parent.postMessage({ type: "macroflush:assets-updated", clipId, documentToken, version: assetVersion }, "*");
@@ -15252,7 +15511,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       if (message.exportMode === true) parent.postMessage({ type: "macroflush:export-error", clipId, exportFrameId: message.exportFrameId, error: setupFailure }, "*");
       return;
     }
-    ${m ? "if (remotePreparation.failed) {\n      if (message.exportMode === true && typeof message.exportFrameId === \"string\") parent.postMessage({\n        type: \"macroflush:export-error\", clipId, exportFrameId: message.exportFrameId, error: setupFailure || \"External resource preparation failed.\"\n      }, \"*\");\n      return;\n    }" : ""}
+    ${h ? "if (remotePreparation.failed) {\n      if (message.exportMode === true && typeof message.exportFrameId === \"string\") parent.postMessage({\n        type: \"macroflush:export-error\", clipId, exportFrameId: message.exportFrameId, error: setupFailure || \"External resource preparation failed.\"\n      }, \"*\");\n      return;\n    }" : ""}
     activeExportFrameId = message.exportMode === true && typeof message.exportFrameId === "string" ? message.exportFrameId : null;
     exportFrameFailure = null;
     const imageWorkDeadline = Date.now() + 5000;
@@ -15409,7 +15668,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
 
     const p5DrawStarted = p5Isolated ? performance.now() : 0;
     if (feedbackInput) {
-      try { p5Adapter?.prepareFrame(message); feedbackInput.prepare(message); reportFeedbackInputStatus(null); }
+      try { p5Adapter?.prepareFrame(message); ${f ? "feedbackTouchRevision = feedbackInput.revision();" : ""} feedbackInput.prepare(message); reportFeedbackInputStatus(null); }
       catch (error) { reportRuntimeError(error, "feedback input", message.compFrame); }
     }
     const context = centiEnabled ? getContext() : null;
@@ -15518,7 +15777,7 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   if (liveAssetUpdates) parent.postMessage({ type: "macroflush:assets-request", clipId, documentToken }, "*");
   if (hasFeedback) parent.postMessage({ type: "macroflush:feedback-request", clipId, documentToken }, "*");
 })();
-`, y = Uu(r.filter((e) => e.kind !== "script" && e.kind !== "style" || p.resources.includes(e)), typeof window > "u" ? void 0 : window.location.origin, i.some((e) => e.kind === "font" && e.sourceUrl?.startsWith("data:")), i.some((e) => e.kind === "model-3d"), s, c.hasDataUriImages === !0 || i.some((e) => e.kind === "image" && e.sourceUrl?.startsWith("data:"))), b = i.filter((e) => e.kind === "font" && e.fontFamily), x = "window.__macroflushNotifyReady();", S = l || b.length || c.liveAssets || g.length || m || d ? `<script>${wd(`(() => {
+`, b = Uu(r.filter((e) => e.kind !== "script" && e.kind !== "style" || m.resources.includes(e)), typeof window > "u" ? void 0 : window.location.origin, i.some((e) => e.kind === "font" && e.sourceUrl?.startsWith("data:")), i.some((e) => e.kind === "model-3d"), s, c.hasDataUriImages === !0 || i.some((e) => e.kind === "image" && e.sourceUrl?.startsWith("data:"))), x = i.filter((e) => e.kind === "font" && e.fontFamily), S = "window.__macroflushNotifyReady();", C = l || x.length || c.liveAssets || _.length || h || d ? `<script>${Ed(`(() => {
     const preparation = window.__macroflushFontPreparation;
     const remotePreparation = window.__macroflushRemotePreparation;
     const assetsReady = window.__macroflushAssetsReady;
@@ -15534,10 +15793,10 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       if (closed) return;
       ${l ? "window.__macroflushPrepareP5();" : ""}
       ${d ? `window.__macroflushFeedbackAuthored(true);
-      const authoredScripts = ${Td(h.scripts)};
+      const authoredScripts = ${Dd(g.scripts)};
       for (let index = 0; index < authoredScripts.length; index++) {
         const item = authoredScripts[index];
-        const marker = [...document.querySelectorAll("script[data-macroflush-feedback-script]")].find(tag => tag.getAttribute("data-macroflush-feedback-script") === ${Td(c.documentToken ?? "")} + ":" + index);
+        const marker = [...document.querySelectorAll("script[data-macroflush-feedback-script]")].find(tag => tag.getAttribute("data-macroflush-feedback-script") === ${Dd(c.documentToken ?? "")} + ":" + index);
         if (!marker) throw new Error("Feedback authored Script placeholder is missing.");
         const tag = document.createElement("script");
         for (const attr of item.attrs) tag.setAttribute(attr.name, attr.value);
@@ -15560,29 +15819,29 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       document.body.appendChild(script);
       ${d ? "window.__macroflushFeedbackStartupCheck(); window.__macroflushFeedbackAuthored(false);" : ""}
       ${l ? "window.__macroflushValidateP5();" : ""}
-      ${x}
+      ${S}
     }).catch(error => {
       if (closed) return;
       ${l ? "window.__macroflushFailP5(error);" : ""}
       ${l && d ? `parent.postMessage({ type: "macroflush:runtime-error", clipId: ${JSON.stringify(e)}, documentToken: ${JSON.stringify(c.documentToken ?? "")}, feedbackError: true, error: String(error) }, "*");` : ""}
       if (remotePreparation) remotePreparation.fail("HTML Clip preparation: " + String(error));
       ${l ? "" : `else parent.postMessage({ type: "macroflush:runtime-error", clipId: ${JSON.stringify(e)}, documentToken: ${JSON.stringify(c.documentToken ?? "")}, feedbackError: ${d}, error: String(error) }, "*");`}
-      ${l && !d ? x : ""}
+      ${l && !d ? S : ""}
     });
-  })();`)}<\/script>` : `<script>${wd(t.js)}<\/script><script>${x}<\/script>`, C = i.filter((e) => e.kind === "script" && e.scriptMode !== "global").map((e) => `<script>${wd(`window.__macroflushRegisterScript(${JSON.stringify(e.id)}, function() {\n${e.scriptSource ?? ""}\n});`)}<\/script>`).join("\n"), w = (c.libraries ?? []).map((e) => i.find((t) => t.id === e)).map((e) => `<script>window.__macroflushLoadGlobalLibrary(${Td(e.name)}, ${Td(e.scriptSource ?? "")});<\/script>`).join("\n"), T = p.errors.length ? "" : p.resources.map((e, t) => {
-		let n = `onload="${l && e.kind === "script" ? `window.__macroflushObserveP5(${Ed(JSON.stringify(e.url))});` : ""}window.__macroflushRemotePreparation.complete(${t}, true)" onerror="window.__macroflushRemotePreparation.complete(${t}, false)"`, r = `integrity="${e.hash}" crossorigin="anonymous" ${n}`;
-		return e.kind === "script" ? `<script src="${Ed(e.url)}" ${r}><\/script>` : `<link rel="stylesheet" href="${Ed(e.url)}" ${r} />`;
+  })();`)}<\/script>` : `<script>${Ed(t.js)}<\/script><script>${S}<\/script>`, w = i.filter((e) => e.kind === "script" && e.scriptMode !== "global").map((e) => `<script>${Ed(`window.__macroflushRegisterScript(${JSON.stringify(e.id)}, function() {\n${e.scriptSource ?? ""}\n});`)}<\/script>`).join("\n"), T = (c.libraries ?? []).map((e) => i.find((t) => t.id === e)).map((e) => `<script>window.__macroflushLoadGlobalLibrary(${Dd(e.name)}, ${Dd(e.scriptSource ?? "")});<\/script>`).join("\n"), E = m.errors.length ? "" : m.resources.map((e, t) => {
+		let n = `onload="${l && e.kind === "script" ? `window.__macroflushObserveP5(${Od(JSON.stringify(e.url))});` : ""}window.__macroflushRemotePreparation.complete(${t}, true)" onerror="window.__macroflushRemotePreparation.complete(${t}, false)"`, r = `integrity="${e.hash}" crossorigin="anonymous" ${n}`;
+		return e.kind === "script" ? `<script src="${Od(e.url)}" ${r}><\/script>` : `<link rel="stylesheet" href="${Od(e.url)}" ${r} />`;
 	}).join("\n");
 	return `<!doctype html>
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Content-Security-Policy" content="${y}" />
-    ${b.length ? `<script>${wd(`window.__macroflushFontPreparation = (${Qu.toString()})(${JSON.stringify(b)});`)}<\/script>` : ""}
-    <script>${wd(v)}<\/script>
-    ${C}
+    <meta http-equiv="Content-Security-Policy" content="${b}" />
+    ${x.length ? `<script>${Ed(`window.__macroflushFontPreparation = (${Qu.toString()})(${JSON.stringify(x)});`)}<\/script>` : ""}
+    <script>${Ed(y)}<\/script>
     ${w}
     ${T}
+    ${E}
     <style>
       html,
       body {
@@ -15597,18 +15856,18 @@ function Cd(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     </style>
   </head>
   <body>
-    ${h.html}
-    ${S}
+    ${g.html}
+    ${C}
   </body>
 </html>`;
 }
-function wd(e) {
+function Ed(e) {
 	return e.replace(/<\/script/gi, "<\\/script");
 }
-function Td(e) {
+function Dd(e) {
 	return JSON.stringify(e).replace(/[<\u2028\u2029]/g, (e) => e === "<" ? "\\u003c" : e === "\u2028" ? "\\u2028" : "\\u2029");
 }
-function Ed(e) {
+function Od(e) {
 	return e.replace(/[&"<>]/g, (e) => ({
 		"&": "&amp;",
 		"\"": "&quot;",
@@ -15618,7 +15877,7 @@ function Ed(e) {
 }
 //#endregion
 //#region src/core/feedbackProducers.ts
-function Dd(e) {
+function kd(e) {
 	if (![
 		"editor",
 		"player",
@@ -15644,7 +15903,7 @@ function Dd(e) {
 		}
 	};
 }
-function Od() {
+function Ad() {
 	let e = /* @__PURE__ */ new Map(), t = !1, n = (e, t) => {
 		if (typeof e != "string" || !e || e.length > 16384) throw new j("invalid-value", `Invalid ${t}.`);
 	}, r = (e) => {
@@ -15697,165 +15956,343 @@ function Od() {
 	};
 }
 //#endregion
+//#region src/core/feedbackTouchIndex.ts
+function jd(e, t, n = Infinity) {
+	let r = 0, i = e.length;
+	for (; r < i;) {
+		let a = Math.floor((r + i) / 2), o = e[a];
+		o.t < t || o.t === t && o.seq <= n ? r = a + 1 : i = a;
+	}
+	return r;
+}
+var Md = (e, t) => e.t > t.t || e.t === t.t && e.seq > t.seq;
+function Nd(e, t) {
+	throw new j("unsupported-playback", `Touch channel ${e}: ${t}`, { channelId: e });
+}
+function Pd(e, t) {
+	if (Me(t, A.maxRecordBytes), !Array.isArray(t) || !t.length || t.length > A.maxChannels) throw new j("size-limit", "Touch input requires 1..32 channels.");
+	if (t.some((e) => typeof e != "string" || !e.trim() || e.includes("\0") || new TextEncoder().encode(e).length > A.maxStringBytes) || new Set(t).size !== t.length) throw new j("invalid-format", "Touch channel IDs must be nonempty, unique strings.");
+	let n = Object.freeze([...t]), r = Object.freeze(n.map((t, n) => {
+		let r = e.document.channels.find((e) => e.id === t);
+		if (!r) throw new j("missing-channel", `Touch channel ${t} is missing.`, { channelId: t });
+		r.kind !== "pointer" && Nd(t, "not a pointer channel.");
+		let i = r;
+		i.initial.buttons !== 0 && Nd(t, "the recording starts pressed.");
+		let a = !1, o = [];
+		for (let e of i.records) [
+			null,
+			"down",
+			"move",
+			"up",
+			"cancel"
+		].includes(e.event) || Nd(t, `event ${e.event} is not supported touch input.`), (e.buttons !== 0 && e.buttons !== 1 || e.button !== void 0 && e.button !== 0) && Nd(t, "only button 0 with state 0/1 is supported."), e.event === "down" ? (a && Nd(t, "a down occurs before the previous contact ends."), a = !0) : (e.event === "up" || e.event === "cancel") && (a || Nd(t, "an ending event has no matching down."), a = !1), e.buttons !== +!!a && Nd(t, "button state changes without a contact boundary."), (e.event === "down" || e.event === "up" || e.event === "cancel" || e.event === "move" && a) && o.push(e);
+		return a && Nd(t, "a contact has no up or cancel event."), Object.freeze({
+			id: n + 1,
+			channel: i,
+			events: Object.freeze(o),
+			owns: new WeakSet(o)
+		});
+	})), i = (t, n, r, i) => {
+		let a = e.document.source, o = r === "clip" ? i.clipWidth / a.width : r === "normalized" ? 1 / a.width : 1, s = r === "clip" ? i.clipHeight / a.height : r === "normalized" ? 1 / a.height : 1;
+		return Object.freeze({
+			id: t.id,
+			channelId: t.channel.id,
+			x: n.x * o,
+			y: n.y * s
+		});
+	}, a = (e, t) => {
+		if (![
+			"composition",
+			"normalized",
+			"clip"
+		].includes(e) || ![t.clipWidth, t.clipHeight].every((e) => Number.isFinite(e) && e > 0 && e <= A.maxValue)) throw new j("invalid-value", "Touch input requires a known space and positive logical dimensions.");
+	}, o = (t, n, o, s, c) => {
+		a(o, s);
+		let l = [], u;
+		for (let a of r) {
+			let r = a.channel.records[jd(a.channel.records, t, n) - 1] ?? a.channel.initial;
+			if (r.buttons !== 0) {
+				if (c) {
+					let t = e.sample(a.channel.id, c.time, c.mapping, { space: o }, s);
+					t?.kind !== "pointer" && Nd(a.channel.id, "the current sample is not pointer input."), l.push(Object.freeze({
+						id: a.id,
+						channelId: a.channel.id,
+						x: t.x,
+						y: t.y
+					}));
+				} else l.push(i(a, r, o, s));
+			}
+			let d = a.events[jd(a.events, t, n) - 1];
+			d && (!u || Md(d, u.record)) && (u = {
+				entry: a,
+				record: d
+			});
+		}
+		let d = l[0] ?? (u ? i(u.entry, u.record, o, s) : i(r[0], r[0].channel.initial, o, s));
+		return Object.freeze({
+			touches: Object.freeze(l),
+			mouse: d,
+			mouseIsPressed: l.length !== 0
+		});
+	};
+	return Object.freeze({
+		channelIds: n,
+		durationUs: e.document.durationUs,
+		eventCount: r.reduce((e, t) => e + t.events.length, 0),
+		validateMapping: (t) => e.validateMapping(t),
+		sample(t, n, r, i) {
+			let a = ze(t, e.document.durationUs, n);
+			return o(a, Infinity, r, i, {
+				time: t,
+				mapping: n
+			});
+		},
+		eventState(t, n, r, i) {
+			if (!Number.isSafeInteger(t) || t < 0 || t > e.document.durationUs || !Number.isSafeInteger(n) || n < -1) throw new j("invalid-time", "Invalid touch event state cut.");
+			return o(t, n, r, i);
+		},
+		*events(e, t) {
+			if (![e, t].every(Number.isSafeInteger) || e > t) throw new j("invalid-time", "Touch event range must be ascending integer microseconds.");
+			let n = [], i = (e, t) => Md(t.record, e.record), a = (e) => {
+				let t = n.length;
+				for (n.push(e); t > 0;) {
+					let e = Math.floor((t - 1) / 2);
+					if (!i(n[t], n[e])) break;
+					[n[t], n[e]] = [n[e], n[t]], t = e;
+				}
+			};
+			for (let n of r) {
+				let r = jd(n.events, e), i = n.events[r];
+				i && i.t <= t && a({
+					entry: n,
+					offset: r,
+					record: i
+				});
+			}
+			for (; n.length;) {
+				let e = n[0], r = n.pop();
+				if (n.length) {
+					n[0] = r;
+					let e = 0;
+					for (;;) {
+						let t = e * 2 + 1, r = t + 1, a = e;
+						if (t < n.length && i(n[t], n[a]) && (a = t), r < n.length && i(n[r], n[a]) && (a = r), a === e) break;
+						[n[e], n[a]] = [n[a], n[e]], e = a;
+					}
+				}
+				yield Object.freeze({
+					id: e.entry.id,
+					channelId: e.entry.channel.id,
+					record: e.record
+				});
+				let o = e.offset + 1, s = e.entry.events[o];
+				s && s.t <= t && a({
+					entry: e.entry,
+					offset: o,
+					record: s
+				});
+			}
+		},
+		point(e, t, n) {
+			a(t, n);
+			let o = r[e.id - 1];
+			if (!o || o.channel.id !== e.channelId || !o.owns.has(e.record)) throw new j("invalid-value", "Touch event belongs to another index.");
+			return i(o, e.record, t, n);
+		}
+	});
+}
+//#endregion
 //#region src/core/feedbackStatus.ts
-function kd(e) {
-	let { binding: t } = e, n = t ? {
-		assetId: t.assetId,
-		...t.pointerChannelId === void 0 ? {} : { pointerChannelId: t.pointerChannelId }
+var Fd = /* @__PURE__ */ new WeakMap();
+function Id(e) {
+	return Ld(e, !0);
+}
+function Ld(e, t) {
+	let { binding: n } = e, r = n && (n.inputMode !== void 0 || n.pointerChannelIds !== void 0), i = n ? {
+		assetId: n.assetId,
+		...n.pointerChannelId === void 0 ? {} : { pointerChannelId: n.pointerChannelId },
+		...n.inputMode === void 0 ? {} : { inputMode: n.inputMode },
+		...Array.isArray(n.pointerChannelIds) ? { pointerChannelIds: Object.freeze([...n.pointerChannelIds]) } : {}
 	} : {};
-	if (!t || t.pointerChannelId === void 0) return Object.freeze({
+	if (!n || !r && n.pointerChannelId === void 0) return Object.freeze({
 		status: "off",
 		requested: !1,
-		...n
+		...i
 	});
-	let r = (e, r, i) => Object.freeze({
+	let a = (e, t, r) => Object.freeze({
 		status: e,
 		requested: !0,
-		...n,
+		...i,
 		issue: Object.freeze({
-			code: r,
-			message: i,
-			assetId: t.assetId,
-			channelId: t.pointerChannelId
+			code: t,
+			message: r,
+			assetId: n.assetId,
+			channelId: n.pointerChannelId
 		})
 	});
-	if (e.isolated || e.unsupportedReason) return r("unsupported", "unsupported-playback", e.unsupportedReason ?? "Feedback input in isolated replay requires P4.");
-	let i = e.assets.find((e) => e.id === t.assetId);
-	if (i?.kind !== "feedback") return r("unavailable", "missing-asset", `Feedback asset ${t.assetId} is unavailable.`);
-	if (e.resourceError || e.resourceReady === !1) return r("unavailable", "resource-not-ready", e.resourceError ?? `Feedback resource ${i.name} is not ready.`);
+	if (e.isolated || e.unsupportedReason) return a("unsupported", "unsupported-playback", e.unsupportedReason ?? "Feedback input in isolated replay requires P4.");
+	let o = e.assets.find((e) => e.id === n.assetId);
+	if (o?.kind !== "feedback") return a("unavailable", "missing-asset", `Feedback asset ${n.assetId} is unavailable.`);
+	if (e.resourceError || e.resourceReady === !1) return a("unavailable", "resource-not-ready", e.resourceError ?? `Feedback resource ${o.name} is not ready.`);
 	try {
-		let { revision: a, sampler: o } = oi(i);
-		if (o.validateMapping({
-			offset: t.offset,
-			rate: t.rate,
-			loop: t.loop
+		r && Ie(n, e.assets);
+		let { revision: s, sampler: c } = oi(o);
+		if (c.validateMapping({
+			offset: n.offset,
+			rate: n.rate,
+			loop: n.loop
 		}), ![
 			"composition",
 			"normalized",
 			"clip"
-		].includes(t.space)) throw new j("invalid-value", "Unknown Feedback coordinate space.");
-		let s = o.summary.channels.find((e) => e.id === t.pointerChannelId);
-		return s ? s.kind !== "pointer" || !s.supported ? r("unavailable", "unsupported-channel", `Channel ${s.id} is not supported pointer input.`) : e.runtimeIssue ? r(e.runtimeIssue.code === "unsupported-playback" ? "unsupported" : "unavailable", e.runtimeIssue.code, e.runtimeIssue.message) : Object.freeze({
+		].includes(n.space)) throw new j("invalid-value", "Unknown Feedback coordinate space.");
+		for (let e of r ? n.pointerChannelIds : [n.pointerChannelId]) {
+			let t = c.summary.channels.find((t) => t.id === e);
+			if (!t) return a("unavailable", "missing-channel", `Pointer channel ${e} is unavailable.`);
+			if (t.kind !== "pointer" || !t.supported) return a("unavailable", "unsupported-channel", `Channel ${t.id} is not supported pointer input.`);
+		}
+		if (r) {
+			if (!e.p5Global) return a("unsupported", "unsupported-playback", "Standard touch input requires the p5 global capability; DOM touch/pointer dispatch is unsupported.");
+			let t = Fd.get(o.recording);
+			t || (t = /* @__PURE__ */ new Map(), Fd.set(o.recording, t));
+			for (let e of n.pointerChannelIds) {
+				if (!t.has(e)) try {
+					Pd(c, [e]), t.set(e, null);
+				} catch (n) {
+					t.set(e, {
+						code: n instanceof j ? n.code : "unsupported-playback",
+						message: n instanceof Error ? n.message : String(n),
+						channelId: e
+					});
+				}
+				let n = t.get(e);
+				if (n) return a("unsupported", n.code, n.message);
+			}
+		}
+		return e.runtimeIssue ? a(e.runtimeIssue.code === "unsupported-playback" ? "unsupported" : "unavailable", e.runtimeIssue.code, e.runtimeIssue.message) : r && !t && e.inputQualified !== !0 ? Object.freeze({
+			...a("unavailable", "resource-not-ready", "Waiting for p5 touch input qualification."),
+			revision: s
+		}) : Object.freeze({
 			status: "ready",
 			requested: !0,
-			...n,
-			revision: a
-		}) : r("unavailable", "missing-channel", `Pointer channel ${t.pointerChannelId} is unavailable.`);
+			...i,
+			revision: s
+		});
 	} catch (e) {
-		return r("unavailable", e instanceof j ? e.code : "invalid-format", e instanceof Error ? e.message : "Invalid Feedback resource.");
+		return a("unavailable", e instanceof j ? e.code : "invalid-format", e instanceof Error ? e.message : "Invalid Feedback resource.");
 	}
 }
 Object.freeze(["radians", "degrees"]);
-var Ad = Object.freeze({
+var Rd = Object.freeze({
 	key: "rotation",
 	shape: "xyz"
-}), jd = Object.freeze({
+}), zd = Object.freeze({
 	key: "angle",
 	shape: "scalar"
-}), Md = Object.freeze([Ad]), Nd = Object.freeze([Ad, jd]), Pd = Object.freeze([]), Fd = {
-	"camera-3d": Md,
-	"light-3d": Nd,
-	"null-3d": Md,
-	"mesh-3d": Md,
-	"model-3d": Md
-}, Id = /* @__PURE__ */ new WeakMap();
-function Ld(e) {
-	return Object.prototype.hasOwnProperty.call(Fd, e);
+}), Bd = Object.freeze([Rd]), Vd = Object.freeze([Rd, zd]), Hd = Object.freeze([]), Ud = {
+	"camera-3d": Bd,
+	"light-3d": Vd,
+	"null-3d": Bd,
+	"mesh-3d": Bd,
+	"model-3d": Bd
+}, Wd = /* @__PURE__ */ new WeakMap();
+function Gd(e) {
+	return Object.prototype.hasOwnProperty.call(Ud, e);
 }
-function Rd(e) {
-	return Ld(e) ? Fd[e] : Pd;
+function Kd(e) {
+	return Gd(e) ? Ud[e] : Hd;
 }
-function zd(e) {
-	let t = Id.get(e);
+function qd(e) {
+	let t = Wd.get(e);
 	if (!t) {
 		let n = /* @__PURE__ */ new Map();
 		for (let t of e) n.has(t.id) || n.set(t.id, Object.freeze({
 			id: t.id,
 			kind: t.kind
 		}));
-		t = n, Id.set(e, t);
+		t = n, Wd.set(e, t);
 	}
 	return t;
 }
-function Bd(e, t, n) {
+function Jd(e, t, n) {
 	if (e.kind !== "object-3d") return null;
 	let r = e.assetId ? n.get(e.assetId) : void 0;
-	if (!r || !Ld(r.kind)) throw Error(`Unknown managed object asset on ${e.id}.`);
-	return Rd(r.kind).find((e) => e.key === t) ?? null;
+	if (!r || !Gd(r.kind)) throw Error(`Unknown managed object asset on ${e.id}.`);
+	return Kd(r.kind).find((e) => e.key === t) ?? null;
 }
-function Vd(e = "radians") {
+function Yd(e = "radians") {
 	if (e !== "radians" && e !== "degrees") throw Error("angleUnit must be radians or degrees.");
 	return e;
 }
-function Hd(e, t, n) {
+function Xd(e, t, n) {
 	if (typeof e != "number" || !Number.isFinite(e) || !Number.isFinite(e * t)) throw Error(`Invalid finite managed angle at ${n}.`);
 	return e * t;
 }
-function Ud(e, t) {
+function Zd(e, t) {
 	if (e === void 0 || t === void 0) throw Error("Conversion requires an explicit angleUnit at both boundaries.");
-	return Vd(e), Vd(t), e === t ? 1 : e === "radians" ? 180 / Math.PI : Math.PI / 180;
+	return Yd(e), Yd(t), e === t ? 1 : e === "radians" ? 180 / Math.PI : Math.PI / 180;
 }
-function Wd(e, t, n, r = "angle") {
-	return Hd(e, Ud(t, n), r);
+function Qd(e, t, n, r = "angle") {
+	return Xd(e, Zd(t, n), r);
 }
-function Gd(e, t, n, r, i = t.key) {
-	let a = Ud(n, r);
-	if (t.shape === "scalar") return Hd(e, a, i);
+function $d(e, t, n, r, i = t.key) {
+	let a = Zd(n, r);
+	if (t.shape === "scalar") return Xd(e, a, i);
 	if (!Array.isArray(e) || e.length !== 3) throw Error(`Invalid managed XYZ rotation at ${i}.`);
 	return [
 		0,
 		1,
 		2
-	].map((t) => Hd(e[t], a, `${i}[${t}]`));
+	].map((t) => Xd(e[t], a, `${i}[${t}]`));
 }
-function Kd(e, t, n, r, i = t.key) {
-	let a = Ud(n, r);
+function ef(e, t, n, r, i = t.key) {
+	let a = Zd(n, r);
 	if (!e || typeof e != "object" || Array.isArray(e) || e.type !== (t.shape === "xyz" ? "vec3" : "number")) throw Error(`Invalid managed angle schema at ${i}.`);
 	let o = { ...e };
-	for (let a of ["default", "value"]) Object.prototype.hasOwnProperty.call(e, a) && e[a] !== void 0 && (o[a] = Gd(e[a], t, n, r, `${i}.${a}`));
+	for (let a of ["default", "value"]) Object.prototype.hasOwnProperty.call(e, a) && e[a] !== void 0 && (o[a] = $d(e[a], t, n, r, `${i}.${a}`));
 	for (let t of [
 		"min",
 		"max",
 		"step"
-	]) Object.prototype.hasOwnProperty.call(e, t) && e[t] !== void 0 && (o[t] = Hd(e[t], a, `${i}.${t}`));
+	]) Object.prototype.hasOwnProperty.call(e, t) && e[t] !== void 0 && (o[t] = Xd(e[t], a, `${i}.${t}`));
 	return o;
 }
 //#endregion
 //#region src/core/managedAngleCodec.ts
-var qd = (e, t) => Object.prototype.hasOwnProperty.call(e, t), Jd = (e) => !!(e && typeof e == "object" && !Array.isArray(e));
-function Yd(e) {
-	if (!Jd(e) || ![
+var tf = (e, t) => Object.prototype.hasOwnProperty.call(e, t), nf = (e) => !!(e && typeof e == "object" && !Array.isArray(e));
+function rf(e) {
+	if (!nf(e) || ![
 		1,
 		2,
 		3
 	].includes(Number(e.clipFormatVersion)) || typeof e.clipFormatVersion != "number" || !Array.isArray(e.assets) || e.clipFormatVersion === 1 && !Array.isArray(e.layers)) throw Error("Managed angles require a legacy V1, V2 or V3 project.");
-	if (qd(e, "managedAngleCodecVersion") || qd(e, "angleUnit") || qd(e, "sourceFormatVersion")) throw Error("Managed angle tags must be outside the legacy project body.");
+	if (tf(e, "managedAngleCodecVersion") || tf(e, "angleUnit") || tf(e, "sourceFormatVersion")) throw Error("Managed angle tags must be outside the legacy project body.");
 }
-function Xd(e) {
-	if (!Jd(e) || e.managedAngleCodecVersion !== 1 || e.angleUnit !== "degrees" || ![
+function af(e) {
+	if (!nf(e) || e.managedAngleCodecVersion !== 1 || e.angleUnit !== "degrees" || ![
 		1,
 		2,
 		3
-	].includes(Number(e.sourceFormatVersion)) || typeof e.sourceFormatVersion != "number" || qd(e, "clipFormatVersion") || !Jd(e.document) || qd(e.document, "clipFormatVersion")) throw Error("Unsupported managed angle document unit, version or shape.");
-	Yd({
+	].includes(Number(e.sourceFormatVersion)) || typeof e.sourceFormatVersion != "number" || tf(e, "clipFormatVersion") || !nf(e.document) || tf(e.document, "clipFormatVersion")) throw Error("Unsupported managed angle document unit, version or shape.");
+	rf({
 		...e.document,
 		clipFormatVersion: e.sourceFormatVersion
 	});
 }
-function Zd(e, t, n) {
-	let r = structuredClone(e), i = zd(r.assets), a = (e) => e.map((e) => ({
+function of(e, t, n) {
+	let r = structuredClone(e), i = qd(r.assets), a = (e) => e.map((e) => ({
 		...e,
 		clips: e.clips.map((e) => {
 			if (e.kind !== "object-3d") return e;
-			Bd(e, "rotation", i);
+			Jd(e, "rotation", i);
 			let r = { ...e.params }, a = e.keyframeTracks;
-			for (let o of Rd(i.get(e.assetId).kind)) {
+			for (let o of Kd(i.get(e.assetId).kind)) {
 				let i = o.key;
-				qd(r, i) && (r[i] = Kd(r[i], o, t, n, `${e.id}.params.${i}`)), a && qd(a, i) && (a = {
+				tf(r, i) && (r[i] = ef(r[i], o, t, n, `${e.id}.params.${i}`)), a && tf(a, i) && (a = {
 					...a,
 					[i]: a[i].map((r) => ({
 						...r,
-						value: Gd(r.value, o, t, n, `${e.id}.keyframeTracks.${i}.value`)
+						value: $d(r.value, o, t, n, `${e.id}.keyframeTracks.${i}.value`)
 					}))
 				});
 			}
@@ -15873,12 +16310,12 @@ function Zd(e, t, n) {
 				layers: a(e.composition.layers)
 			}
 		};
-		if (!Ld(e.kind)) return e;
+		if (!Gd(e.kind)) return e;
 		let r = e, i = { ...r.descriptor }, o = i.transform;
-		for (let r of Rd(e.kind)) r.key === "rotation" && Jd(o) && qd(o, "rotation") && o.rotation !== void 0 ? i.transform = {
+		for (let r of Kd(e.kind)) r.key === "rotation" && nf(o) && tf(o, "rotation") && o.rotation !== void 0 ? i.transform = {
 			...o,
-			rotation: Gd(o.rotation, r, t, n, `${e.id}.descriptor.transform.rotation`)
-		} : r.key === "angle" && qd(i, "angle") && i.angle !== void 0 && (i.angle = Gd(i.angle, r, t, n, `${e.id}.descriptor.angle`));
+			rotation: $d(o.rotation, r, t, n, `${e.id}.descriptor.transform.rotation`)
+		} : r.key === "angle" && tf(i, "angle") && i.angle !== void 0 && (i.angle = $d(i.angle, r, t, n, `${e.id}.descriptor.angle`));
 		return {
 			...r,
 			descriptor: i
@@ -15890,10 +16327,10 @@ function Zd(e, t, n) {
 		...r.clipFormatVersion === 1 ? { layers: a(r.layers) } : {}
 	};
 }
-function Qd(e) {
-	if (Jd(e) && (qd(e, "managedAngleCodecVersion") || qd(e, "angleUnit") || qd(e, "sourceFormatVersion"))) return Xd(e), structuredClone(e);
-	Yd(e);
-	let { clipFormatVersion: t, ...n } = Zd(e, "radians", "degrees");
+function sf(e) {
+	if (nf(e) && (tf(e, "managedAngleCodecVersion") || tf(e, "angleUnit") || tf(e, "sourceFormatVersion"))) return af(e), structuredClone(e);
+	rf(e);
+	let { clipFormatVersion: t, ...n } = of(e, "radians", "degrees");
 	return {
 		managedAngleCodecVersion: 1,
 		angleUnit: "degrees",
@@ -15909,7 +16346,7 @@ var $ = class extends Error {
 		super(t), this.code = e, this.name = "SourceResolutionError";
 	}
 };
-function $d(e) {
+function cf(e) {
 	if (e === void 0 || e.trim() === "") return { status: "missing" };
 	let t = e.trim();
 	if (/^data:/i.test(t)) {
@@ -15954,7 +16391,7 @@ function $d(e) {
 }
 //#endregion
 //#region src/core/projectFormatV3.ts
-function ef(e) {
+function lf(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw Error("Invalid SourceRef.");
 	let t = e, n = t.kind === "embedded" ? ["kind", "dataUrl"] : t.kind === "linked" ? [
 		"kind",
@@ -15970,11 +16407,11 @@ function ef(e) {
 		if (t.base !== "project" || typeof t.path != "string" || !t.path.trim() || /^(?:\/|\\|[a-zA-Z][a-zA-Z\d+.-]*:)/.test(t.path)) throw Error("Linked SourceRef must use a project-relative path.");
 		return;
 	}
-	let r = $d(t.kind === "embedded" ? t.dataUrl : t.kind === "url" ? t.url : void 0);
+	let r = cf(t.kind === "embedded" ? t.dataUrl : t.kind === "url" ? t.url : void 0);
 	if (r.status !== "ready" || r.source.kind !== t.kind) throw Error("Invalid persistent SourceRef.");
 	if (t.kind === "url" && r.source.kind === "url" && t.base !== r.source.base) throw Error("SourceRef URL base does not match its URL.");
 }
-function tf(e) {
+function uf(e) {
 	if (!e || typeof e != "object" || e.clipFormatVersion !== 3) throw Error("Expected a V3 project.");
 	let t = structuredClone(e);
 	if (!Array.isArray(t.assets)) throw Error("V3 project assets are invalid.");
@@ -15988,7 +16425,7 @@ function tf(e) {
 		].includes(e.kind)) return e;
 		if ("sourceUrl" in e || "stemSources" in e) throw Error("V3 binary assets must use sourceRef/stemRefs, not legacy URLs.");
 		let t = e;
-		if (t.sourceRef !== void 0 && ef(t.sourceRef), t.stemRefs !== void 0) {
+		if (t.sourceRef !== void 0 && lf(t.sourceRef), t.stemRefs !== void 0) {
 			if (e.kind !== "audio" || !t.stemRefs || typeof t.stemRefs != "object" || Array.isArray(t.stemRefs)) throw Error("Only audio assets can contain stemRefs.");
 			for (let [e, n] of Object.entries(t.stemRefs)) {
 				if (![
@@ -15997,7 +16434,7 @@ function tf(e) {
 					"other",
 					"vocals"
 				].includes(e)) throw Error("Unknown stem reference.");
-				ef(n);
+				lf(n);
 			}
 		}
 		if (e.kind === "model-3d" && t.sourceRef?.kind !== "embedded") throw new $("unsupported", "V3 models remain embedded until dependency-aware 3D support is implemented.");
@@ -16015,10 +16452,10 @@ function tf(e) {
 }
 //#endregion
 //#region src/core/sourceResolver.ts
-function nf() {
+function df() {
 	return new $("aborted", "Source resolution was aborted.");
 }
-function rf() {
+function ff() {
 	let e = /* @__PURE__ */ new Map(), t = /* @__PURE__ */ new WeakMap(), n = 0, r = !1, i = (e) => e ? (t.has(e) || t.set(e, ++n), t.get(e)) : 0, a = (e) => {
 		e.refs === 0 && e.resource && !e.disposed && (e.disposed = !0, e.resource.release());
 	}, o = (t, n, r, i) => {
@@ -16079,7 +16516,7 @@ function rf() {
 	};
 	return {
 		async acquire(t, n, c = {}) {
-			if (r || c.signal?.aborted) throw nf();
+			if (r || c.signal?.aborted) throw df();
 			if (!n.assetId || !n.revision || !n.securityScope) throw new $("invalid", "Asset, revision and security scope are required.");
 			let l = { ...n }, u = { ...t }, d = u.kind === "embedded" ? u.dataUrl : JSON.stringify(u.kind === "linked" ? [
 				u.kind,
@@ -16111,9 +16548,9 @@ function rf() {
 			let g;
 			try {
 				let e = await (c.signal ? Promise.race([h.promise, new Promise((e, t) => {
-					g = () => t(nf()), c.signal.addEventListener("abort", g, { once: !0 }), c.signal.aborted && g();
+					g = () => t(df()), c.signal.addEventListener("abort", g, { once: !0 }), c.signal.aborted && g();
 				})]) : h.promise);
-				if (r || c.signal?.aborted) throw nf();
+				if (r || c.signal?.aborted) throw df();
 				let t = !1, n = h;
 				return {
 					url: e.url,
@@ -16138,17 +16575,17 @@ function rf() {
 }
 //#endregion
 //#region src/core/projectSources.ts
-function af(e) {
-	return e && typeof e == "object" && "clipFormatVersion" in e && e.clipFormatVersion === 3 ? tf(e) : wa(e);
+function pf(e) {
+	return e && typeof e == "object" && "clipFormatVersion" in e && e.clipFormatVersion === 3 ? uf(e) : wa(e);
 }
-function of() {
-	let e = rf(), t = !1, n = 0, r = 0, i = () => {
+function mf() {
+	let e = ff(), t = !1, n = 0, r = 0, i = () => {
 		t && !n && !r && e.dispose();
 	};
 	return {
 		async resolve(a, o, s) {
 			if (t) throw new $("aborted", "Project source session is closed.");
-			let c = af(a), l = [], u = [];
+			let c = pf(a), l = [], u = [];
 			n++;
 			try {
 				let n = async (n, r, i) => {
@@ -16266,15 +16703,15 @@ function of() {
 }
 //#endregion
 //#region src/core/editorProjectDocument.ts
-var sf = (e) => [
+var hf = (e) => [
 	"image",
 	"video",
 	"audio",
 	"font",
 	"model-3d"
-].includes(e.kind), cf = (e) => e?.kind === "embedded" ? e.dataUrl : void 0;
-function lf(e) {
-	let t = af(e);
+].includes(e.kind), gf = (e) => e?.kind === "embedded" ? e.dataUrl : void 0;
+function _f(e) {
+	let t = pf(e);
 	return t.assets = t.assets.map((e) => {
 		let { sourceRevision: t, stemRevisions: n, ...r } = e;
 		return r;
@@ -16283,9 +16720,9 @@ function lf(e) {
 		clipFormatVersion: 2,
 		persistentFormatVersion: 3,
 		assets: t.assets.map((e) => {
-			if (!sf(e)) return e;
-			let t = e, n = cf(t.sourceRef), r = Object.fromEntries(Object.entries(t.stemRefs ?? {}).flatMap(([e, t]) => {
-				let n = cf(t);
+			if (!hf(e)) return e;
+			let t = e, n = gf(t.sourceRef), r = Object.fromEntries(Object.entries(t.stemRefs ?? {}).flatMap(([e, t]) => {
+				let n = gf(t);
 				return n ? [[e, n]] : [];
 			}));
 			return {
@@ -16298,24 +16735,24 @@ function lf(e) {
 }
 //#endregion
 //#region src/core/managedEditorDocument.ts
-function uf(e) {
-	return Qd(lf(e));
+function vf(e) {
+	return sf(_f(e));
 }
-function df(e, t) {
+function yf(e, t) {
 	let n = e.document.assets.find((e) => e.kind === "composition" && e.id === t);
 	if (!n) throw Error(`Composition asset not found: ${t}`);
 	return n;
 }
-function ff(e, t) {
+function bf(e, t) {
 	return {
 		managedAngleCodecVersion: 1,
 		angleUnit: "degrees",
 		compositionId: t,
-		composition: df(e, t).composition,
+		composition: yf(e, t).composition,
 		assets: e.document.assets
 	};
 }
-function pf(e, t) {
+function xf(e, t) {
 	let n = new Map(t.map((e) => [e.id, e]));
 	return {
 		...e,
@@ -16340,18 +16777,18 @@ function pf(e, t) {
 }
 //#endregion
 //#region src/player/legacyPlayerProject.ts
-var mf = (e) => typeof e == "object" && !!e && !Array.isArray(e);
-function hf(e, t = (e) => console.warn(e)) {
+var Sf = (e) => typeof e == "object" && !!e && !Array.isArray(e);
+function Cf(e, t = (e) => console.warn(e)) {
 	if (!e || ![
 		1,
 		2,
 		3
 	].includes(e.clipFormatVersion) || "angleUnit" in e || "managedAngleCodecVersion" in e) throw Error("The public Player requires a legacy radian project file.");
 	if (e.clipFormatVersion === 3) {
-		let t = uf(e);
+		let t = vf(e);
 		return {
 			document: t,
-			workspace: ff(t, t.document.rootCompositionId),
+			workspace: bf(t, t.document.rootCompositionId),
 			remoteAssetPolicy: t.document.remoteAssetPolicy
 		};
 	}
@@ -16369,7 +16806,7 @@ function hf(e, t = (e) => console.warn(e)) {
 			2
 		].every((t) => typeof e[t] == "number" && Number.isFinite(e[t])))) return e;
 		try {
-			return Gd(e, t, "radians", "degrees", n);
+			return $d(e, t, "radians", "degrees", n);
 		} catch {
 			return a(n), t.shape === "scalar" ? NaN : [
 				NaN,
@@ -16380,16 +16817,16 @@ function hf(e, t = (e) => console.warn(e)) {
 	}, s = (e, t) => {
 		if (typeof e != "number" || !Number.isFinite(e)) return e;
 		try {
-			return Wd(e, "radians", "degrees", t);
+			return Qd(e, "radians", "degrees", t);
 		} catch {
 			return a(t), NaN;
 		}
 	}, c = (e, t, n = "params") => {
-		if (!mf(e)) return e;
-		let r = Object.fromEntries(Object.entries(e).map(([e, t]) => [e, mf(t) ? { ...t } : t]));
-		for (let e of Rd(t ?? "")) {
+		if (!Sf(e)) return e;
+		let r = Object.fromEntries(Object.entries(e).map(([e, t]) => [e, Sf(t) ? { ...t } : t]));
+		for (let e of Kd(t ?? "")) {
 			let t = r[e.key];
-			if (mf(t)) {
+			if (Sf(t)) {
 				for (let r of ["value", "default"]) r in t && (t[r] = o(t[r], e, `${n}.${e.key}.${r}`));
 				for (let r of [
 					"min",
@@ -16405,12 +16842,12 @@ function hf(e, t = (e) => console.warn(e)) {
 		layers: e.layers.map((e) => ({
 			...e,
 			clips: e.clips.map((e) => {
-				let n = e.kind === "object-3d" ? r.get(e.assetId)?.kind : void 0, i = Rd(n ?? ""), a = e.keyframeTracks;
+				let n = e.kind === "object-3d" ? r.get(e.assetId)?.kind : void 0, i = Kd(n ?? ""), a = e.keyframeTracks;
 				for (let n of i) {
 					let r = a?.[n.key];
 					Array.isArray(r) && (a = {
 						...a,
-						[n.key]: r.map((r, i) => mf(r) ? {
+						[n.key]: r.map((r, i) => Sf(r) ? {
 							...r,
 							value: o(r.value, n, `${t}.${e.id}.keys.${n.key}.${i}`)
 						} : r)
@@ -16428,9 +16865,9 @@ function hf(e, t = (e) => console.warn(e)) {
 			...e,
 			composition: l(e.composition, e.id)
 		};
-		if (!Ld(e.kind) || !("descriptor" in e) || !mf(e.descriptor)) return e;
+		if (!Gd(e.kind) || !("descriptor" in e) || !Sf(e.descriptor)) return e;
 		let t = { ...e.descriptor };
-		for (let n of Rd(e.kind)) n.key === "rotation" && mf(t.transform) && "rotation" in t.transform ? t.transform = {
+		for (let n of Kd(e.kind)) n.key === "rotation" && Sf(t.transform) && "rotation" in t.transform ? t.transform = {
 			...t.transform,
 			rotation: o(t.transform.rotation, n, `${e.id}.descriptor.rotation`)
 		} : n.key === "angle" && "angle" in t && (t.angle = o(t.angle, n, `${e.id}.descriptor.angle`));
@@ -16457,9 +16894,9 @@ function hf(e, t = (e) => console.warn(e)) {
 }
 //#endregion
 //#region src/core/managedEditorSources.ts
-function gf(e, t) {
+function wf(e, t) {
 	qi(e);
-	let n = pf(ff(e, e.document.rootCompositionId), t);
+	let n = xf(bf(e, e.document.rootCompositionId), t);
 	return {
 		...e,
 		document: {
@@ -16470,8 +16907,8 @@ function gf(e, t) {
 }
 //#endregion
 //#region src/player/managedAnglePlayerApi.ts
-function _f(e, t, n = {}) {
-	let r = Vd(n.angleUnit);
+function Tf(e, t, n = {}) {
+	let r = Yd(n.angleUnit);
 	Ki(t());
 	let i = {
 		setClipParam: e.setClipParam.bind(e),
@@ -16480,11 +16917,11 @@ function _f(e, t, n = {}) {
 		get: e.get.bind(e)
 	}, a = (e, t) => {
 		if (!t) return null;
-		if (!n.legacyInput) return Bd(t.clip, t.key, zd(e.assets));
+		if (!n.legacyInput) return Jd(t.clip, t.key, qd(e.assets));
 		if (t.clip.kind !== "object-3d") return null;
 		let r = "";
 		for (let n of e.assets) n.id === t.clip.assetId && (r = n.kind);
-		return Rd(r).find((e) => e.key === t.key) ?? null;
+		return Kd(r).find((e) => e.key === t.key) ?? null;
 	};
 	function o(e, t) {
 		let n = e.composition, r = t;
@@ -16513,7 +16950,7 @@ function _f(e, t, n = {}) {
 		if (!(u.shape === "scalar" ? typeof d == "number" && Number.isFinite(d) : Array.isArray(d) && d.length === 3 && d.every((e) => typeof e == "number" && Number.isFinite(e)))) return n.legacyInput ? s(i) : !1;
 		let f;
 		try {
-			f = Gd(d, u, r, "degrees");
+			f = $d(d, u, r, "degrees");
 		} catch {
 			return !1;
 		}
@@ -16526,7 +16963,7 @@ function _f(e, t, n = {}) {
 		let c = o(s, e), l = a(s, c);
 		if (!l) return i;
 		try {
-			return Gd(i, l, "degrees", r);
+			return $d(i, l, "degrees", r);
 		} catch (e) {
 			if (n.legacyInput) return i;
 			throw e;
@@ -16549,7 +16986,7 @@ function _f(e, t, n = {}) {
 }
 //#endregion
 //#region src/core/p5ReplayHistory.ts
-function vf(e, t, n = []) {
+function Ef(e, t, n = []) {
 	if (![
 		t.width,
 		t.height,
@@ -16605,13 +17042,13 @@ function vf(e, t, n = []) {
 }
 //#endregion
 //#region src/core/p5ReplaySession.ts
-var yf = class extends Error {
+var Df = class extends Error {
 	diagnostic;
 	constructor(e) {
 		super(e.message), this.diagnostic = e, this.name = "P5ReplayError";
 	}
 };
-function bf(e) {
+function Of(e) {
 	for (let [t, n] of Object.entries(e.budget)) if (!Number.isFinite(n) || n <= 0) throw Error(`Invalid p5 replay budget: ${t}`);
 	if (!Number.isInteger(e.budget.maxDrawsPerReset) || !Number.isInteger(e.budget.chunkDraws)) throw Error("P5 draw budgets must be integers.");
 	let t = e.now ?? (() => performance.now()), n = 0, r = !1, i = Promise.resolve(), a, o = /* @__PURE__ */ new Set(), s, c, l = {
@@ -16622,7 +17059,7 @@ function bf(e) {
 		completedDraws: 0,
 		totalDraws: 0,
 		startFrame: null
-	}, u = (t, n, r) => new yf({
+	}, u = (t, n, r) => new Df({
 		code: t,
 		clipId: e.clipId,
 		frame: n,
@@ -16728,7 +17165,7 @@ function bf(e) {
 			throw u("draw-failed", o, "replay did not complete");
 		} catch (e) {
 			y ? await h() : await m(v);
-			let t = e instanceof yf ? e : u(g.aborted ? "canceled" : "draw-failed", o, e instanceof Error ? e.message : String(e));
+			let t = e instanceof Df ? e : u(g.aborted ? "canceled" : "draw-failed", o, e instanceof Error ? e.message : String(e));
 			throw t.diagnostic.code !== "canceled" && !r && d({
 				phase: "error",
 				generation: i,
@@ -16783,14 +17220,14 @@ function bf(e) {
 }
 //#endregion
 //#region src/runtime/p5ReplayRealm.ts
-var xf = /* @__PURE__ */ new WeakSet(), Sf = !1, Cf = () => {
-	Sf || (Sf = !0, window.addEventListener("message", (e) => {
-		!e.source || !xf.has(e.source) || (e.data?.bitmap?.close?.(), e.data?.helperBitmap?.close?.());
+var kf = /* @__PURE__ */ new WeakSet(), Af = !1, jf = () => {
+	Af || (Af = !0, window.addEventListener("message", (e) => {
+		!e.source || !kf.has(e.source) || (e.data?.bitmap?.close?.(), e.data?.helperBitmap?.close?.());
 	}));
 };
-function wf(e) {
+function Mf(e) {
 	return async (t) => {
-		Cf();
+		jf();
 		let n = document.createElement("iframe");
 		n.sandbox.add("allow-scripts"), n.setAttribute("aria-hidden", "true"), Object.assign(n.style, {
 			position: "absolute",
@@ -16806,7 +17243,7 @@ function wf(e) {
 			u = t;
 		});
 		l.catch(() => void 0), d.catch(() => void 0);
-		let f, p = (t, n) => new yf({
+		let f, p = (t, n) => new Df({
 			code: t,
 			clipId: e.diagnosticClipId ?? e.clipId,
 			frame: f?.frame ?? 0,
@@ -16877,7 +17314,7 @@ function wf(e) {
 			}
 			c(), m(p("unsupported-api", `isolated realm sent denied message ${String(o.type)}`));
 		}, _ = () => m(p("canceled", "candidate canceled")), v = () => {
-			r || (r = !0, m(p("canceled", "candidate disposed")), clearTimeout(y), t.signal.removeEventListener("abort", _), window.removeEventListener("message", g), n.contentWindow && xf.add(n.contentWindow), n.remove());
+			r || (r = !0, m(p("canceled", "candidate disposed")), clearTimeout(y), t.signal.removeEventListener("abort", _), window.removeEventListener("message", g), n.contentWindow && kf.add(n.contentWindow), n.remove());
 		}, y = setTimeout(() => m(p("preparation-failed", "candidate preparation timed out")), e.preparationTimeoutMs ?? 15e3);
 		window.addEventListener("message", g), t.signal.addEventListener("abort", _, { once: !0 });
 		try {
@@ -16923,7 +17360,7 @@ function wf(e) {
 }
 //#endregion
 //#region src/runtime/p5ClipReplay.ts
-function Tf(e) {
+function Nf(e) {
 	let { history: t } = e, n = t.definition, r = e.sourceId ?? n.id, i = structuredClone(e.descriptors), a = [], o = {
 		draws: 0,
 		cpuMs: 0,
@@ -16931,7 +17368,7 @@ function Tf(e) {
 		peakPixels: 0,
 		peakSurfaces: 0,
 		peakAccountedBytes: 0
-	}, s = wf({
+	}, s = Mf({
 		clipId: r,
 		clipName: n.name,
 		diagnosticClipId: n.id,
@@ -16944,7 +17381,7 @@ function Tf(e) {
 			...t.tick(e),
 			clipId: r
 		}),
-		document: (a) => xd(r, n.source, n.params, n.remoteAssets, i, e.nativeAssetSources, {
+		document: (a) => Cd(r, n.source, n.params, n.remoteAssets, i, e.nativeAssetSources, {
 			documentToken: a.documentToken,
 			libraries: n.libraries,
 			capabilities: n.capabilities,
@@ -16957,7 +17394,7 @@ function Tf(e) {
 				compositionHeight: t.context.height
 			}
 		})
-	}), c = bf({
+	}), c = Of({
 		clipId: n.id,
 		clipName: n.name,
 		mode: e.mode,
@@ -16992,7 +17429,7 @@ function Tf(e) {
 			if (a) {
 				let t = fe(n.params, n.keyframeTracks, r);
 				if (Object.keys(t).some((e) => JSON.stringify(t[e]) !== JSON.stringify(a[e]))) {
-					let t = new yf({
+					let t = new Df({
 						code: "unsupported-api",
 						clipId: n.id,
 						frame: o.frame,
@@ -17020,16 +17457,16 @@ function Tf(e) {
 }
 //#endregion
 //#region src/core/runtimeChildClock.ts
-function Ef(e, t, n) {
+function Pf(e, t, n) {
 	let r = e * t;
 	return n === "html" ? Math.round(r) : Math.floor(r);
 }
-function Df(e, t, n) {
-	return Ef(e, t, n) / t;
+function Ff(e, t, n) {
+	return Pf(e, t, n) / t;
 }
 //#endregion
 //#region src/core/sceneGraphTransform.ts
-function Of(e, t) {
+function If(e, t) {
 	let n = e.rotation * (Math.PI / 180), r = Math.cos(n) * e.scale, i = Math.sin(n) * e.scale, [a, o] = t;
 	return [
 		r,
@@ -17040,7 +17477,7 @@ function Of(e, t) {
 		e.y - i * a - r * o
 	];
 }
-function kf(e, t) {
+function Lf(e, t) {
 	return [
 		e[0] * t[0] + e[2] * t[1],
 		e[1] * t[0] + e[3] * t[1],
@@ -17050,7 +17487,7 @@ function kf(e, t) {
 		e[1] * t[4] + e[3] * t[5] + e[5]
 	];
 }
-function Af(e, t, n) {
+function Rf(e, t, n) {
 	let r = [], i = /* @__PURE__ */ new Set(), a = e.get(t);
 	if (!a) return null;
 	for (; a;) {
@@ -17067,7 +17504,7 @@ function Af(e, t, n) {
 	], s = 1, c = !0;
 	for (let e of r.reverse()) {
 		let t = n(e);
-		o = kf(o, Of(e, e.anchorPoint ?? [t[0] / 2, t[1] / 2])), s *= e.opacity, c &&= e.visible;
+		o = Lf(o, If(e, e.anchorPoint ?? [t[0] / 2, t[1] / 2])), s *= e.opacity, c &&= e.visible;
 	}
 	return {
 		transform: o,
@@ -17077,47 +17514,47 @@ function Af(e, t, n) {
 }
 //#endregion
 //#region src/core/mediaTransport.ts
-var jf = { mode: "realtime" }, Mf = { mode: "paused-sample" }, Nf = { mode: "prepared" }, Pf = (e) => e ? jf : Mf, Ff = /* @__PURE__ */ new WeakMap();
-function If(e, t) {
+var zf = { mode: "realtime" }, Bf = { mode: "paused-sample" }, Vf = { mode: "prepared" }, Hf = (e) => e ? zf : Bf, Uf = /* @__PURE__ */ new WeakMap();
+function Wf(e, t) {
 	!t.active || t.context.mode !== "paused-sample" || e.readyState === 0 || t.appliedTarget === t.target || (Math.abs(e.currentTime - t.target) > 1e-6 && (e.currentTime = t.target), t.appliedTarget = t.target);
 }
-function Lf(e) {
-	let t = Ff.get(e);
+function Gf(e) {
+	let t = Uf.get(e);
 	t && (t.active = !1), e.pause();
 }
-function Rf(e) {
-	for (let t of e.values()) t instanceof HTMLMediaElement && Lf(t);
+function Kf(e) {
+	for (let t of e.values()) t instanceof HTMLMediaElement && Gf(t);
 }
-function zf(e, t, n, r, i, a = 0, o = .15) {
+function qf(e, t, n, r, i, a = 0, o = .15) {
 	if (i.mode === "prepared") return;
 	if (!t) {
-		Lf(e);
+		Gf(e);
 		return;
 	}
-	let s = Ff.get(e);
+	let s = Uf.get(e);
 	if (s || (s = {
 		active: t,
 		target: 0,
 		context: i
-	}, Ff.set(e, s), e.addEventListener("loadedmetadata", () => {
-		let t = Ff.get(e);
-		t && (t.appliedTarget = void 0, If(e, t));
+	}, Uf.set(e, s), e.addEventListener("loadedmetadata", () => {
+		let t = Uf.get(e);
+		t && (t.appliedTarget = void 0, Wf(e, t));
 	})), s.active = !0, s.target = Math.max(0, (n - a) / r), s.context = i, i.mode === "paused-sample") {
-		e.pause(), If(e, s);
+		e.pause(), Wf(e, s);
 		return;
 	}
 	s.appliedTarget = void 0, Math.abs(e.currentTime - s.target) > o && (e.currentTime = s.target), e.play().catch(() => void 0);
 }
 //#endregion
 //#region src/player/createClipPlayer.ts
-function Bf(e) {
+function Jf(e) {
 	if (!e || ![
 		1,
 		2,
 		3
 	].includes(e.clipFormatVersion) || "angleUnit" in e || "managedAngleCodecVersion" in e) throw Error("The public Player requires a legacy radian project file.");
 }
-function Vf(e, t, n = !0) {
+function Yf(e, t, n = !0) {
 	if (Ki(e), !t) throw Error("Managed Player remote asset policy is required.");
 	return {
 		...n ? structuredClone(e.composition) : e.composition,
@@ -17125,55 +17562,55 @@ function Vf(e, t, n = !0) {
 		remoteAssetPolicy: t
 	};
 }
-var Hf = /* @__PURE__ */ new WeakMap();
-function Uf(e, t, n = [0, 0]) {
+var Xf = /* @__PURE__ */ new WeakMap();
+function Zf(e, t, n = [0, 0]) {
 	let [r, i] = t?.dimensions ?? [0, 0];
 	return [typeof e.width == "number" && e.width > 0 ? e.width : r > 0 ? r : n[0], typeof e.height == "number" && e.height > 0 ? e.height : i > 0 ? i : n[1]];
 }
-function Wf(e) {
+function Qf(e) {
 	return e instanceof HTMLImageElement ? [e.naturalWidth, e.naturalHeight] : e instanceof HTMLVideoElement ? [e.videoWidth, e.videoHeight] : typeof ImageBitmap < "u" && e instanceof ImageBitmap || e instanceof HTMLCanvasElement || e instanceof OffscreenCanvas ? [e.width, e.height] : [0, 0];
 }
-function Gf(e, t) {
+function $f(e, t) {
 	if (!Array.isArray(e) || e.length < 2) return t;
 	let n = Number(e[0]), r = Number(e[1]);
 	return [Number.isFinite(n) ? n : t[0], Number.isFinite(r) ? r : t[1]];
 }
-function Kf(e, t, n) {
+function ep(e, t, n) {
 	let r = e.params[t];
 	r && (r.value = n);
 }
-function qf(e) {
-	let t = Vd(e.angleUnit);
-	Bf(e.project);
-	let n = hf(e.project), { angleUnit: r, project: i, ...a } = e, o = Yf(a, {
+function tp(e) {
+	let t = Yd(e.angleUnit);
+	Jf(e.project);
+	let n = Cf(e.project), { angleUnit: r, project: i, ...a } = e, o = rp(a, {
 		kind: "public",
 		project: e.project,
 		...n
 	});
-	return Object.assign(o.player, _f(o.player, o.getWorkspace, {
+	return Object.assign(o.player, Tf(o.player, o.getWorkspace, {
 		angleUnit: t,
 		legacyInput: !0
 	}));
 }
-function Jf(e) {
+function np(e) {
 	if ("angleUnit" in e) throw Error("Internal managed Player controls use degrees; angleUnit is a public API option.");
 	Ki(e.workspace);
-	let t = Yf(e, {
+	let t = rp(e, {
 		kind: "managed",
 		workspace: e.workspace,
 		remoteAssetPolicy: e.remoteAssetPolicy
 	});
 	return Object.assign(t.player, { setWorkspace: t.setWorkspace });
 }
-function Yf(e, t) {
+function rp(e, t) {
 	let n = e.editorNativeAssetSources === !0, r = e.canvas ?? document.createElement("canvas"), i = e.iframeHost ?? document.createElement("div"), a = !e.iframeHost, o = Math.max(1, e.frameTransferFps ?? 30), s = e.dirtyOnly ?? !0, c = e.runtimeDepth ?? 0, l = /* @__PURE__ */ new Map(), u = {
 		framesReceived: 0,
 		framesComposited: 0,
 		replacedFrames: 0,
 		lastCompositeMs: 0
-	}, d = null, f = null, p = null, m = null, h = Dd("player"), g = Od(), _ = Od(), v = "root", y, b = 0, x, S = t.kind === "public" ? t.document : null, C = t.workspace, w = t.kind === "managed" || t.project.clipFormatVersion !== 1, T = Vf(C, t.remoteAssetPolicy, t.kind === "managed"), E = fi(T.assets, n), D = [], O = /* @__PURE__ */ new Map(), ee = [], te = /* @__PURE__ */ new Map(), ne = St(), re = Dt(), ie = null, ae = null, oe = 0, se = null, ce = /* @__PURE__ */ new Map(), le = new Map(T.assets.map((e) => [e.id, e])), ue = /* @__PURE__ */ new Map(), de = /* @__PURE__ */ new Set(), pe = /* @__PURE__ */ new Map(), me = /* @__PURE__ */ new Map(), he = null, ge = null, k = !1, _e = e.mediaPlaying ?? !0, ve = of(), A, ye, j = 0, be = Promise.resolve(), xe = [], Se = t.kind === "public" && t.project.clipFormatVersion === 3, Ce = (e, t, n) => {
+	}, d = null, f = null, p = null, m = null, h = kd("player"), g = Ad(), _ = Ad(), v = "root", y, b = 0, x, S = t.kind === "public" ? t.document : null, C = t.workspace, w = t.kind === "managed" || t.project.clipFormatVersion !== 1, T = Yf(C, t.remoteAssetPolicy, t.kind === "managed"), E = fi(T.assets, n), D = [], O = /* @__PURE__ */ new Map(), ee = [], te = /* @__PURE__ */ new Map(), ne = St(), re = Dt(), ie = null, ae = null, oe = 0, se = null, ce = /* @__PURE__ */ new Map(), le = new Map(T.assets.map((e) => [e.id, e])), ue = /* @__PURE__ */ new Map(), de = /* @__PURE__ */ new Set(), pe = /* @__PURE__ */ new Map(), me = /* @__PURE__ */ new Map(), he = null, ge = null, k = !1, _e = e.mediaPlaying ?? !0, ve = mf(), A, ye, j = 0, be = Promise.resolve(), xe = [], Se = t.kind === "public" && t.project.clipFormatVersion === 3, Ce = (e, t, n) => {
 		let { assets: r, remoteAssetPolicy: i, ...a } = e;
-		return Jf({
+		return np({
 			...n,
 			workspace: {
 				managedAngleCodecVersion: 1,
@@ -17234,10 +17671,10 @@ function Yf(e, t) {
 		else if (e.kind === "image") e.image.onload = null, e.image.onerror = null, e.image.src = "";
 		else {
 			let t = e.kind === "video" ? e.video : e.audio;
-			Lf(t), t.removeAttribute("src"), t.load(), t.remove();
+			Gf(t), t.removeAttribute("src"), t.load(), t.remove();
 		}
 		D = [], De(), pe.clear();
-		for (let e of me.values()) e instanceof HTMLMediaElement && (Lf(e), e.removeAttribute("src"), e.load(), e.remove());
+		for (let e of me.values()) e instanceof HTMLMediaElement && (Gf(e), e.removeAttribute("src"), e.load(), e.remove());
 		me.clear(), he &&= (he.width = 0, he.height = 0, null), ge &&= (ge.width = 0, ge.height = 0, null);
 	}, ke = () => {
 		Oe(), xe = [];
@@ -17356,8 +17793,9 @@ function Yf(e, t) {
 					continue;
 				}
 			}
-			let o = document.createElement("iframe"), s = crypto.randomUUID(), c = kd({
+			let o = document.createElement("iframe"), s = crypto.randomUUID(), c = Id({
 				binding: a.feedback,
+				p5Global: a.capabilities?.includes("p5") === !0,
 				assets: T.assets,
 				isolated: a.capabilities?.includes("p5") && a.p5Playback === "isolated-replay"
 			}), l = {
@@ -17367,6 +17805,9 @@ function Yf(e, t) {
 				iframe: o,
 				documentToken: s,
 				feedbackInputEnabled: c.status === "ready",
+				feedbackRevision: c.revision,
+				feedbackTouchQualified: !1,
+				feedbackTouchFailure: a.feedback?.inputMode === "touch" && c.status !== "ready" ? Error(c.issue?.message ?? "Touch input is unavailable.") : void 0,
 				feedbackDefinition: JSON.stringify([
 					s,
 					c.revision,
@@ -17385,7 +17826,7 @@ function Yf(e, t) {
 				l.ready = !0, l.replayDirty = !0, l.replayRequest = 0, D.push(l);
 				continue;
 			}
-			if (E.feedbackResources?.length) {
+			if (E.feedbackResources?.length || a.feedback?.inputMode === "touch") {
 				let e, t, n = new Promise((n, r) => {
 					e = n, t = r;
 				});
@@ -17395,7 +17836,7 @@ function Yf(e, t) {
 					reject: t
 				}, xe.push(n);
 			}
-			yd(a.source) ? Sd(a.id, a.source, a.params, a.remoteAssets, E.descriptors, !1, n, {
+			xd(a.source) ? wd(a.id, a.source, a.params, a.remoteAssets, E.descriptors, !1, n, {
 				documentToken: s,
 				feedback: a.feedback,
 				feedbackInputEnabled: l.feedbackInputEnabled,
@@ -17413,7 +17854,7 @@ function Yf(e, t) {
 					let n = /* @__PURE__ */ Error(`MacroFlush player failed to build clip document for "${a.name}": ${String(t)}`);
 					l.feedbackStartup?.reject(n), e.onError?.(n), console.error(n);
 				}
-			}) : o.srcdoc = xd(a.id, a.source, a.params, a.remoteAssets, E.descriptors, n, {
+			}) : o.srcdoc = Cd(a.id, a.source, a.params, a.remoteAssets, E.descriptors, n, {
 				documentToken: s,
 				feedback: a.feedback,
 				feedbackInputEnabled: l.feedbackInputEnabled,
@@ -17431,9 +17872,9 @@ function Yf(e, t) {
 		let e = new Set(D.flatMap((e) => e.kind === "html" ? [...e.sceneGraph.values()].map((e) => e.assetId) : []));
 		for (let [t, n] of me) e.has(t) || (n instanceof HTMLMediaElement && (n.pause(), n.removeAttribute("src"), n.load(), n.remove()), me.delete(t));
 	}, je = (e, t, n) => {
-		let r = t.kind === "composition" ? [t.composition.width, t.composition.height] : Gf(e.params.size?.value, [T.width, T.height]);
-		Kf(e, "position", [n.x, n.y]), Kf(e, "scale", [n.scale, n.scale]), Kf(e, "rotation", n.rotation), Kf(e, "opacity", n.opacity), Kf(e, "size", r), Kf(e, "anchorPoint", n.anchorPoint ?? [r[0] / 2, r[1] / 2]), Kf(e, "blendMode", n.blendMode ?? "normal");
-		for (let [t, r] of Object.entries(n.clip ?? {})) Kf(e, t, r);
+		let r = t.kind === "composition" ? [t.composition.width, t.composition.height] : $f(e.params.size?.value, [T.width, T.height]);
+		ep(e, "position", [n.x, n.y]), ep(e, "scale", [n.scale, n.scale]), ep(e, "rotation", n.rotation), ep(e, "opacity", n.opacity), ep(e, "size", r), ep(e, "anchorPoint", n.anchorPoint ?? [r[0] / 2, r[1] / 2]), ep(e, "blendMode", n.blendMode ?? "normal");
+		for (let [t, r] of Object.entries(n.clip ?? {})) ep(e, t, r);
 	}, Me = () => {
 		let t = /* @__PURE__ */ new Map();
 		for (let e of D) {
@@ -17536,7 +17977,7 @@ function Yf(e, t) {
 			};
 			if (pe.set(n, s), D.push(s), r.time !== void 0) {
 				let e = r.clip.kind === "html" && r.clip.capabilities?.includes("p5") && r.clip.p5Playback === "isolated-replay";
-				o.tickTime(e ? r.time : Df(r.time, r.project.fps, r.clip.kind === "html" ? "html" : "composition"));
+				o.tickTime(e ? r.time : Ff(r.time, r.project.fps, r.clip.kind === "html" ? "html" : "composition"));
 			}
 		}
 		De();
@@ -17546,6 +17987,19 @@ function Yf(e, t) {
 		if (typeof r.clipId != "string") return;
 		let i = ce.get(t.source);
 		if (!(!i || i.clip.id !== r.clipId)) {
+			if (r.type === "macroflush:feedback-input-status" && r.documentToken === i.documentToken && i.clip.feedback?.inputMode === "touch") {
+				if (typeof r.revision == "string" && r.revision !== i.feedbackRevision) return;
+				if (r.issue === null && r.revision === i.feedbackRevision && typeof r.revision == "string") i.feedbackTouchQualified = !0, i.feedbackTouchFailure = void 0;
+				else if (r.issue && typeof r.issue.message == "string") {
+					if (r.issue.code === "resource-not-ready") {
+						i.feedbackTouchQualified = !1;
+						return;
+					}
+					let t = Error(r.issue.message);
+					i.feedbackTouchQualified = !1, i.feedbackTouchFailure = t, i.feedbackStartup?.reject(t), e.onError?.(t);
+				}
+				return;
+			}
 			if (r.type === "macroflush:runtime-error" && r.documentToken === i.documentToken && r.feedbackError === !0) {
 				let t = Error(String(r.error));
 				i.feedbackStartup?.reject(t), e.onError?.(t);
@@ -17563,20 +18017,26 @@ function Yf(e, t) {
 				return;
 			}
 			if (r.type === "macroflush:ready") {
-				if (r.documentToken !== i.documentToken || (i.feedbackStartup?.resolve(), i.ready || !i.iframe.isConnected)) return;
+				if (r.documentToken !== i.documentToken) return;
+				if (i.clip.feedback?.inputMode === "touch" && !i.feedbackTouchQualified) {
+					let t = i.feedbackTouchFailure ?? /* @__PURE__ */ Error("p5 touch input qualification has not completed.");
+					i.feedbackStartup?.reject(t), e.onError?.(t);
+					return;
+				}
+				if (i.feedbackStartup?.resolve(), i.ready || !i.iframe.isConnected) return;
 				i.lastFrameSeq = 0, Te(i);
-				let e = i.iframe.contentWindow;
-				e?.postMessage({
+				let t = i.iframe.contentWindow;
+				t?.postMessage({
 					type: "macroflush:request-scene",
 					clipId: i.clip.id
-				}, "*"), Ai(i.clip.source.js) ? Ni(T.assets, T.layers, T.fps, n).then((t) => {
-					k || !i.iframe.isConnected || i.iframe.contentWindow !== e || (e?.postMessage({
+				}, "*"), Ai(i.clip.source.js) ? Ni(T.assets, T.layers, T.fps, n).then((e) => {
+					k || !i.iframe.isConnected || i.iframe.contentWindow !== t || (t?.postMessage({
 						type: "macroflush:audio-analysis",
 						clipId: i.clip.id,
-						payload: t
+						payload: e
 					}, "*"), i.ready = !0, $e());
-				}).catch((t) => {
-					console.error(`MacroFlush player failed to prepare audio analysis for "${i.clip.name}"`, t), !(k || !i.iframe.isConnected || i.iframe.contentWindow !== e) && (e?.postMessage({
+				}).catch((e) => {
+					console.error(`MacroFlush player failed to prepare audio analysis for "${i.clip.name}"`, e), !(k || !i.iframe.isConnected || i.iframe.contentWindow !== t) && (t?.postMessage({
 						type: "macroflush:audio-analysis",
 						clipId: i.clip.id,
 						payload: {
@@ -17608,7 +18068,7 @@ function Yf(e, t) {
 				return;
 			}
 			if (r.type === "macroflush:scene") {
-				let t = Array.isArray(r.operations) ? r.operations.filter(ep) : ep(r.operation) ? [r.operation] : [];
+				let t = Array.isArray(r.operations) ? r.operations.filter(cp) : cp(r.operation) ? [r.operation] : [];
 				if (t.length === 0) return;
 				let n = i.sceneGraph;
 				for (let e of t) n = qa(n, e);
@@ -17644,10 +18104,10 @@ function Yf(e, t) {
 			if (!o || o.kind !== "html" || i < o.clip.inFrame || i >= o.clip.outFrame) return !1;
 			Pe(o);
 			let s = nt(e, r, T, n.params, [o.frameCanvas.width, o.frameCanvas.height], a);
-			return o.hasFrame && e.drawImage(o.frameCanvas, 0, 0, s[0], s[1]), Zf(e, o.sceneGraph, E, me, o.matteCache, i, T.fps, Pf(_e), ze()), e.restore(), o.hasFrame || o.sceneGraph.size > 0;
+			return o.hasFrame && e.drawImage(o.frameCanvas, 0, 0, s[0], s[1]), ap(e, o.sceneGraph, E, me, o.matteCache, i, T.fps, Hf(_e), ze()), e.restore(), o.hasFrame || o.sceneGraph.size > 0;
 		}
-		if (t.kind === "image") return t.ready ? (Xf(e, T, n.params, t.image, [t.image.naturalWidth, t.image.naturalHeight], a), !0) : !1;
-		if (t.kind === "video") return !t.ready || t.video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA ? !1 : (Xf(e, T, n.params, t.video, [t.video.videoWidth, t.video.videoHeight], a), !0);
+		if (t.kind === "image") return t.ready ? (ip(e, T, n.params, t.image, [t.image.naturalWidth, t.image.naturalHeight], a), !0) : !1;
+		if (t.kind === "video") return !t.ready || t.video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA ? !1 : (ip(e, T, n.params, t.video, [t.video.videoWidth, t.video.videoHeight], a), !0);
 		if (t.kind === "audio") return !1;
 		if (t.kind === "composition-ref" || t.kind === "runtime") {
 			if (t.kind === "runtime" && !Re(t)) return Ie(e, t, t.player.canvas, i, a);
@@ -17656,7 +18116,7 @@ function Yf(e, t) {
 		}
 		Pe(t);
 		let o = nt(e, r, T, n.params, [t.frameCanvas.width, t.frameCanvas.height], a);
-		return t.hasFrame && e.drawImage(t.frameCanvas, 0, 0, o[0], o[1]), Zf(e, t.sceneGraph, E, me, t.matteCache, i, T.fps, Pf(_e), ze()), e.restore(), t.hasFrame || t.sceneGraph.size > 0;
+		return t.hasFrame && e.drawImage(t.frameCanvas, 0, 0, o[0], o[1]), ap(e, t.sceneGraph, E, me, t.matteCache, i, T.fps, Hf(_e), ze()), e.restore(), t.hasFrame || t.sceneGraph.size > 0;
 	}, Ie = (e, t, n, i, a) => {
 		let o = t.parentClipId ? O.get(t.parentClipId) : void 0, s = o?.kind === "html" ? o.sceneGraph.get(t.objectId) : void 0;
 		if (!o || o.kind !== "html" || !s) return !1;
@@ -17665,9 +18125,9 @@ function Yf(e, t) {
 			fps: T.fps,
 			playing: !0,
 			speed: 1
-		}, T), l = Af(o.sceneGraph, s.id, (e) => Uf(e, E.get(e.assetId)));
+		}, T), l = Rf(o.sceneGraph, s.id, (e) => Zf(e, E.get(e.assetId)));
 		if (!c || !l?.visible) return !1;
-		let u = Uf(s, E.get(s.assetId), [n.width, n.height]);
+		let u = Zf(s, E.get(s.assetId), [n.width, n.height]);
 		return nt(e, r, T, {
 			...c.params,
 			opacity: 1,
@@ -17762,7 +18222,7 @@ function Yf(e, t) {
 			feedbackInputIntent: n.inputDelivery
 		} : t;
 	}, Ge = (e) => {
-		e.kind === "html" && e.documentToken && g.deactivate(e.documentToken), (e.kind === "composition-ref" || e.kind === "runtime") && (e.player.setMediaPlaying(!1), g.deactivate(`child:${e.clip.id}`), Hf.get(e.player)?.deactivate());
+		e.kind === "html" && e.documentToken && g.deactivate(e.documentToken), (e.kind === "composition-ref" || e.kind === "runtime") && (e.player.setMediaPlaying(!1), g.deactivate(`child:${e.clip.id}`), Xf.get(e.player)?.deactivate());
 	}, Ke = () => {
 		let t = se, n = ae;
 		if (!(!t || !n)) for (let r of n.readyIds) {
@@ -17802,8 +18262,8 @@ function Yf(e, t) {
 			}, "*");
 		}
 	}, qe = (t, r) => {
-		t.replayDirty &&= (t.replay?.dispose(), t.replay = Tf({
-			history: vf(t.clip, T, di(E.descriptors, t.clip.libraries)),
+		t.replayDirty &&= (t.replay?.dispose(), t.replay = Nf({
+			history: Ef(t.clip, T, di(E.descriptors, t.clip.libraries)),
 			descriptors: di(E.descriptors, t.clip.libraries),
 			container: i,
 			mode: "live",
@@ -17821,7 +18281,7 @@ function Yf(e, t) {
 			}
 			t.bitmap && (t.bitmap.close(), u.replacedFrames++), t.bitmap = e, t.lastFrameSeq++, u.framesReceived++, r.frameParamToken && (ae ? (ae.complete(r.frameParamToken, t.clip.id, []), Ke()) : re.complete(r.frameParamToken, t.clip.id, [])), He();
 		}).catch((n) => {
-			k || t.replay !== a || t.replayRequest !== o || n instanceof yf && n.diagnostic.code === "canceled" || (e.onError ? e.onError(n instanceof Error ? n : Error(String(n))) : console.error(n));
+			k || t.replay !== a || t.replayRequest !== o || n instanceof Df && n.diagnostic.code === "canceled" || (e.onError ? e.onError(n instanceof Error ? n : Error(String(n))) : console.error(n));
 		});
 	}, Je = (e) => {
 		if (p !== null) return x = "cue", d = p, f = e, p = null, d;
@@ -17865,7 +18325,7 @@ function Yf(e, t) {
 			playing: _e,
 			speed: 1
 		};
-		_e || Rf(me);
+		_e || Kf(me);
 		let u = T.cues && Object.keys(T.cues).length ? l : {
 			...l,
 			frame: t * T.fps
@@ -17884,7 +18344,7 @@ function Yf(e, t) {
 		let ee = /* @__PURE__ */ new Map();
 		for (let e of D) {
 			if (e.layerRef.visible === !1 && !de.has(e.clip.id)) {
-				Ge(e), e.kind === "html" ? (e.hasEntered = !1, e.replayRequest = (e.replayRequest ?? 0) + 1, e.replay?.cancelPending()) : e.kind === "runtime" && Re(e) ? e.player.tickTime(e.clip.outFrame / T.fps) : (e.kind === "video" || e.kind === "audio") && zf(e.kind === "video" ? e.video : e.audio, !1, o, T.fps, Pf(_e), e.clip.inFrame);
+				Ge(e), e.kind === "html" ? (e.hasEntered = !1, e.replayRequest = (e.replayRequest ?? 0) + 1, e.replay?.cancelPending()) : e.kind === "runtime" && Re(e) ? e.player.tickTime(e.clip.outFrame / T.fps) : (e.kind === "video" || e.kind === "audio") && qf(e.kind === "video" ? e.video : e.audio, !1, o, T.fps, Hf(_e), e.clip.inFrame);
 				continue;
 			}
 			let t = Xe(e.clip, e.kind === "html" && e.replayDirty !== void 0 ? u : l, T, d);
@@ -17925,7 +18385,7 @@ function Yf(e, t) {
 						Ge(e);
 						continue;
 					}
-					let i = le.get(e.clip.assetId), a = e.clip.kind === "html" ? "html" : "composition", o = i?.kind === "composition" ? i.composition.fps : T.fps, c = Df(r.time, o, a), u = g.visit({
+					let i = le.get(e.clip.assetId), a = e.clip.kind === "html" ? "html" : "composition", o = i?.kind === "composition" ? i.composition.fps : T.fps, c = Ff(r.time, o, a), u = g.visit({
 						pathId: `child:${e.clip.id}`,
 						definitionKey: JSON.stringify([
 							e.clip.assetId,
@@ -17940,12 +18400,12 @@ function Yf(e, t) {
 						mapTime: (e) => {
 							let t = e * T.fps;
 							return t >= n.clip.inFrame && t < n.clip.outFrame ? {
-								time: Df((t - n.clip.inFrame) / T.fps, o, a),
+								time: Ff((t - n.clip.inFrame) / T.fps, o, a),
 								segmentKey: String(b)
 							} : null;
 						}
 					});
-					u && Hf.get(e.player)?.tick(Object.freeze({
+					u && Xf.get(e.player)?.tick(Object.freeze({
 						time: c,
 						inputDelivery: s.inputDelivery,
 						delivery: u
@@ -17957,13 +18417,13 @@ function Yf(e, t) {
 					n ? e.player.tickTime(n.time) : (e.player.setMediaPlaying(!1), e.player.tickTime(e.clip.outFrame / T.fps));
 				} else if (t) {
 					let n = Ue(`child:${e.clip.id}`, e.clip.assetId ?? e.clip.id, e.clip, s);
-					n && Hf.get(e.player)?.tick(Object.freeze({
+					n && Xf.get(e.player)?.tick(Object.freeze({
 						time: t.time,
 						inputDelivery: s.inputDelivery,
 						delivery: n
 					}));
 				} else Ge(e);
-			} else (e.kind === "video" || e.kind === "audio") && zf(e.kind === "video" ? e.video : e.audio, !!t, o, T.fps, Pf(_e), e.clip.inFrame);
+			} else (e.kind === "video" || e.kind === "audio") && qf(e.kind === "video" ? e.video : e.audio, !!t, o, T.fps, Hf(_e), e.clip.inFrame);
 		}
 		se = {
 			frame: o,
@@ -17978,8 +18438,8 @@ function Yf(e, t) {
 		m !== null && Ye(m, {}, void 0, !0);
 	}, rt = (e) => {
 		if (!(k || _e === e)) {
-			_e = e, e || Rf(me);
-			for (let t of D) !e && (t.kind === "video" || t.kind === "audio") ? Lf(t.kind === "video" ? t.video : t.audio) : (t.kind === "composition-ref" || t.kind === "runtime") && t.player.setMediaPlaying(e);
+			_e = e, e || Kf(me);
+			for (let t of D) !e && (t.kind === "video" || t.kind === "audio") ? Gf(t.kind === "video" ? t.video : t.audio) : (t.kind === "composition-ref" || t.kind === "runtime") && t.player.setMediaPlaying(e);
 		}
 	}, it = (t) => {
 		ye?.abort();
@@ -17988,7 +18448,7 @@ function Yf(e, t) {
 			be = Promise.all(xe).then(() => void 0), be.catch(() => void 0);
 			return;
 		}
-		let i = af(t), a = ye = new AbortController();
+		let i = pf(t), a = ye = new AbortController();
 		be = ve.resolve(i, {
 			securityScope: `web-player:${r}`,
 			assetBaseUrl: e.assetBaseUrl,
@@ -18004,7 +18464,7 @@ function Yf(e, t) {
 			Se = !1;
 			try {
 				if (!S) throw Error("Public source resolution requires a normalized document owner.");
-				S = gf(S, e.project.assets), C = ff(S, i), T = Vf(C, S.document.remoteAssetPolicy), E = fi(T.assets, n), Ee(), M(T.width, T.height), ke();
+				S = wf(S, e.project.assets), C = bf(S, i), T = Yf(C, S.document.remoteAssetPolicy), E = fi(T.assets, n), Ee(), M(T.width, T.height), ke();
 			} catch (t) {
 				throw Oe(), e.release(), t;
 			}
@@ -18016,13 +18476,13 @@ function Yf(e, t) {
 	}, at = (e) => {
 		if (k) throw Error("Cannot change a project after the Player is destroyed.");
 		if (t.kind !== "public") throw Error("A managed Player requires setWorkspace(), not a raw project replacement.");
-		Bf(e);
-		let r = hf(e), i = r.workspace, a = Vf(i, r.remoteAssetPolicy, !1);
+		Jf(e);
+		let r = Cf(e), i = r.workspace, a = Yf(i, r.remoteAssetPolicy, !1);
 		S = r.document, C = i, w = e.clipFormatVersion !== 1, T = a, d = null, f = null, p = null, h.reset(), _.reset(), g.reset(), y = void 0, E = fi(T.assets, n), Ee(), M(T.width, T.height), e.clipFormatVersion === 3 ? Oe() : ke(), A?.release(), A = void 0, it(e);
 	}, ot = (e, r) => {
 		if (k) throw Error("Cannot change a workspace after the Player is destroyed.");
 		if (t.kind !== "managed") throw Error("A public Player cannot install an internal workspace.");
-		let i = Vf(e, r);
+		let i = Yf(e, r);
 		C = e, T = i, d = null, f = null, p = null, h.reset(), _.reset(), g.reset(), y = void 0, E = fi(T.assets, n), Ee(), M(T.width, T.height), ke(), be = Promise.all(xe).then(() => void 0), be.catch(() => void 0);
 	}, st = (e) => {
 		if (k) throw Error("Cannot open a composition after the Player is destroyed.");
@@ -18032,7 +18492,7 @@ function Yf(e, t) {
 			...C,
 			compositionId: t.id,
 			composition: t.composition
-		}, T = Vf(C, T.remoteAssetPolicy), d = null, f = null, p = null, m = null, h.reset(), _.reset(), g.reset(), y = void 0, l.clear(), E = fi(T.assets, n), Ee(), M(T.width, T.height), Se || (ke(), be = Promise.all(xe).then(() => void 0), be.catch(() => void 0)), Ze(0), {
+		}, T = Yf(C, T.remoteAssetPolicy), d = null, f = null, p = null, m = null, h.reset(), _.reset(), g.reset(), y = void 0, l.clear(), E = fi(T.assets, n), Ee(), M(T.width, T.height), Se || (ke(), be = Promise.all(xe).then(() => void 0), be.catch(() => void 0)), Ze(0), {
 			compositionId: t.id,
 			width: T.width,
 			height: T.height,
@@ -18125,10 +18585,10 @@ function Yf(e, t) {
 		emit: vt,
 		getStats: () => ({ ...u }),
 		destroy() {
-			k || (k = !0, Hf.delete(yt), h.dispose(), _.dispose(), g.dispose(), window.removeEventListener("message", Ne), Oe(), ye?.abort(), A?.release(), ve.dispose(), a && i.remove());
+			k || (k = !0, Xf.delete(yt), h.dispose(), _.dispose(), g.dispose(), window.removeEventListener("message", Ne), Oe(), ye?.abort(), A?.release(), ve.dispose(), a && i.remove());
 		}
 	};
-	return Hf.set(yt, {
+	return Xf.set(yt, {
 		tick: (e) => Ye(e.time, { inputDelivery: e.inputDelivery }, e),
 		deactivate: () => {
 			_.deactivate("clock"), g.reset();
@@ -18143,13 +18603,13 @@ function Yf(e, t) {
 		})
 	};
 }
-function Xf(e, t, n, r, i, a) {
+function ip(e, t, n, r, i, a) {
 	let o = [Math.max(1, i[0]), Math.max(1, i[1])];
 	rt(e, r, o, nt(e, e.canvas, t, n, o, a)), e.restore();
 }
-function Zf(e, t, n, r, i, a, o, s = jf, c = /* @__PURE__ */ new Map()) {
-	let l = typeof s == "boolean" ? s ? Nf : jf : s, u = l.mode === "prepared";
-	l.mode === "paused-sample" && Rf(r);
+function ap(e, t, n, r, i, a, o, s = zf, c = /* @__PURE__ */ new Map()) {
+	let l = typeof s == "boolean" ? s ? Vf : zf : s, u = l.mode === "prepared";
+	l.mode === "paused-sample" && Kf(r);
 	let d = new Map([...t].filter(([, e]) => {
 		let t = n.get(e.assetId)?.kind;
 		return t === "image" || t === "video" || t === "audio" || (t === "html-clip" || t === "composition") && (u || c.has(e.id));
@@ -18187,11 +18647,11 @@ function Zf(e, t, n, r, i, a, o, s = jf, c = /* @__PURE__ */ new Map()) {
 	}
 	let v = m.map((e) => ({
 		node: e,
-		parent: Qf
+		parent: op
 	}));
 	for (; v.length;) {
-		let { node: e, parent: t } = v.pop(), r = e.object, i = n.get(r.assetId), a = Uf(r, i, Wf(c.get(r.id) ?? _(i))), o = r.anchorPoint ?? [a[0] / 2, a[1] / 2], s = {
-			transform: kf(t.transform, Of(r, o)),
+		let { node: e, parent: t } = v.pop(), r = e.object, i = n.get(r.assetId), a = Zf(r, i, Qf(c.get(r.id) ?? _(i))), o = r.anchorPoint ?? [a[0] / 2, a[1] / 2], s = {
+			transform: Lf(t.transform, If(r, o)),
 			opacity: t.opacity * r.opacity,
 			visible: t.visible && r.visible
 		};
@@ -18204,17 +18664,17 @@ function Zf(e, t, n, r, i, a, o, s = jf, c = /* @__PURE__ */ new Map()) {
 	let y = (e, t, r, i = {}) => {
 		let s = n.get(t.object.assetId), d = c.get(t.object.id) ?? _(s);
 		if (!s || !d || !i.ignoreVisibility && !r.visible) return;
-		let [f, p] = Uf(t.object, s, Wf(d));
+		let [f, p] = Zf(t.object, s, Qf(d));
 		if (d instanceof HTMLAudioElement) {
 			if (u) return;
-			d.volume = tp(t.object.volume, 1, 0, 1), zf(d, !!(i.ignoreVisibility || r.visible), a, o, l);
+			d.volume = lp(t.object.volume, 1, 0, 1), qf(d, !!(i.ignoreVisibility || r.visible), a, o, l);
 			return;
 		}
-		d instanceof HTMLVideoElement && !u && zf(d, !!(i.ignoreVisibility || r.visible), a, o, l), !(f <= 0 || p <= 0 || d instanceof HTMLImageElement && !d.complete || d instanceof HTMLVideoElement && d.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) && (e.save(), e.setTransform(h.a, h.b, h.c, h.d, h.e, h.f), e.transform(...r.transform), e.globalAlpha = tp(r.opacity, 1, 0, 1), e.globalCompositeOperation = i.composite ?? tt[t.object.blendMode ?? "normal"] ?? "source-over", e.drawImage(d, 0, 0, f, p), e.restore());
+		d instanceof HTMLVideoElement && !u && qf(d, !!(i.ignoreVisibility || r.visible), a, o, l), !(f <= 0 || p <= 0 || d instanceof HTMLImageElement && !d.complete || d instanceof HTMLVideoElement && d.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) && (e.save(), e.setTransform(h.a, h.b, h.c, h.d, h.e, h.f), e.transform(...r.transform), e.globalAlpha = lp(r.opacity, 1, 0, 1), e.globalCompositeOperation = i.composite ?? tt[t.object.blendMode ?? "normal"] ?? "source-over", e.drawImage(d, 0, 0, f, p), e.restore());
 	}, b = (e, t, n) => {
 		let r = g.get(t.object.id);
 		if (!r || !r.visible) return;
-		let a = t.object.maskId && p.has(t.object.id) ? $f(m, t.object.maskId) : void 0, o = a ? g.get(a.object.id) : void 0;
+		let a = t.object.maskId && p.has(t.object.id) ? sp(m, t.object.maskId) : void 0, o = a ? g.get(a.object.id) : void 0;
 		if (t.object.id !== n && a && o) {
 			let n = i.get(t.object.id);
 			n || (n = document.createElement("canvas"), i.set(t.object.id, n)), (n.width !== e.canvas.width || n.height !== e.canvas.height) && (n.width = e.canvas.width, n.height = e.canvas.height);
@@ -18231,7 +18691,7 @@ function Zf(e, t, n, r, i, a, o, s = jf, c = /* @__PURE__ */ new Map()) {
 	};
 	for (let t of m) b(e, t);
 }
-var Qf = {
+var op = {
 	transform: [
 		1,
 		0,
@@ -18243,23 +18703,23 @@ var Qf = {
 	opacity: 1,
 	visible: !0
 };
-function $f(e, t) {
+function sp(e, t) {
 	for (let n of e) {
 		if (n.object.id === t) return n;
-		let e = $f(n.children, t);
+		let e = sp(n.children, t);
 		if (e) return e;
 	}
 }
-function ep(e) {
+function cp(e) {
 	if (!e || typeof e != "object") return !1;
 	let t = e;
 	if (t.type === "remove") return typeof t.id == "string";
 	let n = t.object;
 	return t.type === "upsert" && typeof n?.id == "string";
 }
-function tp(e, t, n = -Infinity, r = Infinity) {
+function lp(e, t, n = -Infinity, r = Infinity) {
 	let i = Number(e);
 	return Number.isFinite(i) ? Math.min(r, Math.max(n, i)) : t;
 }
 //#endregion
-export { nt as applyClipTransform, tt as canvasBlendModes, Zf as compositeSceneGraph, qf as createClipPlayer, Jf as createManagedClipPlayer, rt as drawImageCover, Uf as resolveDisplaySize };
+export { nt as applyClipTransform, tt as canvasBlendModes, ap as compositeSceneGraph, tp as createClipPlayer, np as createManagedClipPlayer, rt as drawImageCover, Zf as resolveDisplaySize };
