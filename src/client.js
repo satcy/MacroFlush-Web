@@ -1,5 +1,11 @@
 import { translate as t } from "./locale.js";
-import { examples } from "./examples.js";
+import { editorProjects as examples } from "./examples.js";
+
+// Keep the full learning path readable without JS; collapse it on mobile once enhanced.
+document.querySelectorAll(".tutorial-nav-toggle").forEach(button => {
+  button.dataset.ready = "true";
+  button.addEventListener("click", () => button.setAttribute("aria-expanded", String(button.getAttribute("aria-expanded") !== "true")));
+});
 import { updateProgress, timecode } from "./playback-ui.js";
 
 // Keep the current Reference anchor when switching language.

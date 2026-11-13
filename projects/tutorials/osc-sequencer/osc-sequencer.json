@@ -1,0 +1,1827 @@
+{
+  "rootCompositionId": "composition-root",
+  "assets": [
+    {
+      "id": "composition-root",
+      "name": "MainComposition",
+      "kind": "composition",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 360,
+        "cues": {
+          "Cue1": {
+            "frame": 0,
+            "mode": "none"
+          },
+          "Cue2": {
+            "frame": 180,
+            "mode": "loop"
+          },
+          "Cue3": {
+            "frame": 240,
+            "mode": "stop"
+          }
+        },
+        "cueScript": "// Timeline UI changes regenerate this cue list and replace manual edits.\ncue(\"Cue1\", 0, { mode: \"none\" });\ncue(\"Cue2\", 180, { mode: \"loop\"});\ncue(\"Cue3\", 240, { mode: \"stop\" });",
+        "layers": [
+          {
+            "id": "layer-user-1",
+            "name": "Layer1",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "html-clip-1-instance-1",
+                "name": "SendOscParamsTest",
+                "kind": "html",
+                "assetId": "html-clip-1-asset",
+                "inFrame": 0,
+                "outFrame": 360,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      960,
+                      540
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1920,
+                      1080
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "val0": {
+                    "key": "val0",
+                    "type": "number",
+                    "default": 0,
+                    "value": 14.38671875,
+                    "group": "custom",
+                    "writable": true,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "val1": {
+                    "key": "val1",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "custom",
+                    "writable": true,
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "color": {
+                    "key": "color",
+                    "type": "color",
+                    "default": "#ffffff",
+                    "value": 0,
+                    "group": "custom",
+                    "writable": true,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "pos": {
+                    "key": "pos",
+                    "type": "vec2",
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "custom",
+                    "writable": true,
+                    "interpolable": true,
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+                  "js": "clip.use(\"centi\");\n\nclip.defineParams({\n  val0: {type: \"number\", default:0, interpolable: true},\n  val1: {type: \"number\", default:0, interpolable: false},\n  color: {type: \"color\", default:\"#ffffff\", interpolable: true},\n  pos: {type:\"vec2\", interpolable: true}\n});\n\nsetup(() => {\n  size(1920, 1080);\n  bg(33);\n});\n\nonFrame(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n  clear();\n  bg(clip.color);\n  col(255);\n  let y = 0;\n  for(const name of clip.paramNames){\n    if (clip.isNew[name]) sendOsc(\"/\" + name, clip[name]);\n    bmTxt(name + \": \" + clip[name],0,y);\n    y += 40;\n  } \n  \n});\n\nonEnter(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});\n\nonBeat(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});"
+                },
+                "keyframeTracks": {
+                  "pos": [
+                    {
+                      "frame": 0,
+                      "value": [
+                        1,
+                        1
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 359,
+                      "value": [
+                        38.78515625,
+                        -60.578125
+                      ],
+                      "easing": "linear"
+                    }
+                  ],
+                  "val1": [
+                    {
+                      "frame": 38,
+                      "value": 6.23046875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 39,
+                      "value": 8.8359375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 40,
+                      "value": 9.2421875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 41,
+                      "value": 11.2734375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 42,
+                      "value": 11.6796875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 49,
+                      "value": 10.046875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 50,
+                      "value": 8.8203125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 51,
+                      "value": 5.0234375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 52,
+                      "value": 4.203125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 58,
+                      "value": 4.609375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 59,
+                      "value": 5.421875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 60,
+                      "value": 11.0078125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 61,
+                      "value": 12.80078125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 62,
+                      "value": 15.64453125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 63,
+                      "value": 19.84375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 64,
+                      "value": 27.4296875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 65,
+                      "value": 36.04296875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 66,
+                      "value": 36.85546875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 68,
+                      "value": 36.85546875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 69,
+                      "value": 35.05859375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 70,
+                      "value": 31.46484375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 71,
+                      "value": 23.87109375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 72,
+                      "value": 13.45703125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 73,
+                      "value": 13.046875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 78,
+                      "value": 13.046875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 83,
+                      "value": 13.046875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 86,
+                      "value": 12.2265625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 87,
+                      "value": 11.40625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 88,
+                      "value": 10.99609375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 89,
+                      "value": 10.17578125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 90,
+                      "value": 8.1328125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 91,
+                      "value": 6.90625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 92,
+                      "value": 2.29296875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 93,
+                      "value": -7.3046875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 94,
+                      "value": -17.71875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 95,
+                      "value": -20.33203125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 96,
+                      "value": -21.15234375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 99,
+                      "value": -21.5625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 103,
+                      "value": -20.34375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 104,
+                      "value": -12.75390625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 105,
+                      "value": -6.95703125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 106,
+                      "value": 10.4375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 107,
+                      "value": 25.82421875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 108,
+                      "value": 30.4296875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 109,
+                      "value": 31.2421875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 115,
+                      "value": 32.0546875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 116,
+                      "value": 32.4609375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 117,
+                      "value": 33.6796875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 118,
+                      "value": 34.8984375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 119,
+                      "value": 37.50390625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 120,
+                      "value": 39.12890625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 121,
+                      "value": 48.5078125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 122,
+                      "value": 58.09765625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 123,
+                      "value": 64.70703125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 124,
+                      "value": 65.51953125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 125,
+                      "value": 66.73828125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 126,
+                      "value": 67.55078125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 127,
+                      "value": 68.76953125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 128,
+                      "value": 70.39453125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 129,
+                      "value": 71.61328125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 130,
+                      "value": 73.64453125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 131,
+                      "value": 74.86328125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 132,
+                      "value": 75.26953125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 133,
+                      "value": 76.08203125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 134,
+                      "value": 77.30078125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 135,
+                      "value": 81.69921875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 136,
+                      "value": 84.3046875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 137,
+                      "value": 85.5234375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 138,
+                      "value": 86.7421875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 139,
+                      "value": 87.9609375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 140,
+                      "value": 88.3671875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 141,
+                      "value": 88.7734375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 142,
+                      "value": 89.1796875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 143,
+                      "value": 89.5859375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 144,
+                      "value": 90.3984375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 145,
+                      "value": 91.2109375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 146,
+                      "value": 91.6171875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 147,
+                      "value": 92.8359375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 150,
+                      "value": 92.8359375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 152,
+                      "value": 91.19921875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 153,
+                      "value": 81.59765625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 154,
+                      "value": 74,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 155,
+                      "value": 62.3984375,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 156,
+                      "value": 55.78125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 157,
+                      "value": 43.36328125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 158,
+                      "value": 41.73046875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 159,
+                      "value": 40.91015625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 164,
+                      "value": 42.703125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 165,
+                      "value": 66.1015625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 166,
+                      "value": 81.69921875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 167,
+                      "value": 87.28515625,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 168,
+                      "value": 93.48828125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 169,
+                      "value": 94.70703125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 170,
+                      "value": 95.11328125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 175,
+                      "value": 97.3125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 176,
+                      "value": 98.125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 177,
+                      "value": 100.32421875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 178,
+                      "value": 101.54296875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 179,
+                      "value": 102.35546875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 180,
+                      "value": 102.76171875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 181,
+                      "value": 103.57421875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 182,
+                      "value": 104.38671875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 183,
+                      "value": 105.19921875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 184,
+                      "value": 105.60546875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 185,
+                      "value": 106.41796875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 186,
+                      "value": 108.44921875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 187,
+                      "value": 108.85546875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 359,
+                      "value": 0,
+                      "easing": "step"
+                    }
+                  ],
+                  "val0": [
+                    {
+                      "frame": 0,
+                      "value": 0,
+                      "easing": "bezier",
+                      "bezier": [
+                        0.48918966293233257,
+                        0.12623188405797103,
+                        0.5581608044730755,
+                        0.9871256038647342
+                      ]
+                    },
+                    {
+                      "frame": 359,
+                      "value": 14.38671875,
+                      "easing": "linear"
+                    }
+                  ],
+                  "color": [
+                    {
+                      "frame": 31,
+                      "value": "#e328e6",
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 146,
+                      "value": "#c59696",
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 225,
+                      "value": "#400707",
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 270,
+                      "value": "#4abcd9",
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 304,
+                      "value": "#000000",
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 322,
+                      "value": "#63af18",
+                      "easing": "linear"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "composition-2",
+      "name": "Composition2",
+      "kind": "composition",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 360,
+        "cues": {
+          "Cue1": {
+            "frame": 0,
+            "mode": "loop"
+          }
+        },
+        "cueScript": "// Timeline UI changes regenerate this cue list and replace manual edits.\ncue(\"Cue1\", 0, { mode: \"loop\" });",
+        "layers": [
+          {
+            "id": "layer-user-1",
+            "name": "Layer1",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "html-clip-1-instance-1",
+                "name": "SendOscParamsTest",
+                "kind": "html",
+                "assetId": "html-clip-1-asset",
+                "inFrame": 0,
+                "outFrame": 360,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      960,
+                      540
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1920,
+                      1080
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "val0": {
+                    "key": "val0",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "custom",
+                    "writable": true,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "val1": {
+                    "key": "val1",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "custom",
+                    "writable": true,
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "color": {
+                    "key": "color",
+                    "type": "color",
+                    "default": "#ffffff",
+                    "value": 0,
+                    "group": "custom",
+                    "writable": true,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "pos": {
+                    "key": "pos",
+                    "type": "vec2",
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "custom",
+                    "writable": true,
+                    "interpolable": true,
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+                  "js": "clip.use(\"centi\");\n\nclip.defineParams({\n  val0: {type: \"number\", default:0, interpolable: true},\n  val1: {type: \"number\", default:0, interpolable: false},\n  color: {type: \"color\", default:\"#ffffff\", interpolable: true},\n  pos: {type:\"vec2\", interpolable: true}\n});\n\nsetup(() => {\n  size(1920, 1080);\n  bg(33);\n});\n\nonFrame(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n  clear();\n  bg(clip.color);\n  col(255);\n  let y = 0;\n  for(const name of clip.paramNames){\n    if (clip.isNew[name]) sendOsc(\"/\" + name, clip[name]);\n    bmTxt(name + \": \" + clip[name],0,y);\n    y += 40;\n  } \n  \n});\n\nonEnter(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});\n\nonBeat(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});"
+                },
+                "keyframeTracks": {
+                  "val0": [
+                    {
+                      "frame": 30,
+                      "value": 0,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 142,
+                      "value": 1,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 359,
+                      "value": 5,
+                      "easing": "linear"
+                    }
+                  ],
+                  "val1": [
+                    {
+                      "frame": 113,
+                      "value": 0,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 167,
+                      "value": 1,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 215,
+                      "value": 3,
+                      "easing": "step"
+                    }
+                  ],
+                  "color": [
+                    {
+                      "frame": 0,
+                      "value": "#000000",
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 33,
+                      "value": "#0033ff",
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 72,
+                      "value": "#ff4000",
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 173,
+                      "value": "#0ce99f",
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 359,
+                      "value": "#000000",
+                      "easing": "linear"
+                    }
+                  ],
+                  "pos": [
+                    {
+                      "frame": 9,
+                      "value": [
+                        0,
+                        6.4296875
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 10,
+                      "value": [
+                        0,
+                        10.828125
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 12,
+                      "value": [
+                        0,
+                        13.265625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 15,
+                      "value": [
+                        0,
+                        13.265625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 16,
+                      "value": [
+                        0,
+                        12.4453125
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 18,
+                      "value": [
+                        0,
+                        11.62890625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 19,
+                      "value": [
+                        0,
+                        5.01171875
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 21,
+                      "value": [
+                        0,
+                        0.6015625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 22,
+                      "value": [
+                        0,
+                        -1.03515625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 25,
+                      "value": [
+                        0,
+                        -0.22265625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 27,
+                      "value": [
+                        0,
+                        2.62109375
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 28,
+                      "value": [
+                        0,
+                        3.83984375
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 30,
+                      "value": [
+                        0,
+                        23.8359375
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 31,
+                      "value": [
+                        0,
+                        41.4375
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 33,
+                      "value": [
+                        0,
+                        55.23046875
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 36,
+                      "value": [
+                        0,
+                        55.23046875
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 37,
+                      "value": [
+                        0,
+                        52.61328125
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 39,
+                      "value": [
+                        0,
+                        48.609375
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 40,
+                      "value": [
+                        0,
+                        46.15625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 42,
+                      "value": [
+                        0,
+                        45.3359375
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 43,
+                      "value": [
+                        0,
+                        43.6953125
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 45,
+                      "value": [
+                        0,
+                        40.66796875
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 46,
+                      "value": [
+                        0,
+                        34.05078125
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 48,
+                      "value": [
+                        0,
+                        20.65625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 49,
+                      "value": [
+                        0,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 73,
+                      "value": [
+                        8.96484375,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 75,
+                      "value": [
+                        24.3515625,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 76,
+                      "value": [
+                        25.5703125,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 79,
+                      "value": [
+                        25.16015625,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 81,
+                      "value": [
+                        12.9453125,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 82,
+                      "value": [
+                        -4.6640625,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 84,
+                      "value": [
+                        -23.29296875,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 85,
+                      "value": [
+                        -23.703125,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 90,
+                      "value": [
+                        1.48828125,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 91,
+                      "value": [
+                        13.08203125,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 93,
+                      "value": [
+                        18.66796875,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 95,
+                      "value": [
+                        18.66796875,
+                        18.0390625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 118,
+                      "value": [
+                        18.66796875,
+                        22.84375
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 120,
+                      "value": [
+                        18.66796875,
+                        25.6875
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 121,
+                      "value": [
+                        18.66796875,
+                        27.3125
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 122,
+                      "value": [
+                        18.66796875,
+                        29.51171875
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 124,
+                      "value": [
+                        18.66796875,
+                        33.3359375
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 127,
+                      "value": [
+                        18.66796875,
+                        33.7421875
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 129,
+                      "value": [
+                        18.66796875,
+                        39.359375
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 130,
+                      "value": [
+                        18.66796875,
+                        39.765625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 133,
+                      "value": [
+                        18.66796875,
+                        37.55859375
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 135,
+                      "value": [
+                        18.66796875,
+                        2.33984375
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 136,
+                      "value": [
+                        18.66796875,
+                        -13.26953125
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 138,
+                      "value": [
+                        18.66796875,
+                        -22.66015625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 158,
+                      "value": [
+                        44.67578125,
+                        -22.66015625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 159,
+                      "value": [
+                        60.06640625,
+                        -22.66015625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 160,
+                      "value": [
+                        71.66015625,
+                        -22.66015625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 161,
+                      "value": [
+                        73.28515625,
+                        -22.66015625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 162,
+                      "value": [
+                        73.69140625,
+                        -22.66015625
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 183,
+                      "value": [
+                        73.69140625,
+                        -17.85546875
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 184,
+                      "value": [
+                        73.69140625,
+                        -13.25
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 186,
+                      "value": [
+                        73.69140625,
+                        -7.2578125
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 208,
+                      "value": [
+                        82.0859375,
+                        -7.2578125
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 210,
+                      "value": [
+                        100.07421875,
+                        -7.2578125
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 211,
+                      "value": [
+                        100.48046875,
+                        -7.2578125
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 280,
+                      "value": [
+                        3.25,
+                        0
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 282,
+                      "value": [
+                        5.6875,
+                        0
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 284,
+                      "value": [
+                        6.5,
+                        0
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 285,
+                      "value": [
+                        9.75,
+                        0
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 286,
+                      "value": [
+                        14.35546875,
+                        0
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 287,
+                      "value": [
+                        15.57421875,
+                        0
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 288,
+                      "value": [
+                        16.38671875,
+                        0
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 290,
+                      "value": [
+                        16.79296875,
+                        0
+                      ],
+                      "easing": "linear"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "html-clip-1-asset",
+      "name": "SendOscParamsTest",
+      "kind": "html-clip",
+      "detail": "HTML Clip",
+      "clipId": "html-clip-1",
+      "htmlTemplate": {
+        "id": "html-clip-1",
+        "name": "SendOscParamsTest",
+        "kind": "html",
+        "assetId": "html-clip-1-asset",
+        "inFrame": 0,
+        "outFrame": 360,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              960,
+              540
+            ],
+            "value": [
+              960,
+              540
+            ],
+            "label": "anchorPoint",
+            "group": "custom",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1920,
+              1080
+            ],
+            "value": [
+              1920,
+              1080
+            ],
+            "group": "custom",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          },
+          "val0": {
+            "key": "val0",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "custom",
+            "writable": true,
+            "interpolable": true,
+            "version": 1
+          },
+          "val1": {
+            "key": "val1",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "custom",
+            "writable": true,
+            "interpolable": false,
+            "version": 1
+          },
+          "color": {
+            "key": "color",
+            "type": "color",
+            "default": "#ffffff",
+            "value": 0,
+            "group": "custom",
+            "writable": true,
+            "interpolable": true,
+            "version": 1
+          },
+          "pos": {
+            "key": "pos",
+            "type": "vec2",
+            "value": [
+              1,
+              1
+            ],
+            "group": "custom",
+            "writable": true,
+            "interpolable": true,
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+          "js": "clip.use(\"centi\");\n\nclip.defineParams({\n  val0: {type: \"number\", default:0, interpolable: true},\n  val1: {type: \"number\", default:0, interpolable: false},\n  color: {type: \"color\", default:\"#ffffff\", interpolable: true},\n  pos: {type:\"vec2\", interpolable: true}\n});\n\nsetup(() => {\n  size(1920, 1080);\n  bg(33);\n});\n\nonFrame(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n  clear();\n  bg(clip.color);\n  col(255);\n  let y = 0;\n  for(const name of clip.paramNames){\n    if (clip.isNew[name]) sendOsc(\"/\" + name, clip[name]);\n    bmTxt(name + \": \" + clip[name],0,y);\n    y += 40;\n  } \n  \n});\n\nonEnter(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});\n\nonBeat(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});"
+        }
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "cdnjs.cloudflare.com",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  },
+  "clipFormatVersion": 2
+}

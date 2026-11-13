@@ -1,5 +1,8 @@
 import { featureGroupDescriptions, featureDescriptions } from "./reference-features.js";
 import { threeDGroupDescriptions, threeDDescriptions, threeDLessonEnglish } from "./three-d-content.js";
+import { oscSequencerLessonEnglish } from "./osc-sequencer-content.js";
+import { p5TimelineLessonEnglish } from "./p5-tutorial-content.js";
+import { workshopTranslations } from "./tutorial-workshops.js";
 // English descriptions share the Japanese catalog's IDs, signatures and examples.
 export const groupDescriptions = {
   ...threeDGroupDescriptions,
@@ -26,6 +29,8 @@ export const apiDescriptions = {
   defineparams: "Declare the types, defaults and ranges of exposed parameters. Supported types are number, string, boolean, color, vec2, vec3 and select.",
   "clip-params": "Read and write declared parameters directly. Keyframe values take priority during keyed intervals. Set writable: false to disable script-driven updates to the host.",
   comp: "Composition parameters are shared by Clips in the same Composition. Create them in the Inspector with no Clip selected.",
+  "clip-param-list": "Enumerate the Clip's own custom parameters. clip.paramNames is a frozen array of registered keys in registration order, and clip.listParams() returns deep-cloned, frozen snapshots of each parameter's schema and current value (key, type, default, value, label, min, max, step, options, space, interpolable, writable). clip.defineParams() now returns the keys it declared. Built-in transform keys and clip.<name> values not yet created are excluded. Declarations from the Inspector or host appear once host values apply (in setup() or onFrame()). paramNames and listParams are reserved like isNew: a project that already has custom parameters with those names is rejected when the schema is registered. Also available through p5's callable clip.",
+  "clip-isnew": "A read-only boolean for each custom parameter, true when its value differs from the value the Clip saw on the previous processed tick. It is always true on the first tick and at the Clip's IN frame (local frame below 1), and false when an unchanged value is ticked again. Changes from the Inspector, OSC, setParam and keyframes are each detected once, while the Clip's own writes are not. Seek, step and still ticks also update the history, so results depend on the order of processed ticks, and an export that starts mid-Clip begins with true flags. Unknown and built-in keys are undefined, and isNew cannot be declared as a parameter. Also works with p5. The app verified this with Node tests, not a native run.",
   getparam: "Read an interpolated parameter from another Clip placement in the same Composition, as evaluated at the start of the frame. Supply the placement ID from the Timeline, rather than an asset name.",
   centi: "Enable the Centi Canvas2D helpers. By default, they are available as global functions.",
   size: "Set the canvas dimensions in pixels. Set a fixed size in the Inspector, or write it directly inside setup() as two positive numeric literals, such as size(720, 405) (sz is the same). When you edit the source in the Editor and the literals change, the edited placement's Inspector size and its asset template's initial value are updated in one Undo step. Other existing placements are unchanged, and merely opening an existing project does not synchronize. A valid intermediate value can briefly appear in the Preview 300 ms after you type. Not covered: p5, instances, member calls such as c.size(), branches, nested functions and dynamic arguments. At runtime the host reapplies its parameters after setup(), so call dynamic sizes in onFrame() before drawing; those changes update the Clip's size parameter, are saved, and can mark the project unsaved. This is separate from p5's createCanvas().",
@@ -91,7 +96,10 @@ export const apiDescriptions = {
 };
 
 export const lessonTranslations = {
+  ...workshopTranslations,
+  "p5-timeline": p5TimelineLessonEnglish,
   "timeline-3d": threeDLessonEnglish,
+  "osc-sequencer": oscSequencerLessonEnglish,
   "first-clip": {
     title: "Create your first Clip", summary: "Draw a circle on a canvas and animate it with the timeline.",
     steps: [

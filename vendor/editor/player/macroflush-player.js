@@ -11398,8 +11398,66 @@ var Bu = {
 	}
 };
 //#endregion
+//#region src/core/clipParamIsNew.ts
+function Vu(e) {
+	let t = new Set(e), n = /* @__PURE__ */ new Map(), r = Object.freeze(Object.create(null)), i = (e, t) => {
+		if (e === t || typeof e == "number" && typeof t == "number" && Number.isNaN(e) && Number.isNaN(t)) return !0;
+		if (!e || !t || typeof e != "object" || typeof t != "object" || Array.isArray(e) !== Array.isArray(t)) return !1;
+		if (Array.isArray(e) && Array.isArray(t)) {
+			if (e.length !== t.length) return !1;
+			for (let n = 0; n < e.length; n++) if (!i(e[n], t[n])) return !1;
+			return !0;
+		}
+		let n = e, r = t, a = Object.keys(n);
+		return a.length === Object.keys(r).length && a.every((e) => Object.prototype.hasOwnProperty.call(r, e) && i(n[e], r[e]));
+	};
+	return {
+		read: () => r,
+		begin(e, a) {
+			let o = Object.create(null);
+			for (let r of e) {
+				let e = r.key;
+				r.group !== "custom" || t.has(e) || e === "isNew" || (o[e] = a >= 0 && a < 1 || !n.has(e) || !i(r.value, n.get(e)));
+			}
+			r = Object.freeze(o);
+		},
+		commit(e) {
+			let r = /* @__PURE__ */ new Map();
+			for (let n of e) n.group === "custom" && !t.has(n.key) && n.key !== "isNew" && r.set(n.key, structuredClone(n.value));
+			n = r;
+		}
+	};
+}
+//#endregion
+//#region src/core/clipParamEnumeration.ts
+function Hu(e, t) {
+	let n = () => Array.from(e.values()).filter((e) => e.group === "custom" && !t.has(e.key)), r = [
+		"key",
+		"type",
+		"default",
+		"value",
+		"label",
+		"min",
+		"max",
+		"step",
+		"options",
+		"space",
+		"interpolable",
+		"writable"
+	];
+	return {
+		names: () => Object.freeze(n().map((e) => e.key)),
+		list() {
+			let e = structuredClone(n().map((e) => Object.fromEntries(r.filter((t) => e[t] !== void 0).map((t) => [t, e[t]])))), t = /* @__PURE__ */ new WeakSet(), i = (e) => {
+				!e || typeof e != "object" || t.has(e) || (t.add(e), Object.values(e).forEach(i), Object.freeze(e));
+			};
+			return i(e), e;
+		}
+	};
+}
+//#endregion
 //#region src/core/sizeInterpolation.ts
-function Vu(e, t) {
+function Uu(e, t) {
 	if (t.key !== "size") return t;
 	if (!e) return {
 		...t,
@@ -11413,7 +11471,7 @@ function Vu(e, t) {
 }
 //#endregion
 //#region src/runtime/clipCsp.ts
-var Hu = {
+var Wu = {
 	script: "script-src",
 	style: "style-src",
 	font: "font-src",
@@ -11421,16 +11479,16 @@ var Hu = {
 	data: "connect-src",
 	other: "connect-src"
 };
-function Uu(e, t, n = !1, r = !1, i = !1, a = !1) {
-	let o = /* @__PURE__ */ new Map(), s = Wu(t ?? "");
-	if (s) for (let e of Object.values(Hu)) {
+function Gu(e, t, n = !1, r = !1, i = !1, a = !1) {
+	let o = /* @__PURE__ */ new Map(), s = Ku(t ?? "");
+	if (s) for (let e of Object.values(Wu)) {
 		let t = o.get(e) ?? /* @__PURE__ */ new Set();
 		t.add(s), o.set(e, t);
 	}
 	for (let t of e) {
-		let e = Wu(t.url);
+		let e = Ku(t.url);
 		if (!e) continue;
-		let n = Hu[t.kind], r = o.get(n) ?? /* @__PURE__ */ new Set();
+		let n = Wu[t.kind], r = o.get(n) ?? /* @__PURE__ */ new Set();
 		r.add(e), o.set(n, r);
 	}
 	if (n) {
@@ -11470,7 +11528,7 @@ function Uu(e, t, n = !1, r = !1, i = !1, a = !1) {
 		"form-action 'none'"
 	].join("; ");
 }
-function Wu(e) {
+function Ku(e) {
 	try {
 		let t = new URL(e);
 		return t.protocol !== "http:" && t.protocol !== "https:" || t.origin === "null" ? null : t.origin;
@@ -11480,15 +11538,15 @@ function Wu(e) {
 }
 //#endregion
 //#region src/runtime/centi.bitmapFont.js?raw
-var Gu = "(function (Centi) {\n    Centi.prototype.bmFont = \n    Centi.prototype.bitmapFont = function(size){\n        this.bitmapFontSize = size;\n	};\n    Centi.prototype.bmTxt = \n    Centi.prototype.bitmapText = function(str, x, y, size){\n        if ( this.bitmapFontSize == undefined ) {\n            this.bitmapFontSize = 32;\n        }\n        if ( size != undefined ) {\n            this.bitmapFontSize = size;\n        }\n        size = this.bitmapFontSize;\n        var _str = str;\n        if ( typeof str !== \"string\" ) {\n            _str = str.toString(10);\n        }\n        for ( var i=0; i<_str.length; i++ ) {\n            var code = _str.charCodeAt(i);\n            var hex = this.getBitmapFontCode(code);\n            this.bitmap5by8(hex, x, y, size/8);\n            x += (size / 8) * 6;\n        }\n	};\n    Centi.prototype.bm5x8 = \n    Centi.prototype.bm5by8 = \n    Centi.prototype.bitmap5by8 = function(bin, x, y, dot_size){\n        var bit_max = Math.pow(2,32);\n        var bin_32bit_arr = [bin%bit_max, Math.floor(bin/bit_max)];\n        var c = 0;\n        for ( var i=0; i<5; i++ ) {\n            if ( i == 0 ) c = bin_32bit_arr[0];\n            if ( i == 4 ) c = bin_32bit_arr[1];\n            for ( var j=0; j<8; j++ ) {\n                if ( c & 1 ) {\n                    this.rect(x+i*dot_size, y+j*dot_size, dot_size, dot_size);\n                }\n                c = c >> 1;\n            }\n        }\n	};\n    Centi.prototype.getBitmapFontCode = function(code) {\n        var val = 0;\n        if ( code >= 0x20 && code <= 0x7F ) {\n            if ( !this.bitmapFontCodes ) {\n                this.bitmapFontCodes = _initCodes();\n//                for ( var i=this.bitmapFontCodes.length-1; i>=0; i-- ) {\n//                    for ( var j=0; j<this.bitmapFontCodes[i].length; j++ ) {\n//                        this.bitmapFontCodes[i][j] = parseInt(this.bitmapFontCodes[i][j].toString(10));\n//                    }\n//                }\n            }\n            var arr = this.bitmapFontCodes[code - 0x20];\n            for ( var i=arr.length-1; i>=0; i-- ) {\n                val += arr[i] * Math.pow(2, i*8);\n            }\n        }\n        return val;\n        function _initCodes() {\n            return [\n                [ // 20\n                    0b00000000,\n                    0b00000000,\n                    0b00000000,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 21\n                    0b00000000,\n                    0b00000000,\n                    0b01001111,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 22\n                    0b00000000,\n                    0b00000111,\n                    0b00000000,\n                    0b00000111,\n                    0b00000000  \n                ],\n                  [ // 23\n                    0b00010100,\n                    0b01111111,\n                    0b00010100,\n                    0b01111111,\n                    0b00010100  \n                ],\n                  [ // 24\n                    0b00100100,\n                    0b00101010,\n                    0b01111111,\n                    0b00101010,\n                    0b00010010  \n                ],\n                  [ // 25\n                    0b00100011,\n                    0b00010011,\n                    0b00001000,\n                    0b01100100,\n                    0b01100010  \n                ],\n                  [ // 26\n                    0b00110110,\n                    0b01001001,\n                    0b01010101,\n                    0b00100010,\n                    0b01010000  \n                ],\n                  [ // 27\n                    0b00000000,\n                    0b00000101,\n                    0b00000011,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 28\n                    0b00000000,\n                    0b00011100,\n                    0b00100010,\n                    0b01000001,\n                    0b00000000  \n                ],\n                  [ // 29\n                    0b00000000,\n                    0b01000001,\n                    0b00100010,\n                    0b00011100,\n                    0b00000000  \n                ],\n                  [ // 2A\n                    0b00010100,\n                    0b00001000,\n                    0b00111110,\n                    0b00001000,\n                    0b00010100  \n                ],\n                  [ // 2B\n                    0b00001000,\n                    0b00001000,\n                    0b00111110,\n                    0b00001000,\n                    0b00001000  \n                ],\n                  [ // 2C\n                    0b00000000,\n                    0b01010000,\n                    0b00110000,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 2D\n                    0b00001000,\n                    0b00001000,\n                    0b00001000,\n                    0b00001000,\n                    0b00001000  \n                ],\n                  [ // 2E\n                    0b00000000,\n                    0b01100000,\n                    0b01100000,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 2F\n                    0b00100000,\n                    0b00010000,\n                    0b00001000,\n                    0b00000100,\n                    0b00000010  \n                ],\n                  [ // 30\n                    0b00111110,\n                    0b01010001,\n                    0b01001001,\n                    0b01000101,\n                    0b00111110  \n                ],\n                  [ // 31\n                    0b00000000,\n                    0b01000010,\n                    0b01111111,\n                    0b01000000,\n                    0b00000000  \n                ],\n                  [ // 32\n                    0b01000010,\n                    0b01100001,\n                    0b01010001,\n                    0b01001001,\n                    0b01000110  \n                ],\n                  [ // 33\n                    0b00100001,\n                    0b01000001,\n                    0b01000101,\n                    0b01001011,\n                    0b00110001  \n                ],\n                  [ // 34\n                    0b00011000,\n                    0b00010100,\n                    0b00010010,\n                    0b01111111,\n                    0b00010000  \n                ],\n                  [ // 35\n                    0b00100111,\n                    0b01000101,\n                    0b01000101,\n                    0b01000101,\n                    0b00111001  \n                ],\n                  [ // 36\n                    0b00111100,\n                    0b01001010,\n                    0b01001001,\n                    0b01001001,\n                    0b00110000  \n                ],\n                  [ // 37\n                    0b00000001,\n                    0b01110001,\n                    0b00001001,\n                    0b00000101,\n                    0b00000011  \n                ],\n                  [ // 38\n                    0b00110110,\n                    0b01001001,\n                    0b01001001,\n                    0b01001001,\n                    0b00110110  \n                ],\n                  [ // 39\n                    0b00000110,\n                    0b01001001,\n                    0b01001001,\n                    0b00101001,\n                    0b00011110  \n                ],\n                  [ // 3A\n                    0b00000000,\n                    0b00110110,\n                    0b00110110,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 3B\n                    0b00000000,\n                    0b01010110,\n                    0b00110110,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 3C\n                    0b00001000,\n                    0b00010100,\n                    0b00100010,\n                    0b01000001,\n                    0b00000000  \n                ],\n                  [ // 3D\n                    0b00010100,\n                    0b00010100,\n                    0b00010100,\n                    0b00010100,\n                    0b00010100  \n                ],\n                  [ // 3E\n                    0b00000000,\n                    0b01000001,\n                    0b00100010,\n                    0b00010100,\n                    0b00001000  \n                ],\n                  [ // 3F\n                    0b00000010,\n                    0b00000001,\n                    0b01010001,\n                    0b00001001,\n                    0b00000110  \n                ],\n                  [ // 40\n                    0b00110010,\n                    0b01001001,\n                    0b01111001,\n                    0b01000001,\n                    0b00111110  \n                ],\n                  [ // 41\n                    0b01111110,\n                    0b00010001,\n                    0b00010001,\n                    0b00010001,\n                    0b01111110  \n                ],\n                  [ // 42\n                    0b01111111,\n                    0b01001001,\n                    0b01001001,\n                    0b01001001,\n                    0b00110110  \n                ],\n                  [ // 43\n                    0b00111110,\n                    0b01000001,\n                    0b01000001,\n                    0b01000001,\n                    0b00100010  \n                ],\n                  [ // 44\n                    0b01111111,\n                    0b01000001,\n                    0b01000001,\n                    0b00100010,\n                    0b00011100  \n                ],\n                  [ // 45\n                    0b01111111,\n                    0b01001001,\n                    0b01001001,\n                    0b01001001,\n                    0b01000001  \n                ],\n                  [ // 46\n                    0b01111111,\n                    0b00001001,\n                    0b00001001,\n                    0b00001001,\n                    0b00000001  \n                ],\n                  [ // 47\n                    0b00111110,\n                    0b01000001,\n                    0b01001001,\n                    0b01001001,\n                    0b01111010  \n                ],\n                  [ // 48\n                    0b01111111,\n                    0b00001000,\n                    0b00001000,\n                    0b00001000,\n                    0b01111111  \n                ],\n                  [ // 49\n                    0b00000000,\n                    0b01000001,\n                    0b01111111,\n                    0b01000001,\n                    0b00000000  \n                ],\n                  [ // 4A\n                    0b00100000,\n                    0b01000000,\n                    0b01000001,\n                    0b00111111,\n                    0b00000001  \n                ],\n                  [ // 4B\n                    0b01111111,\n                    0b00001000,\n                    0b00010100,\n                    0b00100010,\n                    0b01000001  \n                ],\n                  [ // 4C\n                    0b01111111,\n                    0b01000000,\n                    0b01000000,\n                    0b01000000,\n                    0b01000000  \n                ],\n                  [ // 4D\n                    0b01111111,\n                    0b00000010,\n                    0b00001100,\n                    0b00000010,\n                    0b01111111  \n                ],\n                  [ // 4E\n                    0b01111111,\n                    0b00000100,\n                    0b00001000,\n                    0b00010000,\n                    0b01111111  \n                ],\n                  [ // 4F\n                    0b00111110,\n                    0b01000001,\n                    0b01000001,\n                    0b01000001,\n                    0b00111110  \n                ],\n                  [ // 50\n                    0b01111111,\n                    0b00001001,\n                    0b00001001,\n                    0b00001001,\n                    0b00000110  \n                ],\n                  [ // 51\n                    0b00111110,\n                    0b01000001,\n                    0b01010001,\n                    0b00100001,\n                    0b01011110  \n                ],\n                  [ // 52\n                    0b01111111,\n                    0b00001001,\n                    0b00011001,\n                    0b00101001,\n                    0b01000110  \n                ],\n                  [ // 53\n                    0b01000110,\n                    0b01001001,\n                    0b01001001,\n                    0b01001001,\n                    0b00110001  \n                ],\n                  [ // 54\n                    0b00000001,\n                    0b00000001,\n                    0b01111111,\n                    0b00000001,\n                    0b00000001  \n                ],\n                  [ // 55\n                    0b00111111,\n                    0b01000000,\n                    0b01000000,\n                    0b01000000,\n                    0b00111111  \n                ],\n                  [ // 56\n                    0b00011111,\n                    0b00100000,\n                    0b01000000,\n                    0b00100000,\n                    0b00011111  \n                ],\n                  [ // 57\n                    0b00111111,\n                    0b01000000,\n                    0b00111000,\n                    0b01000000,\n                    0b00111111  \n                ],\n                  [ // 58\n                    0b01100011,\n                    0b00010100,\n                    0b00001000,\n                    0b00010100,\n                    0b01100011  \n                ],\n                  [ // 59\n                    0b00000111,\n                    0b00001000,\n                    0b01110000,\n                    0b00001000,\n                    0b00000111  \n                ],\n                  [ // 5A\n                    0b01100001,\n                    0b01010001,\n                    0b01001001,\n                    0b01000101,\n                    0b01000011  \n                ],\n                  [ // 5B\n                    0b00000000,\n                    0b01111111,\n                    0b01000001,\n                    0b01000001,\n                    0b00000000  \n                ],\n                  [ // 5C\n                    0b00000010,\n                    0b00000100,\n                    0b00001000,\n                    0b00010000,\n                    0b00100000  \n                ],\n                  [ // 5D\n                    0b00000000,\n                    0b01000001,\n                    0b01000001,\n                    0b01111111,\n                    0b00000000  \n                ],\n                  [ // 5E\n                    0b00000100,\n                    0b00000010,\n                    0b00000001,\n                    0b00000010,\n                    0b00000100  \n                ],\n                  [ // 5F\n                    0b01000000,\n                    0b01000000,\n                    0b01000000,\n                    0b01000000,\n                    0b01000000  \n                ],\n                  [ // 60\n                    0b00000000,\n                    0b00000001,\n                    0b00000010,\n                    0b00000100,\n                    0b00000000  \n                ],\n                  [ // 61\n                    0b00100000,\n                    0b01010100,\n                    0b01010100,\n                    0b01010100,\n                    0b01111000  \n                ],\n                  [ // 62\n                    0b01111111,\n                    0b01001000,\n                    0b01000100,\n                    0b01000100,\n                    0b00111000  \n                ],\n                  [ // 63\n                    0b00111000,\n                    0b01000100,\n                    0b01000100,\n                    0b01000100,\n                    0b00100000  \n                ],\n                  [ // 64\n                    0b00111000,\n                    0b01000100,\n                    0b01000100,\n                    0b01001000,\n                    0b01111111  \n                ],\n                  [ // 65\n                    0b00111000,\n                    0b01010100,\n                    0b01010100,\n                    0b01010100,\n                    0b00011000  \n                ],\n                  [ // 66\n                    0b00001000,\n                    0b01111110,\n                    0b00001001,\n                    0b00000001,\n                    0b00000010  \n                ],\n                  [ // 67\n                    0b00001100,\n                    0b01010010,\n                    0b01010010,\n                    0b01010010,\n                    0b00111110  \n                ],\n                  [ // 68\n                    0b01111111,\n                    0b00001000,\n                    0b00000100,\n                    0b00000100,\n                    0b01111000  \n                ],\n                  [ // 69\n                    0b00000000,\n                    0b01000100,\n                    0b01111101,\n                    0b01000000,\n                    0b00000000  \n                ],\n                  [ // 6A\n                    0b00100000,\n                    0b01000000,\n                    0b01000100,\n                    0b00111101,\n                    0b00000000  \n                ],\n                  [ // 6B\n                    0b01111111,\n                    0b00010000,\n                    0b00101000,\n                    0b01000100,\n                    0b00000000  \n                ],\n                  [ // 6C\n                    0b00000000,\n                    0b01000001,\n                    0b01111111,\n                    0b01000000,\n                    0b00000000  \n                ],\n                  [ // 6D\n                    0b01111100,\n                    0b00000100,\n                    0b00011000,\n                    0b00000100,\n                    0b01111000  \n                ],\n                  [ // 6E\n                    0b01111100,\n                    0b00001000,\n                    0b00000100,\n                    0b00000100,\n                    0b01111000  \n                ],\n                  [ // 6F\n                    0b00111000,\n                    0b01000100,\n                    0b01000100,\n                    0b01000100,\n                    0b00111000  \n                ],\n                  [ // 70\n                    0b01111100,\n                    0b00010100,\n                    0b00010100,\n                    0b00010100,\n                    0b00001000  \n                ],\n                  [ // 71\n                    0b00001000,\n                    0b00010100,\n                    0b00010100,\n                    0b00011000,\n                    0b01111100  \n                ],\n                  [ // 72\n                    0b01111100,\n                    0b00001000,\n                    0b00000100,\n                    0b00000100,\n                    0b00001000  \n                ],\n                  [ // 73\n                    0b01001000,\n                    0b01010100,\n                    0b01010100,\n                    0b01010100,\n                    0b00100000  \n                ],\n                  [ // 74\n                    0b00000100,\n                    0b00111111,\n                    0b01000100,\n                    0b01000000,\n                    0b00100000  \n                ],\n                  [ // 75\n                    0b00111100,\n                    0b01000000,\n                    0b01000000,\n                    0b00100000,\n                    0b01111100  \n                ],\n                  [ // 76\n                    0b00011100,\n                    0b00100000,\n                    0b01000000,\n                    0b00100000,\n                    0b00011100  \n                ],\n                  [ // 77\n                    0b00111100,\n                    0b01000000,\n                    0b00110000,\n                    0b01000000,\n                    0b00111100  \n                ],\n                  [ // 78\n                    0b01000100,\n                    0b00101000,\n                    0b00010000,\n                    0b00101000,\n                    0b01000100  \n                ],\n                  [ // 79\n                    0b00001100,\n                    0b01010000,\n                    0b01010000,\n                    0b01010000,\n                    0b00111100\n                ],\n                  [ // 7A\n                    0b01000100,\n                    0b01100100,\n                    0b01010100,\n                    0b01001100,\n                    0b01000100\n                ],\n                  [ // 7B\n                    0b00000000,\n                    0b00001000,\n                    0b00110110,\n                    0b01000001,\n                    0b00000000\n                ],\n                  [ // 7C\n                    0b00000000,\n                    0b00000000,\n                    0b01111111,\n                    0b00000000,\n                    0b00000000\n                ],\n                  [ // 7D\n                    0b00000000,\n                    0b01000001,\n                    0b00110110,\n                    0b00001000,\n                    0b00000000  \n                ],\n                  [ // 7E\n                    0b00001000,\n                    0b00000100,\n                    0b00001000,\n                    0b00010000,\n                    0b00001000  \n                ],\n                  [ // 7F\n                    0b00000001,\n                    0b00101010,\n                    0b01111100,\n                    0b00101010,\n                    0b00000001  \n                ]\n            ];\n        }\n    }\n})(Centi);", Ku = "(function(Centi) {\n\n	function readVec2(args) {\n		var arg0 = args[0];\n		if (args.length >= 2 && typeof arg0 === 'number') {\n			return new Centi.Vec2(args[0], args[1]);\n		} else if (Array.isArray(arg0)) {\n			return new Centi.Vec2(arg0[0], arg0[1]);\n		} else if (arg0 && arg0.x !== undefined && arg0.y !== undefined) {\n			return new Centi.Vec2(arg0.x, arg0.y);\n		}\n		return new Centi.Vec2();\n	}\n\n	Centi.prototype.Matrix = function(){\n		return this.new(Centi.Matrix, arguments);\n	};\n\n    Centi.Matrix = function() {\n        var count = arguments.length,\n            ok = true;\n        if (count === 6) {\n            this.set.apply(this, arguments);\n        } else if (count === 1) {\n            var arg = arguments[0];\n            if (arg instanceof Centi.Matrix) {\n                this.set(arg._a, arg._c, arg._b, arg._d, arg._tx, arg._ty);\n            } else if (Array.isArray(arg)) {\n                this.set.apply(this, arg);\n            } else {\n                ok = false;\n            }\n        } else if (count === 0) {\n            this.reset();\n        } else {\n            ok = false;\n        }\n        if (!ok)\n            throw new Error('Unsupported matrix parameters');\n    };\n\n    Centi.Matrix.prototype.set = function(a, c, b, d, tx, ty, _dontNotify) {\n        this._a = a;\n        this._c = c;\n        this._b = b;\n        this._d = d;\n        this._tx = tx;\n        this._ty = ty;\n        if (!_dontNotify)\n            this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype._changed = function() {\n        var owner = this._owner;\n        if (owner) {\n            if (owner._applyMatrix) {\n                owner.transform(null, true);\n            } else {\n                owner._changed(9);\n            }\n        }\n    };\n\n    Centi.Matrix.prototype.clone = function() {\n        return new Centi.Matrix(this._a, this._c, this._b, this._d,\n            this._tx, this._ty);\n    };\n\n    Centi.Matrix.prototype.equals = function(mx) {\n        return mx === this || mx && this._a === mx._a && this._b === mx._b && this._c === mx._c && this._d === mx._d && this._tx === mx._tx && this._ty === mx._ty || false;\n    };\n\n    Centi.Matrix.prototype.reset = function(_dontNotify) {\n        this._a = this._d = 1;\n        this._c = this._b = this._tx = this._ty = 0;\n        if (!_dontNotify)\n            this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.apply = function() {\n        var owner = this._owner;\n        if (owner) {\n            owner.transform(null, true);\n            return this.isIdentity();\n        }\n        return false;\n    };\n\n    Centi.Matrix.prototype.translate = function(x, y) {\n        this._tx += x * this._a + y * this._b;\n        this._ty += x * this._c + y * this._d;\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.scale = function(x, y, cx, cy) {\n        var scale = new Centi.Vec2(x, y);\n        if (arguments.length == 4)\n            this.translate(cx, cy);\n        this._a *= scale.x;\n        this._c *= scale.x;\n        this._b *= scale.y;\n        this._d *= scale.y;\n        if (arguments.length == 4)\n            this.translate(-cx, -cy);\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.rotate = function(angle, x, y) {\n        angle *= Math.PI / 180;\n        x = x || 0;\n        y = y || 0;\n        var cos = Math.cos(angle),\n            sin = Math.sin(angle),\n            tx = x - x * cos + y * sin,\n            ty = y - x * sin - y * cos,\n            a = this._a,\n            b = this._b,\n            c = this._c,\n            d = this._d;\n        this._a = cos * a + sin * b;\n        this._b = -sin * a + cos * b;\n        this._c = cos * c + sin * d;\n        this._d = -sin * c + cos * d;\n        this._tx += tx * a + ty * b;\n        this._ty += tx * c + ty * d;\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.shear = function(x, y, cx, cy) {\n        var shear = new Centi.Vec2(x, y);\n        if (arguments.length == 4)\n            this.translate(cx, cy);\n        var a = this._a,\n            c = this._c;\n        this._a += shear.y * this._b;\n        this._c += shear.y * this._d;\n        this._b += shear.x * a;\n        this._d += shear.x * c;\n        if (arguments.length == 4)\n            this.translate(-cx, -cy);\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.skew = function(x, y, cx, cy) {\n        var skew = new Centi.Vec2(x, y),\n            toRadians = Math.PI / 180,\n            shear = new Centi.Vec2(Math.tan(skew.x * toRadians),\n                Math.tan(skew.y * toRadians));\n        return this.shear(shear.x, shear.y, cx, cy);\n    };\n\n    Centi.Matrix.prototype.concatenate = function(mx) {\n        var a1 = this._a,\n            b1 = this._b,\n            c1 = this._c,\n            d1 = this._d,\n            a2 = mx._a,\n            b2 = mx._b,\n            c2 = mx._c,\n            d2 = mx._d,\n            tx2 = mx._tx,\n            ty2 = mx._ty;\n        this._a = a2 * a1 + c2 * b1;\n        this._b = b2 * a1 + d2 * b1;\n        this._c = a2 * c1 + c2 * d1;\n        this._d = b2 * c1 + d2 * d1;\n        this._tx += tx2 * a1 + ty2 * b1;\n        this._ty += tx2 * c1 + ty2 * d1;\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.preConcatenate = function(mx) {\n        var a1 = this._a,\n            b1 = this._b,\n            c1 = this._c,\n            d1 = this._d,\n            tx1 = this._tx,\n            ty1 = this._ty,\n            a2 = mx._a,\n            b2 = mx._b,\n            c2 = mx._c,\n            d2 = mx._d,\n            tx2 = mx._tx,\n            ty2 = mx._ty;\n        this._a = a2 * a1 + b2 * c1;\n        this._b = a2 * b1 + b2 * d1;\n        this._c = c2 * a1 + d2 * c1;\n        this._d = c2 * b1 + d2 * d1;\n        this._tx = a2 * tx1 + b2 * ty1 + tx2;\n        this._ty = c2 * tx1 + d2 * ty1 + ty2;\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.chain = function(mx) {\n        var a1 = this._a,\n            b1 = this._b,\n            c1 = this._c,\n            d1 = this._d,\n            tx1 = this._tx,\n            ty1 = this._ty,\n            a2 = mx._a,\n            b2 = mx._b,\n            c2 = mx._c,\n            d2 = mx._d,\n            tx2 = mx._tx,\n            ty2 = mx._ty;\n        return new Centi.Matrix(\n            a2 * a1 + c2 * b1,\n            a2 * c1 + c2 * d1,\n            b2 * a1 + d2 * b1,\n            b2 * c1 + d2 * d1,\n            tx1 + tx2 * a1 + ty2 * b1,\n            ty1 + tx2 * c1 + ty2 * d1);\n    };\n\n    Centi.Matrix.prototype.isIdentity = function() {\n        return this._a === 1 && this._c === 0 && this._b === 0 && this._d === 1 && this._tx === 0 && this._ty === 0;\n    };\n\n    Centi.Matrix.prototype.orNullIfIdentity = function() {\n        return this.isIdentity() ? null : this;\n    };\n\n    Centi.Matrix.prototype.isInvertible = function() {\n        return !!this._getDeterminant();\n    };\n\n    Centi.Matrix.prototype.isSingular = function() {\n        return !this._getDeterminant();\n    };\n\n    Centi.Matrix.prototype.transform = function(src, dst, count) {\n        return arguments.length < 3 ? this._transformPoint(readVec2(arguments)) : this._transformCoordinates(src, dst, count);\n    };\n\n    Centi.Matrix.prototype._transformPoint = function(point, dest, _dontNotify) {\n        var x = point.x,\n            y = point.y;\n        if (!dest)\n            dest = new Centi.Vec2();\n        return dest.set(\n            x * this._a + y * this._b + this._tx,\n            x * this._c + y * this._d + this._ty,\n            _dontNotify\n        );\n    };\n\n    Centi.Matrix.prototype._transformCoordinates = function(src, dst, count) {\n        var i = 0,\n            j = 0,\n            max = 2 * count;\n        while (i < max) {\n            var x = src[i++],\n                y = src[i++];\n            dst[j++] = x * this._a + y * this._b + this._tx;\n            dst[j++] = x * this._c + y * this._d + this._ty;\n        }\n        return dst;\n    };\n\n    Centi.Matrix.prototype._transformCorners = function(rect) {\n        var x1 = rect.x,\n            y1 = rect.y,\n            x2 = x1 + rect.width,\n            y2 = y1 + rect.height,\n            coords = [x1, y1, x2, y1, x2, y2, x1, y2];\n        return this._transformCoordinates(coords, coords, 4);\n    };\n\n    Centi.Matrix.prototype._transformBounds = function(bounds, dest, _dontNotify) {\n        var coords = this._transformCorners(bounds),\n            min = coords.slice(0, 2),\n            max = coords.slice();\n        for (var i = 2; i < 8; i++) {\n            var val = coords[i],\n                j = i & 1;\n            if (val < min[j])\n                min[j] = val;\n            else if (val > max[j])\n                max[j] = val;\n        }\n        return new Centi.Rectangle(min[0], min[1], max[0] - min[0], max[1] - min[1]);\n    };\n\n    Centi.Matrix.prototype.inverseTransform = function() {\n        return this._inverseTransform(readVec2(arguments));\n    };\n\n    Centi.Matrix.prototype._getDeterminant = function() {\n        var det = this._a * this._d - this._b * this._c;\n        return isFinite(det) && !Centi.Numerical.isZero(det) && isFinite(this._tx) && isFinite(this._ty) ? det : null;\n    };\n\n    Centi.Matrix.prototype._inverseTransform = function(point, dest, _dontNotify) {\n        var det = this._getDeterminant();\n        if (!det)\n            return null;\n        var x = point.x - this._tx,\n            y = point.y - this._ty;\n        if (!dest)\n            dest = new Centi.Vec2();\n        return dest.set(\n            (x * this._d - y * this._b) / det, (y * this._a - x * this._c) / det,\n            _dontNotify\n        );\n    };\n\n    Centi.Matrix.prototype.decompose = function() {\n        var a = this._a,\n            b = this._b,\n            c = this._c,\n            d = this._d;\n        if (Centi.Numerical.isZero(a * d - b * c))\n            return null;\n\n        var scaleX = Math.sqrt(a * a + b * b);\n        a /= scaleX;\n        b /= scaleX;\n\n        var shear = a * c + b * d;\n        c -= a * shear;\n        d -= b * shear;\n\n        var scaleY = Math.sqrt(c * c + d * d);\n        c /= scaleY;\n        d /= scaleY;\n        shear /= scaleY;\n\n        if (a * d < b * c) {\n            a = -a;\n            b = -b;\n            shear = -shear;\n            scaleX = -scaleX;\n        }\n\n        return {\n            scaling: new Centi.Vec2(scaleX, scaleY),\n            rotation: -Math.atan2(b, a) * 180 / Math.PI,\n            shearing: shear\n        };\n    };\n\n    Centi.Matrix.prototype.getValues = function() {\n        return [this._a, this._c, this._b, this._d, this._tx, this._ty];\n    };\n\n    Centi.Matrix.prototype.getTranslation = function() {\n        return new Centi.Vec2(this._tx, this._ty);\n    };\n\n    Centi.Matrix.prototype.getScaling = function() {\n        return (this.decompose() || {}).scaling;\n    };\n\n    Centi.Matrix.prototype.getRotation = function() {\n        return (this.decompose() || {}).rotation;\n    };\n\n    Centi.Matrix.prototype.inverted = function() {\n        var det = this._getDeterminant();\n        return det && new Centi.Matrix(\n            this._d / det, -this._c / det, -this._b / det,\n            this._a / det, (this._b * this._ty - this._d * this._tx) / det, (this._c * this._tx - this._a * this._ty) / det);\n    };\n\n    Centi.Matrix.prototype.shiftless = function() {\n        return new Centi.Matrix(this._a, this._c, this._b, this._d, 0, 0);\n    };\n\n    Centi.Matrix.prototype.applyToContext = function(ctx) {\n        ctx.transform(this._a, this._c, this._b, this._d, this._tx, this._ty);\n    };\n\n})(Centi);", qu = "/**\n * k-d Tree JavaScript - V 1.01\n *\n * https://github.com/ubilabs/kd-tree-javascript\n *\n * @author Mircea Pricop <pricop@ubilabs.net>, 2012\n * @author Martin Kleppe <kleppe@ubilabs.net>, 2012\n * @author Ubilabs http://ubilabs.net, 2012\n * @license MIT License <http://www.opensource.org/licenses/mit-license.php>\n */(function(e,t){if(typeof define===\"function\"&&define.amd){define([\"exports\"],t)}else if(typeof exports===\"object\"){t(exports)}else{t(e.commonJsStrict={})}})(this,function(e){function t(e,t,n){this.obj=e;this.left=null;this.right=null;this.parent=n;this.dimension=t}function n(e,n,i){function o(e,n,r){var s=n%i.length,u,a;if(e.length===0){return null}if(e.length===1){return new t(e[0],s,r)}e.sort(function(e,t){return e[i[s]]-t[i[s]]});u=Math.floor(e.length/2);a=new t(e[u],s,r);a.left=o(e.slice(0,u),n+1,a);a.right=o(e.slice(u+1),n+1,a);return a}function u(e){function t(e){if(e.left){e.left.parent=e;t(e.left)}if(e.right){e.right.parent=e;t(e.right)}}s.root=e;t(s.root)}var s=this;if(!Array.isArray(e))u(e,n,i);else this.root=o(e,0,null);this.toJSON=function(e){if(!e)e=this.root;var n=new t(e.obj,e.dimension,null);if(e.left)n.left=s.toJSON(e.left);if(e.right)n.right=s.toJSON(e.right);return n};this.insert=function(e){function n(t,r){if(t===null){return r}var s=i[t.dimension];if(e[s]<t.obj[s]){return n(t.left,t)}else{return n(t.right,t)}}var r=n(this.root,null),s,o;if(r===null){this.root=new t(e,0,null);return}s=new t(e,(r.dimension+1)%i.length,r);o=i[r.dimension];if(e[o]<r.obj[o]){r.left=s}else{r.right=s}};this.remove=function(e){function n(t){if(t===null){return null}if(t.obj===e){return t}var r=i[t.dimension];if(e[r]<t.obj[r]){return n(t.left,t)}else{return n(t.right,t)}}function r(e){function u(e,t){var n,r,s,o,a;if(e===null){return null}n=i[t];if(e.dimension===t){if(e.right!==null){return u(e.right,t)}return e}r=e.obj[n];s=u(e.left,t);o=u(e.right,t);a=e;if(s!==null&&s.obj[n]>r){a=s}if(o!==null&&o.obj[n]>a.obj[n]){a=o}return a}function a(e,t){var n,r,s,o,u;if(e===null){return null}n=i[t];if(e.dimension===t){if(e.left!==null){return a(e.left,t)}return e}r=e.obj[n];s=a(e.left,t);o=a(e.right,t);u=e;if(s!==null&&s.obj[n]<r){u=s}if(o!==null&&o.obj[n]<u.obj[n]){u=o}return u}var t,n,o;if(e.left===null&&e.right===null){if(e.parent===null){s.root=null;return}o=i[e.parent.dimension];if(e.obj[o]<e.parent.obj[o]){e.parent.left=null}else{e.parent.right=null}return}if(e.left!==null){t=u(e.left,e.dimension)}else{t=a(e.right,e.dimension)}n=t.obj;r(t);e.obj=n}var t;t=n(s.root);if(t===null){return}r(t)};this.nearest=function(e,t,o){function l(r){function d(e,n){f.push([e,n]);if(f.size()>t){f.pop()}}var s,o=i[r.dimension],u=n(e,r.obj),a={},c,h,p;for(p=0;p<i.length;p+=1){if(p===r.dimension){a[i[p]]=e[i[p]]}else{a[i[p]]=r.obj[i[p]]}}c=n(a,r.obj);if(r.right===null&&r.left===null){if(f.size()<t||u<f.peek()[1]){d(r,u)}return}if(r.right===null){s=r.left}else if(r.left===null){s=r.right}else{if(e[o]<r.obj[o]){s=r.left}else{s=r.right}}l(s);if(f.size()<t||u<f.peek()[1]){d(r,u)}if(f.size()<t||Math.abs(c)<f.peek()[1]){if(s===r.left){h=r.right}else{h=r.left}if(h!==null){l(h)}}}var u,a,f;f=new r(function(e){return-e[1]});if(o){for(u=0;u<t;u+=1){f.push([null,o])}}l(s.root);a=[];for(u=0;u<t;u+=1){if(f.content[u][0]){a.push([f.content[u][0].obj,f.content[u][1]])}}return a};this.balanceFactor=function(){function e(t){if(t===null){return 0}return Math.max(e(t.left),e(t.right))+1}function t(e){if(e===null){return 0}return t(e.left)+t(e.right)+1}return e(s.root)/(Math.log(t(s.root))/Math.log(2))}}function r(e){this.content=[];this.scoreFunction=e}r.prototype={push:function(e){this.content.push(e);this.bubbleUp(this.content.length-1)},pop:function(){var e=this.content[0];var t=this.content.pop();if(this.content.length>0){this.content[0]=t;this.sinkDown(0)}return e},peek:function(){return this.content[0]},remove:function(e){var t=this.content.length;for(var n=0;n<t;n++){if(this.content[n]==e){var r=this.content.pop();if(n!=t-1){this.content[n]=r;if(this.scoreFunction(r)<this.scoreFunction(e))this.bubbleUp(n);else this.sinkDown(n)}return}}throw new Error(\"Node not found.\")},size:function(){return this.content.length},bubbleUp:function(e){var t=this.content[e];while(e>0){var n=Math.floor((e+1)/2)-1,r=this.content[n];if(this.scoreFunction(t)<this.scoreFunction(r)){this.content[n]=t;this.content[e]=r;e=n}else{break}}},sinkDown:function(e){var t=this.content.length,n=this.content[e],r=this.scoreFunction(n);while(true){var i=(e+1)*2,s=i-1;var o=null;if(s<t){var u=this.content[s],a=this.scoreFunction(u);if(a<r)o=s}if(i<t){var f=this.content[i],l=this.scoreFunction(f);if(l<(o==null?r:a)){o=i}}if(o!=null){this.content[e]=this.content[o];this.content[o]=n;e=o}else{break}}}};this.kdTree=n;e.kdTree=n;e.BinaryHeap=r})", Ju = "export type KeyframeEasing =\n  | \"linear\"\n  | \"step\"\n  | \"quadIn\"\n  | \"quadOut\"\n  | \"quadInOut\"\n  | \"cubicIn\"\n  | \"cubicOut\"\n  | \"cubicInOut\"\n  | \"quartIn\" | \"quartOut\" | \"quartInOut\"\n  | \"quintIn\" | \"quintOut\" | \"quintInOut\"\n  | \"sineIn\"\n  | \"sineOut\"\n  | \"sineInOut\"\n  | \"expoIn\"\n  | \"expoOut\"\n  | \"expoInOut\"\n  | \"circIn\" | \"circOut\" | \"circInOut\"\n  | \"backIn\" | \"backOut\" | \"backInOut\"\n  | \"elasticIn\" | \"elasticOut\" | \"elasticInOut\"\n  | \"bounceIn\" | \"bounceOut\" | \"bounceInOut\"\n  | \"smoothStep\" | \"smootherStep\"\n  | \"bezier\";\n\nexport const keyframeEasingOptions = [\n  \"linear\", \"step\", \"quadIn\", \"quadOut\", \"quadInOut\",\n  \"cubicIn\", \"cubicOut\", \"cubicInOut\",\n  \"quartIn\", \"quartOut\", \"quartInOut\", \"quintIn\", \"quintOut\", \"quintInOut\",\n  \"sineIn\", \"sineOut\", \"sineInOut\",\n  \"expoIn\", \"expoOut\", \"expoInOut\", \"circIn\", \"circOut\", \"circInOut\",\n  \"backIn\", \"backOut\", \"backInOut\", \"elasticIn\", \"elasticOut\", \"elasticInOut\",\n  \"bounceIn\", \"bounceOut\", \"bounceInOut\", \"smoothStep\", \"smootherStep\"\n];\n\n/** @param {number} value */\nexport function linear(value: number) { return value; }\n/** @param {number} value */\nexport function quadIn(value: number) { return value * value; }\n/** @param {number} value */\nexport function quadOut(value: number) { return value * (2 - value); }\n/** @param {number} value */\nexport function quadInOut(value: number) { return value < 0.5 ? 2 * value * value : -1 + (4 - 2 * value) * value; }\n/** @param {number} value */\nexport function cubicIn(value: number) { return value * value * value; }\n/** @param {number} value */\nexport function cubicOut(value: number) { return 1 + (--value) * value * value; }\n/** @param {number} value */\nexport function cubicInOut(value: number) { return value < 0.5 ? 4 * value * value * value : (value - 1) * (2 * value - 2) * (2 * value - 2) + 1; }\n/** @param {number} value */\nexport function sineIn(value: number) { return value === 1 ? 1 : 1 - Math.cos(value * Math.PI / 2); }\n/** @param {number} value */\nexport function sineOut(value: number) { return Math.sin(value * Math.PI / 2); }\n/** @param {number} value */\nexport function sineInOut(value: number) { return value === 0 || value === 0.5 || value === 1 ? value : (1 - Math.cos(Math.PI * value)) / 2; }\n/** @param {number} value */\nexport function expoIn(value: number) { return value === 0 ? 0 : Math.pow(2, 10 * value - 10); }\n/** @param {number} value */\nexport function expoOut(value: number) { return value === 1 ? 1 : 1 - Math.pow(2, -10 * value); }\n/** @param {number} value */\nexport function expoInOut(value: number) { return value === 0 || value === 1 ? value : value < 0.5 ? Math.pow(2, 20 * value - 10) / 2 : (2 - Math.pow(2, -20 * value + 10)) / 2; }\n\n/** @param {number} value */\nexport function quartIn(value: number) { return value ** 4; }\n/** @param {number} value */\nexport function quartOut(value: number) { return 1 - (1 - value) ** 4; }\n/** @param {number} value */\nexport function quartInOut(value: number) { return value < 0.5 ? 8 * value ** 4 : 1 - (-2 * value + 2) ** 4 / 2; }\n/** @param {number} value */\nexport function quintIn(value: number) { return value ** 5; }\n/** @param {number} value */\nexport function quintOut(value: number) { return 1 - (1 - value) ** 5; }\n/** @param {number} value */\nexport function quintInOut(value: number) { return value < 0.5 ? 16 * value ** 5 : 1 - (-2 * value + 2) ** 5 / 2; }\n/** @param {number} value */\nexport function circIn(value: number) { return 1 - Math.sqrt(Math.max(0, 1 - value ** 2)); }\n/** @param {number} value */\nexport function circOut(value: number) { return Math.sqrt(Math.max(0, 1 - (value - 1) ** 2)); }\n/** @param {number} value */\nexport function circInOut(value: number) { return value < 0.5 ? (1 - Math.sqrt(Math.max(0, 1 - (2 * value) ** 2))) / 2 : (Math.sqrt(Math.max(0, 1 - (-2 * value + 2) ** 2)) + 1) / 2; }\n/** @param {number} value */\nexport function backIn(value: number) { return value === 0 || value === 1 ? value : 2.70158 * value ** 3 - 1.70158 * value ** 2; }\n/** @param {number} value */\nexport function backOut(value: number) { return value === 0 || value === 1 ? value : 1 + 2.70158 * (value - 1) ** 3 + 1.70158 * (value - 1) ** 2; }\n/** @param {number} value */\nexport function backInOut(value: number) {\n  if (value === 0 || value === 1) return value;\n  const c2 = 1.70158 * 1.525;\n  return value < 0.5 ? (2 * value) ** 2 * ((c2 + 1) * 2 * value - c2) / 2 : ((2 * value - 2) ** 2 * ((c2 + 1) * (2 * value - 2) + c2) + 2) / 2;\n}\n/** @param {number} value */\nexport function elasticIn(value: number) { return value === 0 || value === 1 ? value : -(2 ** (10 * value - 10)) * Math.sin((10 * value - 10.75) * (2 * Math.PI / 3)); }\n/** @param {number} value */\nexport function elasticOut(value: number) { return value === 0 || value === 1 ? value : 2 ** (-10 * value) * Math.sin((10 * value - 0.75) * (2 * Math.PI / 3)) + 1; }\n/** @param {number} value */\nexport function elasticInOut(value: number) {\n  if (value === 0 || value === 1) return value;\n  const oscillation = Math.sin((20 * value - 11.125) * (2 * Math.PI / 4.5));\n  return value < 0.5 ? -(2 ** (20 * value - 10) * oscillation) / 2 : (2 ** (-20 * value + 10) * oscillation) / 2 + 1;\n}\n/** @param {number} value */\nexport function bounceOut(value: number) {\n  if (value === 0 || value === 1) return value;\n  const n1 = 7.5625, d1 = 2.75;\n  if (value < 1 / d1) return n1 * value * value;\n  if (value < 2 / d1) return n1 * (value - 1.5 / d1) ** 2 + 0.75;\n  if (value < 2.5 / d1) return n1 * (value - 2.25 / d1) ** 2 + 0.9375;\n  return n1 * (value - 2.625 / d1) ** 2 + 0.984375;\n}\n/** @param {number} value */\nexport function bounceIn(value: number) { return value === 0 || value === 1 ? value : 1 - bounceOut(1 - value); }\n/** @param {number} value */\nexport function bounceInOut(value: number) { return value === 0 || value === 1 ? value : value < 0.5 ? (1 - bounceOut(1 - 2 * value)) / 2 : (1 + bounceOut(2 * value - 1)) / 2; }\n/** @param {number} value */\nexport function smoothStep(value: number) { return value * value * (3 - 2 * value); }\n/** @param {number} value */\nexport function smootherStep(value: number) { return value ** 3 * (value * (value * 6 - 15) + 10); }\n\nexport const namedEasingFunctions = {\n  linear, quadIn, quadOut, quadInOut, cubicIn, cubicOut, cubicInOut,\n  quartIn, quartOut, quartInOut, quintIn, quintOut, quintInOut,\n  sineIn, sineOut, sineInOut, expoIn, expoOut, expoInOut, circIn, circOut, circInOut,\n  backIn, backOut, backInOut, elasticIn, elasticOut, elasticInOut,\n  bounceIn, bounceOut, bounceInOut, smoothStep, smootherStep\n};\n\nexport const centiEase = {\n  Linear: { None: linear },\n  Quadratic: { In: quadIn, Out: quadOut, InOut: quadInOut },\n  Cubic: { In: cubicIn, Out: cubicOut, InOut: cubicInOut },\n  Quartic: { In: quartIn, Out: quartOut, InOut: quartInOut },\n  Quintic: { In: quintIn, Out: quintOut, InOut: quintInOut },\n  Sinusoidal: { In: sineIn, Out: sineOut, InOut: sineInOut },\n  Exponential: { In: expoIn, Out: expoOut, InOut: expoInOut },\n  Circular: { In: circIn, Out: circOut, InOut: circInOut },\n  Back: { In: backIn, Out: backOut, InOut: backInOut },\n  Elastic: { In: elasticIn, Out: elasticOut, InOut: elasticInOut },\n  Bounce: { In: bounceIn, Out: bounceOut, InOut: bounceInOut },\n  Smoothstep: { InOut: smoothStep },\n  Smootherstep: { InOut: smootherStep }\n};\n\n/** @param {number} value @param {number[]} bezier */\nexport function cubicBezier(value: number, bezier: number[]) {\n  const [x1 = 0, y1 = 0, x2 = 1, y2 = 1] = bezier;\n  const target = clamp01(value);\n  let parameter = target;\n\n  // Newton-Raphson converges quickly for normal CSS cubic-bezier handles.\n  for (let iteration = 0; iteration < 8; iteration += 1) {\n    const difference = cubic(parameter, 0, x1, x2, 1) - target;\n    const slope = cubicDerivative(parameter, 0, x1, x2, 1);\n    if (Math.abs(difference) < 0.00001 || Math.abs(slope) < 0.00001) break;\n    parameter = clamp01(parameter - difference / slope);\n  }\n\n  // Bisection stabilizes non-linear or flat x control regions.\n  let lower = 0;\n  let upper = 1;\n  for (let iteration = 0; iteration < 12; iteration += 1) {\n    const x = cubic(parameter, 0, x1, x2, 1);\n    if (Math.abs(x - target) < 0.00001) break;\n    if (x < target) lower = parameter;\n    else upper = parameter;\n    parameter = (lower + upper) / 2;\n  }\n\n  return cubic(parameter, 0, y1, y2, 1);\n}\n\n/** @param {string | undefined} easing @param {number} value @param {number[] | undefined} bezier */\nexport function evaluateEasing(easing: string | undefined, value: number, bezier?: number[]) {\n  const progress = clamp01(value);\n  if (easing === \"step\") return 0;\n  if (easing === \"bezier\") return cubicBezier(progress, bezier ?? [0.25, 0.1, 0.25, 1]);\n  return namedEasingFunctions[easing as keyof typeof namedEasingFunctions]?.(progress) ?? progress;\n}\n\n/** @param {number} value @param {number} a @param {number} b @param {number} c @param {number} d */\nfunction cubic(value: number, a: number, b: number, c: number, d: number) {\n  const inverse = 1 - value;\n  return inverse ** 3 * a + 3 * inverse ** 2 * value * b + 3 * inverse * value ** 2 * c + value ** 3 * d;\n}\n\n/** @param {number} value @param {number} a @param {number} b @param {number} c @param {number} d */\nfunction cubicDerivative(value: number, a: number, b: number, c: number, d: number) {\n  const inverse = 1 - value;\n  return 3 * inverse ** 2 * (b - a) + 6 * inverse * value * (c - b) + 3 * value ** 2 * (d - c);\n}\n\n/** @param {number} value */\nfunction clamp01(value: number) { return Math.max(0, Math.min(1, value)); }\n";
+var qu = "(function (Centi) {\n    Centi.prototype.bmFont = \n    Centi.prototype.bitmapFont = function(size){\n        this.bitmapFontSize = size;\n	};\n    Centi.prototype.bmTxt = \n    Centi.prototype.bitmapText = function(str, x, y, size){\n        if ( this.bitmapFontSize == undefined ) {\n            this.bitmapFontSize = 32;\n        }\n        if ( size != undefined ) {\n            this.bitmapFontSize = size;\n        }\n        size = this.bitmapFontSize;\n        var _str = str;\n        if ( typeof str !== \"string\" ) {\n            _str = str.toString(10);\n        }\n        for ( var i=0; i<_str.length; i++ ) {\n            var code = _str.charCodeAt(i);\n            var hex = this.getBitmapFontCode(code);\n            this.bitmap5by8(hex, x, y, size/8);\n            x += (size / 8) * 6;\n        }\n	};\n    Centi.prototype.bm5x8 = \n    Centi.prototype.bm5by8 = \n    Centi.prototype.bitmap5by8 = function(bin, x, y, dot_size){\n        var bit_max = Math.pow(2,32);\n        var bin_32bit_arr = [bin%bit_max, Math.floor(bin/bit_max)];\n        var c = 0;\n        for ( var i=0; i<5; i++ ) {\n            if ( i == 0 ) c = bin_32bit_arr[0];\n            if ( i == 4 ) c = bin_32bit_arr[1];\n            for ( var j=0; j<8; j++ ) {\n                if ( c & 1 ) {\n                    this.rect(x+i*dot_size, y+j*dot_size, dot_size, dot_size);\n                }\n                c = c >> 1;\n            }\n        }\n	};\n    Centi.prototype.getBitmapFontCode = function(code) {\n        var val = 0;\n        if ( code >= 0x20 && code <= 0x7F ) {\n            if ( !this.bitmapFontCodes ) {\n                this.bitmapFontCodes = _initCodes();\n//                for ( var i=this.bitmapFontCodes.length-1; i>=0; i-- ) {\n//                    for ( var j=0; j<this.bitmapFontCodes[i].length; j++ ) {\n//                        this.bitmapFontCodes[i][j] = parseInt(this.bitmapFontCodes[i][j].toString(10));\n//                    }\n//                }\n            }\n            var arr = this.bitmapFontCodes[code - 0x20];\n            for ( var i=arr.length-1; i>=0; i-- ) {\n                val += arr[i] * Math.pow(2, i*8);\n            }\n        }\n        return val;\n        function _initCodes() {\n            return [\n                [ // 20\n                    0b00000000,\n                    0b00000000,\n                    0b00000000,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 21\n                    0b00000000,\n                    0b00000000,\n                    0b01001111,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 22\n                    0b00000000,\n                    0b00000111,\n                    0b00000000,\n                    0b00000111,\n                    0b00000000  \n                ],\n                  [ // 23\n                    0b00010100,\n                    0b01111111,\n                    0b00010100,\n                    0b01111111,\n                    0b00010100  \n                ],\n                  [ // 24\n                    0b00100100,\n                    0b00101010,\n                    0b01111111,\n                    0b00101010,\n                    0b00010010  \n                ],\n                  [ // 25\n                    0b00100011,\n                    0b00010011,\n                    0b00001000,\n                    0b01100100,\n                    0b01100010  \n                ],\n                  [ // 26\n                    0b00110110,\n                    0b01001001,\n                    0b01010101,\n                    0b00100010,\n                    0b01010000  \n                ],\n                  [ // 27\n                    0b00000000,\n                    0b00000101,\n                    0b00000011,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 28\n                    0b00000000,\n                    0b00011100,\n                    0b00100010,\n                    0b01000001,\n                    0b00000000  \n                ],\n                  [ // 29\n                    0b00000000,\n                    0b01000001,\n                    0b00100010,\n                    0b00011100,\n                    0b00000000  \n                ],\n                  [ // 2A\n                    0b00010100,\n                    0b00001000,\n                    0b00111110,\n                    0b00001000,\n                    0b00010100  \n                ],\n                  [ // 2B\n                    0b00001000,\n                    0b00001000,\n                    0b00111110,\n                    0b00001000,\n                    0b00001000  \n                ],\n                  [ // 2C\n                    0b00000000,\n                    0b01010000,\n                    0b00110000,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 2D\n                    0b00001000,\n                    0b00001000,\n                    0b00001000,\n                    0b00001000,\n                    0b00001000  \n                ],\n                  [ // 2E\n                    0b00000000,\n                    0b01100000,\n                    0b01100000,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 2F\n                    0b00100000,\n                    0b00010000,\n                    0b00001000,\n                    0b00000100,\n                    0b00000010  \n                ],\n                  [ // 30\n                    0b00111110,\n                    0b01010001,\n                    0b01001001,\n                    0b01000101,\n                    0b00111110  \n                ],\n                  [ // 31\n                    0b00000000,\n                    0b01000010,\n                    0b01111111,\n                    0b01000000,\n                    0b00000000  \n                ],\n                  [ // 32\n                    0b01000010,\n                    0b01100001,\n                    0b01010001,\n                    0b01001001,\n                    0b01000110  \n                ],\n                  [ // 33\n                    0b00100001,\n                    0b01000001,\n                    0b01000101,\n                    0b01001011,\n                    0b00110001  \n                ],\n                  [ // 34\n                    0b00011000,\n                    0b00010100,\n                    0b00010010,\n                    0b01111111,\n                    0b00010000  \n                ],\n                  [ // 35\n                    0b00100111,\n                    0b01000101,\n                    0b01000101,\n                    0b01000101,\n                    0b00111001  \n                ],\n                  [ // 36\n                    0b00111100,\n                    0b01001010,\n                    0b01001001,\n                    0b01001001,\n                    0b00110000  \n                ],\n                  [ // 37\n                    0b00000001,\n                    0b01110001,\n                    0b00001001,\n                    0b00000101,\n                    0b00000011  \n                ],\n                  [ // 38\n                    0b00110110,\n                    0b01001001,\n                    0b01001001,\n                    0b01001001,\n                    0b00110110  \n                ],\n                  [ // 39\n                    0b00000110,\n                    0b01001001,\n                    0b01001001,\n                    0b00101001,\n                    0b00011110  \n                ],\n                  [ // 3A\n                    0b00000000,\n                    0b00110110,\n                    0b00110110,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 3B\n                    0b00000000,\n                    0b01010110,\n                    0b00110110,\n                    0b00000000,\n                    0b00000000  \n                ],\n                  [ // 3C\n                    0b00001000,\n                    0b00010100,\n                    0b00100010,\n                    0b01000001,\n                    0b00000000  \n                ],\n                  [ // 3D\n                    0b00010100,\n                    0b00010100,\n                    0b00010100,\n                    0b00010100,\n                    0b00010100  \n                ],\n                  [ // 3E\n                    0b00000000,\n                    0b01000001,\n                    0b00100010,\n                    0b00010100,\n                    0b00001000  \n                ],\n                  [ // 3F\n                    0b00000010,\n                    0b00000001,\n                    0b01010001,\n                    0b00001001,\n                    0b00000110  \n                ],\n                  [ // 40\n                    0b00110010,\n                    0b01001001,\n                    0b01111001,\n                    0b01000001,\n                    0b00111110  \n                ],\n                  [ // 41\n                    0b01111110,\n                    0b00010001,\n                    0b00010001,\n                    0b00010001,\n                    0b01111110  \n                ],\n                  [ // 42\n                    0b01111111,\n                    0b01001001,\n                    0b01001001,\n                    0b01001001,\n                    0b00110110  \n                ],\n                  [ // 43\n                    0b00111110,\n                    0b01000001,\n                    0b01000001,\n                    0b01000001,\n                    0b00100010  \n                ],\n                  [ // 44\n                    0b01111111,\n                    0b01000001,\n                    0b01000001,\n                    0b00100010,\n                    0b00011100  \n                ],\n                  [ // 45\n                    0b01111111,\n                    0b01001001,\n                    0b01001001,\n                    0b01001001,\n                    0b01000001  \n                ],\n                  [ // 46\n                    0b01111111,\n                    0b00001001,\n                    0b00001001,\n                    0b00001001,\n                    0b00000001  \n                ],\n                  [ // 47\n                    0b00111110,\n                    0b01000001,\n                    0b01001001,\n                    0b01001001,\n                    0b01111010  \n                ],\n                  [ // 48\n                    0b01111111,\n                    0b00001000,\n                    0b00001000,\n                    0b00001000,\n                    0b01111111  \n                ],\n                  [ // 49\n                    0b00000000,\n                    0b01000001,\n                    0b01111111,\n                    0b01000001,\n                    0b00000000  \n                ],\n                  [ // 4A\n                    0b00100000,\n                    0b01000000,\n                    0b01000001,\n                    0b00111111,\n                    0b00000001  \n                ],\n                  [ // 4B\n                    0b01111111,\n                    0b00001000,\n                    0b00010100,\n                    0b00100010,\n                    0b01000001  \n                ],\n                  [ // 4C\n                    0b01111111,\n                    0b01000000,\n                    0b01000000,\n                    0b01000000,\n                    0b01000000  \n                ],\n                  [ // 4D\n                    0b01111111,\n                    0b00000010,\n                    0b00001100,\n                    0b00000010,\n                    0b01111111  \n                ],\n                  [ // 4E\n                    0b01111111,\n                    0b00000100,\n                    0b00001000,\n                    0b00010000,\n                    0b01111111  \n                ],\n                  [ // 4F\n                    0b00111110,\n                    0b01000001,\n                    0b01000001,\n                    0b01000001,\n                    0b00111110  \n                ],\n                  [ // 50\n                    0b01111111,\n                    0b00001001,\n                    0b00001001,\n                    0b00001001,\n                    0b00000110  \n                ],\n                  [ // 51\n                    0b00111110,\n                    0b01000001,\n                    0b01010001,\n                    0b00100001,\n                    0b01011110  \n                ],\n                  [ // 52\n                    0b01111111,\n                    0b00001001,\n                    0b00011001,\n                    0b00101001,\n                    0b01000110  \n                ],\n                  [ // 53\n                    0b01000110,\n                    0b01001001,\n                    0b01001001,\n                    0b01001001,\n                    0b00110001  \n                ],\n                  [ // 54\n                    0b00000001,\n                    0b00000001,\n                    0b01111111,\n                    0b00000001,\n                    0b00000001  \n                ],\n                  [ // 55\n                    0b00111111,\n                    0b01000000,\n                    0b01000000,\n                    0b01000000,\n                    0b00111111  \n                ],\n                  [ // 56\n                    0b00011111,\n                    0b00100000,\n                    0b01000000,\n                    0b00100000,\n                    0b00011111  \n                ],\n                  [ // 57\n                    0b00111111,\n                    0b01000000,\n                    0b00111000,\n                    0b01000000,\n                    0b00111111  \n                ],\n                  [ // 58\n                    0b01100011,\n                    0b00010100,\n                    0b00001000,\n                    0b00010100,\n                    0b01100011  \n                ],\n                  [ // 59\n                    0b00000111,\n                    0b00001000,\n                    0b01110000,\n                    0b00001000,\n                    0b00000111  \n                ],\n                  [ // 5A\n                    0b01100001,\n                    0b01010001,\n                    0b01001001,\n                    0b01000101,\n                    0b01000011  \n                ],\n                  [ // 5B\n                    0b00000000,\n                    0b01111111,\n                    0b01000001,\n                    0b01000001,\n                    0b00000000  \n                ],\n                  [ // 5C\n                    0b00000010,\n                    0b00000100,\n                    0b00001000,\n                    0b00010000,\n                    0b00100000  \n                ],\n                  [ // 5D\n                    0b00000000,\n                    0b01000001,\n                    0b01000001,\n                    0b01111111,\n                    0b00000000  \n                ],\n                  [ // 5E\n                    0b00000100,\n                    0b00000010,\n                    0b00000001,\n                    0b00000010,\n                    0b00000100  \n                ],\n                  [ // 5F\n                    0b01000000,\n                    0b01000000,\n                    0b01000000,\n                    0b01000000,\n                    0b01000000  \n                ],\n                  [ // 60\n                    0b00000000,\n                    0b00000001,\n                    0b00000010,\n                    0b00000100,\n                    0b00000000  \n                ],\n                  [ // 61\n                    0b00100000,\n                    0b01010100,\n                    0b01010100,\n                    0b01010100,\n                    0b01111000  \n                ],\n                  [ // 62\n                    0b01111111,\n                    0b01001000,\n                    0b01000100,\n                    0b01000100,\n                    0b00111000  \n                ],\n                  [ // 63\n                    0b00111000,\n                    0b01000100,\n                    0b01000100,\n                    0b01000100,\n                    0b00100000  \n                ],\n                  [ // 64\n                    0b00111000,\n                    0b01000100,\n                    0b01000100,\n                    0b01001000,\n                    0b01111111  \n                ],\n                  [ // 65\n                    0b00111000,\n                    0b01010100,\n                    0b01010100,\n                    0b01010100,\n                    0b00011000  \n                ],\n                  [ // 66\n                    0b00001000,\n                    0b01111110,\n                    0b00001001,\n                    0b00000001,\n                    0b00000010  \n                ],\n                  [ // 67\n                    0b00001100,\n                    0b01010010,\n                    0b01010010,\n                    0b01010010,\n                    0b00111110  \n                ],\n                  [ // 68\n                    0b01111111,\n                    0b00001000,\n                    0b00000100,\n                    0b00000100,\n                    0b01111000  \n                ],\n                  [ // 69\n                    0b00000000,\n                    0b01000100,\n                    0b01111101,\n                    0b01000000,\n                    0b00000000  \n                ],\n                  [ // 6A\n                    0b00100000,\n                    0b01000000,\n                    0b01000100,\n                    0b00111101,\n                    0b00000000  \n                ],\n                  [ // 6B\n                    0b01111111,\n                    0b00010000,\n                    0b00101000,\n                    0b01000100,\n                    0b00000000  \n                ],\n                  [ // 6C\n                    0b00000000,\n                    0b01000001,\n                    0b01111111,\n                    0b01000000,\n                    0b00000000  \n                ],\n                  [ // 6D\n                    0b01111100,\n                    0b00000100,\n                    0b00011000,\n                    0b00000100,\n                    0b01111000  \n                ],\n                  [ // 6E\n                    0b01111100,\n                    0b00001000,\n                    0b00000100,\n                    0b00000100,\n                    0b01111000  \n                ],\n                  [ // 6F\n                    0b00111000,\n                    0b01000100,\n                    0b01000100,\n                    0b01000100,\n                    0b00111000  \n                ],\n                  [ // 70\n                    0b01111100,\n                    0b00010100,\n                    0b00010100,\n                    0b00010100,\n                    0b00001000  \n                ],\n                  [ // 71\n                    0b00001000,\n                    0b00010100,\n                    0b00010100,\n                    0b00011000,\n                    0b01111100  \n                ],\n                  [ // 72\n                    0b01111100,\n                    0b00001000,\n                    0b00000100,\n                    0b00000100,\n                    0b00001000  \n                ],\n                  [ // 73\n                    0b01001000,\n                    0b01010100,\n                    0b01010100,\n                    0b01010100,\n                    0b00100000  \n                ],\n                  [ // 74\n                    0b00000100,\n                    0b00111111,\n                    0b01000100,\n                    0b01000000,\n                    0b00100000  \n                ],\n                  [ // 75\n                    0b00111100,\n                    0b01000000,\n                    0b01000000,\n                    0b00100000,\n                    0b01111100  \n                ],\n                  [ // 76\n                    0b00011100,\n                    0b00100000,\n                    0b01000000,\n                    0b00100000,\n                    0b00011100  \n                ],\n                  [ // 77\n                    0b00111100,\n                    0b01000000,\n                    0b00110000,\n                    0b01000000,\n                    0b00111100  \n                ],\n                  [ // 78\n                    0b01000100,\n                    0b00101000,\n                    0b00010000,\n                    0b00101000,\n                    0b01000100  \n                ],\n                  [ // 79\n                    0b00001100,\n                    0b01010000,\n                    0b01010000,\n                    0b01010000,\n                    0b00111100\n                ],\n                  [ // 7A\n                    0b01000100,\n                    0b01100100,\n                    0b01010100,\n                    0b01001100,\n                    0b01000100\n                ],\n                  [ // 7B\n                    0b00000000,\n                    0b00001000,\n                    0b00110110,\n                    0b01000001,\n                    0b00000000\n                ],\n                  [ // 7C\n                    0b00000000,\n                    0b00000000,\n                    0b01111111,\n                    0b00000000,\n                    0b00000000\n                ],\n                  [ // 7D\n                    0b00000000,\n                    0b01000001,\n                    0b00110110,\n                    0b00001000,\n                    0b00000000  \n                ],\n                  [ // 7E\n                    0b00001000,\n                    0b00000100,\n                    0b00001000,\n                    0b00010000,\n                    0b00001000  \n                ],\n                  [ // 7F\n                    0b00000001,\n                    0b00101010,\n                    0b01111100,\n                    0b00101010,\n                    0b00000001  \n                ]\n            ];\n        }\n    }\n})(Centi);", Ju = "(function(Centi) {\n\n	function readVec2(args) {\n		var arg0 = args[0];\n		if (args.length >= 2 && typeof arg0 === 'number') {\n			return new Centi.Vec2(args[0], args[1]);\n		} else if (Array.isArray(arg0)) {\n			return new Centi.Vec2(arg0[0], arg0[1]);\n		} else if (arg0 && arg0.x !== undefined && arg0.y !== undefined) {\n			return new Centi.Vec2(arg0.x, arg0.y);\n		}\n		return new Centi.Vec2();\n	}\n\n	Centi.prototype.Matrix = function(){\n		return this.new(Centi.Matrix, arguments);\n	};\n\n    Centi.Matrix = function() {\n        var count = arguments.length,\n            ok = true;\n        if (count === 6) {\n            this.set.apply(this, arguments);\n        } else if (count === 1) {\n            var arg = arguments[0];\n            if (arg instanceof Centi.Matrix) {\n                this.set(arg._a, arg._c, arg._b, arg._d, arg._tx, arg._ty);\n            } else if (Array.isArray(arg)) {\n                this.set.apply(this, arg);\n            } else {\n                ok = false;\n            }\n        } else if (count === 0) {\n            this.reset();\n        } else {\n            ok = false;\n        }\n        if (!ok)\n            throw new Error('Unsupported matrix parameters');\n    };\n\n    Centi.Matrix.prototype.set = function(a, c, b, d, tx, ty, _dontNotify) {\n        this._a = a;\n        this._c = c;\n        this._b = b;\n        this._d = d;\n        this._tx = tx;\n        this._ty = ty;\n        if (!_dontNotify)\n            this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype._changed = function() {\n        var owner = this._owner;\n        if (owner) {\n            if (owner._applyMatrix) {\n                owner.transform(null, true);\n            } else {\n                owner._changed(9);\n            }\n        }\n    };\n\n    Centi.Matrix.prototype.clone = function() {\n        return new Centi.Matrix(this._a, this._c, this._b, this._d,\n            this._tx, this._ty);\n    };\n\n    Centi.Matrix.prototype.equals = function(mx) {\n        return mx === this || mx && this._a === mx._a && this._b === mx._b && this._c === mx._c && this._d === mx._d && this._tx === mx._tx && this._ty === mx._ty || false;\n    };\n\n    Centi.Matrix.prototype.reset = function(_dontNotify) {\n        this._a = this._d = 1;\n        this._c = this._b = this._tx = this._ty = 0;\n        if (!_dontNotify)\n            this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.apply = function() {\n        var owner = this._owner;\n        if (owner) {\n            owner.transform(null, true);\n            return this.isIdentity();\n        }\n        return false;\n    };\n\n    Centi.Matrix.prototype.translate = function(x, y) {\n        this._tx += x * this._a + y * this._b;\n        this._ty += x * this._c + y * this._d;\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.scale = function(x, y, cx, cy) {\n        var scale = new Centi.Vec2(x, y);\n        if (arguments.length == 4)\n            this.translate(cx, cy);\n        this._a *= scale.x;\n        this._c *= scale.x;\n        this._b *= scale.y;\n        this._d *= scale.y;\n        if (arguments.length == 4)\n            this.translate(-cx, -cy);\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.rotate = function(angle, x, y) {\n        angle *= Math.PI / 180;\n        x = x || 0;\n        y = y || 0;\n        var cos = Math.cos(angle),\n            sin = Math.sin(angle),\n            tx = x - x * cos + y * sin,\n            ty = y - x * sin - y * cos,\n            a = this._a,\n            b = this._b,\n            c = this._c,\n            d = this._d;\n        this._a = cos * a + sin * b;\n        this._b = -sin * a + cos * b;\n        this._c = cos * c + sin * d;\n        this._d = -sin * c + cos * d;\n        this._tx += tx * a + ty * b;\n        this._ty += tx * c + ty * d;\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.shear = function(x, y, cx, cy) {\n        var shear = new Centi.Vec2(x, y);\n        if (arguments.length == 4)\n            this.translate(cx, cy);\n        var a = this._a,\n            c = this._c;\n        this._a += shear.y * this._b;\n        this._c += shear.y * this._d;\n        this._b += shear.x * a;\n        this._d += shear.x * c;\n        if (arguments.length == 4)\n            this.translate(-cx, -cy);\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.skew = function(x, y, cx, cy) {\n        var skew = new Centi.Vec2(x, y),\n            toRadians = Math.PI / 180,\n            shear = new Centi.Vec2(Math.tan(skew.x * toRadians),\n                Math.tan(skew.y * toRadians));\n        return this.shear(shear.x, shear.y, cx, cy);\n    };\n\n    Centi.Matrix.prototype.concatenate = function(mx) {\n        var a1 = this._a,\n            b1 = this._b,\n            c1 = this._c,\n            d1 = this._d,\n            a2 = mx._a,\n            b2 = mx._b,\n            c2 = mx._c,\n            d2 = mx._d,\n            tx2 = mx._tx,\n            ty2 = mx._ty;\n        this._a = a2 * a1 + c2 * b1;\n        this._b = b2 * a1 + d2 * b1;\n        this._c = a2 * c1 + c2 * d1;\n        this._d = b2 * c1 + d2 * d1;\n        this._tx += tx2 * a1 + ty2 * b1;\n        this._ty += tx2 * c1 + ty2 * d1;\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.preConcatenate = function(mx) {\n        var a1 = this._a,\n            b1 = this._b,\n            c1 = this._c,\n            d1 = this._d,\n            tx1 = this._tx,\n            ty1 = this._ty,\n            a2 = mx._a,\n            b2 = mx._b,\n            c2 = mx._c,\n            d2 = mx._d,\n            tx2 = mx._tx,\n            ty2 = mx._ty;\n        this._a = a2 * a1 + b2 * c1;\n        this._b = a2 * b1 + b2 * d1;\n        this._c = c2 * a1 + d2 * c1;\n        this._d = c2 * b1 + d2 * d1;\n        this._tx = a2 * tx1 + b2 * ty1 + tx2;\n        this._ty = c2 * tx1 + d2 * ty1 + ty2;\n        this._changed();\n        return this;\n    };\n\n    Centi.Matrix.prototype.chain = function(mx) {\n        var a1 = this._a,\n            b1 = this._b,\n            c1 = this._c,\n            d1 = this._d,\n            tx1 = this._tx,\n            ty1 = this._ty,\n            a2 = mx._a,\n            b2 = mx._b,\n            c2 = mx._c,\n            d2 = mx._d,\n            tx2 = mx._tx,\n            ty2 = mx._ty;\n        return new Centi.Matrix(\n            a2 * a1 + c2 * b1,\n            a2 * c1 + c2 * d1,\n            b2 * a1 + d2 * b1,\n            b2 * c1 + d2 * d1,\n            tx1 + tx2 * a1 + ty2 * b1,\n            ty1 + tx2 * c1 + ty2 * d1);\n    };\n\n    Centi.Matrix.prototype.isIdentity = function() {\n        return this._a === 1 && this._c === 0 && this._b === 0 && this._d === 1 && this._tx === 0 && this._ty === 0;\n    };\n\n    Centi.Matrix.prototype.orNullIfIdentity = function() {\n        return this.isIdentity() ? null : this;\n    };\n\n    Centi.Matrix.prototype.isInvertible = function() {\n        return !!this._getDeterminant();\n    };\n\n    Centi.Matrix.prototype.isSingular = function() {\n        return !this._getDeterminant();\n    };\n\n    Centi.Matrix.prototype.transform = function(src, dst, count) {\n        return arguments.length < 3 ? this._transformPoint(readVec2(arguments)) : this._transformCoordinates(src, dst, count);\n    };\n\n    Centi.Matrix.prototype._transformPoint = function(point, dest, _dontNotify) {\n        var x = point.x,\n            y = point.y;\n        if (!dest)\n            dest = new Centi.Vec2();\n        return dest.set(\n            x * this._a + y * this._b + this._tx,\n            x * this._c + y * this._d + this._ty,\n            _dontNotify\n        );\n    };\n\n    Centi.Matrix.prototype._transformCoordinates = function(src, dst, count) {\n        var i = 0,\n            j = 0,\n            max = 2 * count;\n        while (i < max) {\n            var x = src[i++],\n                y = src[i++];\n            dst[j++] = x * this._a + y * this._b + this._tx;\n            dst[j++] = x * this._c + y * this._d + this._ty;\n        }\n        return dst;\n    };\n\n    Centi.Matrix.prototype._transformCorners = function(rect) {\n        var x1 = rect.x,\n            y1 = rect.y,\n            x2 = x1 + rect.width,\n            y2 = y1 + rect.height,\n            coords = [x1, y1, x2, y1, x2, y2, x1, y2];\n        return this._transformCoordinates(coords, coords, 4);\n    };\n\n    Centi.Matrix.prototype._transformBounds = function(bounds, dest, _dontNotify) {\n        var coords = this._transformCorners(bounds),\n            min = coords.slice(0, 2),\n            max = coords.slice();\n        for (var i = 2; i < 8; i++) {\n            var val = coords[i],\n                j = i & 1;\n            if (val < min[j])\n                min[j] = val;\n            else if (val > max[j])\n                max[j] = val;\n        }\n        return new Centi.Rectangle(min[0], min[1], max[0] - min[0], max[1] - min[1]);\n    };\n\n    Centi.Matrix.prototype.inverseTransform = function() {\n        return this._inverseTransform(readVec2(arguments));\n    };\n\n    Centi.Matrix.prototype._getDeterminant = function() {\n        var det = this._a * this._d - this._b * this._c;\n        return isFinite(det) && !Centi.Numerical.isZero(det) && isFinite(this._tx) && isFinite(this._ty) ? det : null;\n    };\n\n    Centi.Matrix.prototype._inverseTransform = function(point, dest, _dontNotify) {\n        var det = this._getDeterminant();\n        if (!det)\n            return null;\n        var x = point.x - this._tx,\n            y = point.y - this._ty;\n        if (!dest)\n            dest = new Centi.Vec2();\n        return dest.set(\n            (x * this._d - y * this._b) / det, (y * this._a - x * this._c) / det,\n            _dontNotify\n        );\n    };\n\n    Centi.Matrix.prototype.decompose = function() {\n        var a = this._a,\n            b = this._b,\n            c = this._c,\n            d = this._d;\n        if (Centi.Numerical.isZero(a * d - b * c))\n            return null;\n\n        var scaleX = Math.sqrt(a * a + b * b);\n        a /= scaleX;\n        b /= scaleX;\n\n        var shear = a * c + b * d;\n        c -= a * shear;\n        d -= b * shear;\n\n        var scaleY = Math.sqrt(c * c + d * d);\n        c /= scaleY;\n        d /= scaleY;\n        shear /= scaleY;\n\n        if (a * d < b * c) {\n            a = -a;\n            b = -b;\n            shear = -shear;\n            scaleX = -scaleX;\n        }\n\n        return {\n            scaling: new Centi.Vec2(scaleX, scaleY),\n            rotation: -Math.atan2(b, a) * 180 / Math.PI,\n            shearing: shear\n        };\n    };\n\n    Centi.Matrix.prototype.getValues = function() {\n        return [this._a, this._c, this._b, this._d, this._tx, this._ty];\n    };\n\n    Centi.Matrix.prototype.getTranslation = function() {\n        return new Centi.Vec2(this._tx, this._ty);\n    };\n\n    Centi.Matrix.prototype.getScaling = function() {\n        return (this.decompose() || {}).scaling;\n    };\n\n    Centi.Matrix.prototype.getRotation = function() {\n        return (this.decompose() || {}).rotation;\n    };\n\n    Centi.Matrix.prototype.inverted = function() {\n        var det = this._getDeterminant();\n        return det && new Centi.Matrix(\n            this._d / det, -this._c / det, -this._b / det,\n            this._a / det, (this._b * this._ty - this._d * this._tx) / det, (this._c * this._tx - this._a * this._ty) / det);\n    };\n\n    Centi.Matrix.prototype.shiftless = function() {\n        return new Centi.Matrix(this._a, this._c, this._b, this._d, 0, 0);\n    };\n\n    Centi.Matrix.prototype.applyToContext = function(ctx) {\n        ctx.transform(this._a, this._c, this._b, this._d, this._tx, this._ty);\n    };\n\n})(Centi);", Yu = "/**\n * k-d Tree JavaScript - V 1.01\n *\n * https://github.com/ubilabs/kd-tree-javascript\n *\n * @author Mircea Pricop <pricop@ubilabs.net>, 2012\n * @author Martin Kleppe <kleppe@ubilabs.net>, 2012\n * @author Ubilabs http://ubilabs.net, 2012\n * @license MIT License <http://www.opensource.org/licenses/mit-license.php>\n */(function(e,t){if(typeof define===\"function\"&&define.amd){define([\"exports\"],t)}else if(typeof exports===\"object\"){t(exports)}else{t(e.commonJsStrict={})}})(this,function(e){function t(e,t,n){this.obj=e;this.left=null;this.right=null;this.parent=n;this.dimension=t}function n(e,n,i){function o(e,n,r){var s=n%i.length,u,a;if(e.length===0){return null}if(e.length===1){return new t(e[0],s,r)}e.sort(function(e,t){return e[i[s]]-t[i[s]]});u=Math.floor(e.length/2);a=new t(e[u],s,r);a.left=o(e.slice(0,u),n+1,a);a.right=o(e.slice(u+1),n+1,a);return a}function u(e){function t(e){if(e.left){e.left.parent=e;t(e.left)}if(e.right){e.right.parent=e;t(e.right)}}s.root=e;t(s.root)}var s=this;if(!Array.isArray(e))u(e,n,i);else this.root=o(e,0,null);this.toJSON=function(e){if(!e)e=this.root;var n=new t(e.obj,e.dimension,null);if(e.left)n.left=s.toJSON(e.left);if(e.right)n.right=s.toJSON(e.right);return n};this.insert=function(e){function n(t,r){if(t===null){return r}var s=i[t.dimension];if(e[s]<t.obj[s]){return n(t.left,t)}else{return n(t.right,t)}}var r=n(this.root,null),s,o;if(r===null){this.root=new t(e,0,null);return}s=new t(e,(r.dimension+1)%i.length,r);o=i[r.dimension];if(e[o]<r.obj[o]){r.left=s}else{r.right=s}};this.remove=function(e){function n(t){if(t===null){return null}if(t.obj===e){return t}var r=i[t.dimension];if(e[r]<t.obj[r]){return n(t.left,t)}else{return n(t.right,t)}}function r(e){function u(e,t){var n,r,s,o,a;if(e===null){return null}n=i[t];if(e.dimension===t){if(e.right!==null){return u(e.right,t)}return e}r=e.obj[n];s=u(e.left,t);o=u(e.right,t);a=e;if(s!==null&&s.obj[n]>r){a=s}if(o!==null&&o.obj[n]>a.obj[n]){a=o}return a}function a(e,t){var n,r,s,o,u;if(e===null){return null}n=i[t];if(e.dimension===t){if(e.left!==null){return a(e.left,t)}return e}r=e.obj[n];s=a(e.left,t);o=a(e.right,t);u=e;if(s!==null&&s.obj[n]<r){u=s}if(o!==null&&o.obj[n]<u.obj[n]){u=o}return u}var t,n,o;if(e.left===null&&e.right===null){if(e.parent===null){s.root=null;return}o=i[e.parent.dimension];if(e.obj[o]<e.parent.obj[o]){e.parent.left=null}else{e.parent.right=null}return}if(e.left!==null){t=u(e.left,e.dimension)}else{t=a(e.right,e.dimension)}n=t.obj;r(t);e.obj=n}var t;t=n(s.root);if(t===null){return}r(t)};this.nearest=function(e,t,o){function l(r){function d(e,n){f.push([e,n]);if(f.size()>t){f.pop()}}var s,o=i[r.dimension],u=n(e,r.obj),a={},c,h,p;for(p=0;p<i.length;p+=1){if(p===r.dimension){a[i[p]]=e[i[p]]}else{a[i[p]]=r.obj[i[p]]}}c=n(a,r.obj);if(r.right===null&&r.left===null){if(f.size()<t||u<f.peek()[1]){d(r,u)}return}if(r.right===null){s=r.left}else if(r.left===null){s=r.right}else{if(e[o]<r.obj[o]){s=r.left}else{s=r.right}}l(s);if(f.size()<t||u<f.peek()[1]){d(r,u)}if(f.size()<t||Math.abs(c)<f.peek()[1]){if(s===r.left){h=r.right}else{h=r.left}if(h!==null){l(h)}}}var u,a,f;f=new r(function(e){return-e[1]});if(o){for(u=0;u<t;u+=1){f.push([null,o])}}l(s.root);a=[];for(u=0;u<t;u+=1){if(f.content[u][0]){a.push([f.content[u][0].obj,f.content[u][1]])}}return a};this.balanceFactor=function(){function e(t){if(t===null){return 0}return Math.max(e(t.left),e(t.right))+1}function t(e){if(e===null){return 0}return t(e.left)+t(e.right)+1}return e(s.root)/(Math.log(t(s.root))/Math.log(2))}}function r(e){this.content=[];this.scoreFunction=e}r.prototype={push:function(e){this.content.push(e);this.bubbleUp(this.content.length-1)},pop:function(){var e=this.content[0];var t=this.content.pop();if(this.content.length>0){this.content[0]=t;this.sinkDown(0)}return e},peek:function(){return this.content[0]},remove:function(e){var t=this.content.length;for(var n=0;n<t;n++){if(this.content[n]==e){var r=this.content.pop();if(n!=t-1){this.content[n]=r;if(this.scoreFunction(r)<this.scoreFunction(e))this.bubbleUp(n);else this.sinkDown(n)}return}}throw new Error(\"Node not found.\")},size:function(){return this.content.length},bubbleUp:function(e){var t=this.content[e];while(e>0){var n=Math.floor((e+1)/2)-1,r=this.content[n];if(this.scoreFunction(t)<this.scoreFunction(r)){this.content[n]=t;this.content[e]=r;e=n}else{break}}},sinkDown:function(e){var t=this.content.length,n=this.content[e],r=this.scoreFunction(n);while(true){var i=(e+1)*2,s=i-1;var o=null;if(s<t){var u=this.content[s],a=this.scoreFunction(u);if(a<r)o=s}if(i<t){var f=this.content[i],l=this.scoreFunction(f);if(l<(o==null?r:a)){o=i}}if(o!=null){this.content[e]=this.content[o];this.content[o]=n;e=o}else{break}}}};this.kdTree=n;e.kdTree=n;e.BinaryHeap=r})", Xu = "export type KeyframeEasing =\n  | \"linear\"\n  | \"step\"\n  | \"quadIn\"\n  | \"quadOut\"\n  | \"quadInOut\"\n  | \"cubicIn\"\n  | \"cubicOut\"\n  | \"cubicInOut\"\n  | \"quartIn\" | \"quartOut\" | \"quartInOut\"\n  | \"quintIn\" | \"quintOut\" | \"quintInOut\"\n  | \"sineIn\"\n  | \"sineOut\"\n  | \"sineInOut\"\n  | \"expoIn\"\n  | \"expoOut\"\n  | \"expoInOut\"\n  | \"circIn\" | \"circOut\" | \"circInOut\"\n  | \"backIn\" | \"backOut\" | \"backInOut\"\n  | \"elasticIn\" | \"elasticOut\" | \"elasticInOut\"\n  | \"bounceIn\" | \"bounceOut\" | \"bounceInOut\"\n  | \"smoothStep\" | \"smootherStep\"\n  | \"bezier\";\n\nexport const keyframeEasingOptions = [\n  \"linear\", \"step\", \"quadIn\", \"quadOut\", \"quadInOut\",\n  \"cubicIn\", \"cubicOut\", \"cubicInOut\",\n  \"quartIn\", \"quartOut\", \"quartInOut\", \"quintIn\", \"quintOut\", \"quintInOut\",\n  \"sineIn\", \"sineOut\", \"sineInOut\",\n  \"expoIn\", \"expoOut\", \"expoInOut\", \"circIn\", \"circOut\", \"circInOut\",\n  \"backIn\", \"backOut\", \"backInOut\", \"elasticIn\", \"elasticOut\", \"elasticInOut\",\n  \"bounceIn\", \"bounceOut\", \"bounceInOut\", \"smoothStep\", \"smootherStep\"\n];\n\n/** @param {number} value */\nexport function linear(value: number) { return value; }\n/** @param {number} value */\nexport function quadIn(value: number) { return value * value; }\n/** @param {number} value */\nexport function quadOut(value: number) { return value * (2 - value); }\n/** @param {number} value */\nexport function quadInOut(value: number) { return value < 0.5 ? 2 * value * value : -1 + (4 - 2 * value) * value; }\n/** @param {number} value */\nexport function cubicIn(value: number) { return value * value * value; }\n/** @param {number} value */\nexport function cubicOut(value: number) { return 1 + (--value) * value * value; }\n/** @param {number} value */\nexport function cubicInOut(value: number) { return value < 0.5 ? 4 * value * value * value : (value - 1) * (2 * value - 2) * (2 * value - 2) + 1; }\n/** @param {number} value */\nexport function sineIn(value: number) { return value === 1 ? 1 : 1 - Math.cos(value * Math.PI / 2); }\n/** @param {number} value */\nexport function sineOut(value: number) { return Math.sin(value * Math.PI / 2); }\n/** @param {number} value */\nexport function sineInOut(value: number) { return value === 0 || value === 0.5 || value === 1 ? value : (1 - Math.cos(Math.PI * value)) / 2; }\n/** @param {number} value */\nexport function expoIn(value: number) { return value === 0 ? 0 : Math.pow(2, 10 * value - 10); }\n/** @param {number} value */\nexport function expoOut(value: number) { return value === 1 ? 1 : 1 - Math.pow(2, -10 * value); }\n/** @param {number} value */\nexport function expoInOut(value: number) { return value === 0 || value === 1 ? value : value < 0.5 ? Math.pow(2, 20 * value - 10) / 2 : (2 - Math.pow(2, -20 * value + 10)) / 2; }\n\n/** @param {number} value */\nexport function quartIn(value: number) { return value ** 4; }\n/** @param {number} value */\nexport function quartOut(value: number) { return 1 - (1 - value) ** 4; }\n/** @param {number} value */\nexport function quartInOut(value: number) { return value < 0.5 ? 8 * value ** 4 : 1 - (-2 * value + 2) ** 4 / 2; }\n/** @param {number} value */\nexport function quintIn(value: number) { return value ** 5; }\n/** @param {number} value */\nexport function quintOut(value: number) { return 1 - (1 - value) ** 5; }\n/** @param {number} value */\nexport function quintInOut(value: number) { return value < 0.5 ? 16 * value ** 5 : 1 - (-2 * value + 2) ** 5 / 2; }\n/** @param {number} value */\nexport function circIn(value: number) { return 1 - Math.sqrt(Math.max(0, 1 - value ** 2)); }\n/** @param {number} value */\nexport function circOut(value: number) { return Math.sqrt(Math.max(0, 1 - (value - 1) ** 2)); }\n/** @param {number} value */\nexport function circInOut(value: number) { return value < 0.5 ? (1 - Math.sqrt(Math.max(0, 1 - (2 * value) ** 2))) / 2 : (Math.sqrt(Math.max(0, 1 - (-2 * value + 2) ** 2)) + 1) / 2; }\n/** @param {number} value */\nexport function backIn(value: number) { return value === 0 || value === 1 ? value : 2.70158 * value ** 3 - 1.70158 * value ** 2; }\n/** @param {number} value */\nexport function backOut(value: number) { return value === 0 || value === 1 ? value : 1 + 2.70158 * (value - 1) ** 3 + 1.70158 * (value - 1) ** 2; }\n/** @param {number} value */\nexport function backInOut(value: number) {\n  if (value === 0 || value === 1) return value;\n  const c2 = 1.70158 * 1.525;\n  return value < 0.5 ? (2 * value) ** 2 * ((c2 + 1) * 2 * value - c2) / 2 : ((2 * value - 2) ** 2 * ((c2 + 1) * (2 * value - 2) + c2) + 2) / 2;\n}\n/** @param {number} value */\nexport function elasticIn(value: number) { return value === 0 || value === 1 ? value : -(2 ** (10 * value - 10)) * Math.sin((10 * value - 10.75) * (2 * Math.PI / 3)); }\n/** @param {number} value */\nexport function elasticOut(value: number) { return value === 0 || value === 1 ? value : 2 ** (-10 * value) * Math.sin((10 * value - 0.75) * (2 * Math.PI / 3)) + 1; }\n/** @param {number} value */\nexport function elasticInOut(value: number) {\n  if (value === 0 || value === 1) return value;\n  const oscillation = Math.sin((20 * value - 11.125) * (2 * Math.PI / 4.5));\n  return value < 0.5 ? -(2 ** (20 * value - 10) * oscillation) / 2 : (2 ** (-20 * value + 10) * oscillation) / 2 + 1;\n}\n/** @param {number} value */\nexport function bounceOut(value: number) {\n  if (value === 0 || value === 1) return value;\n  const n1 = 7.5625, d1 = 2.75;\n  if (value < 1 / d1) return n1 * value * value;\n  if (value < 2 / d1) return n1 * (value - 1.5 / d1) ** 2 + 0.75;\n  if (value < 2.5 / d1) return n1 * (value - 2.25 / d1) ** 2 + 0.9375;\n  return n1 * (value - 2.625 / d1) ** 2 + 0.984375;\n}\n/** @param {number} value */\nexport function bounceIn(value: number) { return value === 0 || value === 1 ? value : 1 - bounceOut(1 - value); }\n/** @param {number} value */\nexport function bounceInOut(value: number) { return value === 0 || value === 1 ? value : value < 0.5 ? (1 - bounceOut(1 - 2 * value)) / 2 : (1 + bounceOut(2 * value - 1)) / 2; }\n/** @param {number} value */\nexport function smoothStep(value: number) { return value * value * (3 - 2 * value); }\n/** @param {number} value */\nexport function smootherStep(value: number) { return value ** 3 * (value * (value * 6 - 15) + 10); }\n\nexport const namedEasingFunctions = {\n  linear, quadIn, quadOut, quadInOut, cubicIn, cubicOut, cubicInOut,\n  quartIn, quartOut, quartInOut, quintIn, quintOut, quintInOut,\n  sineIn, sineOut, sineInOut, expoIn, expoOut, expoInOut, circIn, circOut, circInOut,\n  backIn, backOut, backInOut, elasticIn, elasticOut, elasticInOut,\n  bounceIn, bounceOut, bounceInOut, smoothStep, smootherStep\n};\n\nexport const centiEase = {\n  Linear: { None: linear },\n  Quadratic: { In: quadIn, Out: quadOut, InOut: quadInOut },\n  Cubic: { In: cubicIn, Out: cubicOut, InOut: cubicInOut },\n  Quartic: { In: quartIn, Out: quartOut, InOut: quartInOut },\n  Quintic: { In: quintIn, Out: quintOut, InOut: quintInOut },\n  Sinusoidal: { In: sineIn, Out: sineOut, InOut: sineInOut },\n  Exponential: { In: expoIn, Out: expoOut, InOut: expoInOut },\n  Circular: { In: circIn, Out: circOut, InOut: circInOut },\n  Back: { In: backIn, Out: backOut, InOut: backInOut },\n  Elastic: { In: elasticIn, Out: elasticOut, InOut: elasticInOut },\n  Bounce: { In: bounceIn, Out: bounceOut, InOut: bounceInOut },\n  Smoothstep: { InOut: smoothStep },\n  Smootherstep: { InOut: smootherStep }\n};\n\n/** @param {number} value @param {number[]} bezier */\nexport function cubicBezier(value: number, bezier: number[]) {\n  const [x1 = 0, y1 = 0, x2 = 1, y2 = 1] = bezier;\n  const target = clamp01(value);\n  let parameter = target;\n\n  // Newton-Raphson converges quickly for normal CSS cubic-bezier handles.\n  for (let iteration = 0; iteration < 8; iteration += 1) {\n    const difference = cubic(parameter, 0, x1, x2, 1) - target;\n    const slope = cubicDerivative(parameter, 0, x1, x2, 1);\n    if (Math.abs(difference) < 0.00001 || Math.abs(slope) < 0.00001) break;\n    parameter = clamp01(parameter - difference / slope);\n  }\n\n  // Bisection stabilizes non-linear or flat x control regions.\n  let lower = 0;\n  let upper = 1;\n  for (let iteration = 0; iteration < 12; iteration += 1) {\n    const x = cubic(parameter, 0, x1, x2, 1);\n    if (Math.abs(x - target) < 0.00001) break;\n    if (x < target) lower = parameter;\n    else upper = parameter;\n    parameter = (lower + upper) / 2;\n  }\n\n  return cubic(parameter, 0, y1, y2, 1);\n}\n\n/** @param {string | undefined} easing @param {number} value @param {number[] | undefined} bezier */\nexport function evaluateEasing(easing: string | undefined, value: number, bezier?: number[]) {\n  const progress = clamp01(value);\n  if (easing === \"step\") return 0;\n  if (easing === \"bezier\") return cubicBezier(progress, bezier ?? [0.25, 0.1, 0.25, 1]);\n  return namedEasingFunctions[easing as keyof typeof namedEasingFunctions]?.(progress) ?? progress;\n}\n\n/** @param {number} value @param {number} a @param {number} b @param {number} c @param {number} d */\nfunction cubic(value: number, a: number, b: number, c: number, d: number) {\n  const inverse = 1 - value;\n  return inverse ** 3 * a + 3 * inverse ** 2 * value * b + 3 * inverse * value ** 2 * c + value ** 3 * d;\n}\n\n/** @param {number} value @param {number} a @param {number} b @param {number} c @param {number} d */\nfunction cubicDerivative(value: number, a: number, b: number, c: number, d: number) {\n  const inverse = 1 - value;\n  return 3 * inverse ** 2 * (b - a) + 6 * inverse * value * (c - b) + 3 * value ** 2 * (d - c);\n}\n\n/** @param {number} value */\nfunction clamp01(value: number) { return Math.max(0, Math.min(1, value)); }\n";
 //#endregion
 //#region src/runtime/exportRandomSeed.ts
-function Yu(e, t) {
+function Zu(e, t) {
 	let n = `${e}:${Math.trunc(t)}`, r = 2166136261;
 	for (let e = 0; e < n.length; e += 1) r ^= n.charCodeAt(e), r = Math.imul(r, 16777619);
 	return r >>> 0;
 }
-function Xu(e) {
+function Qu(e) {
 	let t = e >>> 0;
 	return () => {
 		t = t + 1831565813 >>> 0;
@@ -11498,7 +11556,7 @@ function Xu(e) {
 }
 //#endregion
 //#region src/core/exportScenePlan.ts
-function Zu(e, t) {
+function $u(e, t) {
 	let n = /* @__PURE__ */ new Map();
 	for (let t of e) {
 		if (!t || typeof t.id != "string" || !t.id || typeof t.assetId != "string" || typeof t.visible != "boolean") throw Error("Invalid export scene object.");
@@ -11571,7 +11629,7 @@ function Zu(e, t) {
 }
 //#endregion
 //#region src/runtime/projectFontPreparation.ts
-function Qu(e, t = {}) {
+function ed(e, t = {}) {
 	let n = e.filter((e) => e.kind === "font" && e.fontFamily), r = t.fonts ?? document.fonts, i = t.makeFace ?? ((e, t, n) => new FontFace(e, t, n)), a = [], o = /* @__PURE__ */ new Set(), s = setTimeout, c = clearTimeout, l = !1, u, d = (e) => ({
 		weight: e.fontWeight || "400",
 		style: e.fontStyle || "normal"
@@ -11649,7 +11707,7 @@ function Qu(e, t = {}) {
 }
 //#endregion
 //#region src/runtime/projectFontUsage.ts
-function $u(e, t) {
+function td(e, t) {
 	let n = (n, r) => {
 		if (r.trim()) try {
 			e.fonts.check(n, r) || t(`Font unavailable for text: ${n}`);
@@ -11723,16 +11781,16 @@ function $u(e, t) {
 }
 //#endregion
 //#region src/core/assetImageDependencies.ts
-function ed(e) {
+function nd(e) {
 	return !!e && typeof e == "object" && typeof e.type == "string";
 }
-function td(e) {
-	return ed(e) ? e.type === "Literal" && typeof e.value == "string" ? e.value : e.type !== "TemplateLiteral" || !Array.isArray(e.expressions) || e.expressions.length ? null : (Array.isArray(e.quasis) ? e.quasis[0] : void 0)?.value?.cooked ?? null : null;
+function rd(e) {
+	return nd(e) ? e.type === "Literal" && typeof e.value == "string" ? e.value : e.type !== "TemplateLiteral" || !Array.isArray(e.expressions) || e.expressions.length ? null : (Array.isArray(e.quasis) ? e.quasis[0] : void 0)?.value?.cooked ?? null : null;
 }
-function nd(e) {
-	return rd(e, /* @__PURE__ */ new Set(["assetImage", "assetTexture"]));
+function id(e) {
+	return ad(e, /* @__PURE__ */ new Set(["assetImage", "assetTexture"]));
 }
-function rd(e, t, n = !1) {
+function ad(e, t, n = !1) {
 	let r = /* @__PURE__ */ new Set();
 	for (let i of e) try {
 		let e = /* @__PURE__ */ new Set(), a = {
@@ -11752,13 +11810,13 @@ function rd(e, t, n = !1) {
 		let s = [o];
 		for (; s.length;) {
 			let n = s.pop();
-			if (n.type === "CallExpression" && ed(n.callee) && n.callee.type === "Identifier" && typeof n.callee.name == "string" && t.has(n.callee.name)) {
-				let t = td(Array.isArray(n.arguments) ? n.arguments[0] : void 0);
+			if (n.type === "CallExpression" && nd(n.callee) && n.callee.type === "Identifier" && typeof n.callee.name == "string" && t.has(n.callee.name)) {
+				let t = rd(Array.isArray(n.arguments) ? n.arguments[0] : void 0);
 				t !== null && e.add(t);
 			}
 			let r = [];
-			for (let e of Object.values(n)) if (ed(e)) r.push(e);
-			else if (Array.isArray(e)) for (let t of e) ed(t) && r.push(t);
+			for (let e of Object.values(n)) if (nd(e)) r.push(e);
+			else if (Array.isArray(e)) for (let t of e) nd(t) && r.push(t);
 			for (let e = r.length - 1; e >= 0; e--) s.push(r[e]);
 		}
 		for (let t of e) r.add(t);
@@ -11769,7 +11827,7 @@ function rd(e, t, n = !1) {
 }
 //#endregion
 //#region src/runtime/assetImageRegistry.ts
-function id(e, t, n = () => new Image(), r = {
+function od(e, t, n = () => new Image(), r = {
 	schedule: setTimeout,
 	cancel: clearTimeout
 }) {
@@ -11874,7 +11932,7 @@ function id(e, t, n = () => new Image(), r = {
 }
 //#endregion
 //#region src/runtime/assetImageWork.ts
-function ad(e) {
+function sd(e) {
 	let t = /* @__PURE__ */ new Map(), n = [], r = new AbortController(), i = e.now ?? (() => Date.now()), a = 0, o = (r, i) => (t.set(r, i), r.then(() => t.delete(r), (a) => {
 		t.delete(r);
 		let o = /* @__PURE__ */ Error(`${i}: ${a instanceof Error ? a.message : String(a)}`);
@@ -11920,16 +11978,16 @@ function ad(e) {
 }
 //#endregion
 //#region src/core/remoteResourceValidation.ts
-function od(e) {
+function cd(e) {
 	return typeof e == "string" && /^sha384-[A-Za-z0-9+/]{64}$/.test(e);
 }
-function sd(e) {
+function ld(e) {
 	if (typeof e != "string" || !e || e.length > 8192 || /[\x00-\x20\x7f]/.test(e)) throw Error("Enter a valid HTTPS resource URL.");
 	let t = new URL(e), n = t.hostname.toLowerCase().replace(/\.$/, "");
 	if (t.protocol !== "https:" || t.username || t.password || !n.includes(".") || n.startsWith("[") || /^\d+\.\d+\.\d+\.\d+$/.test(n) || n.split(".").some((e) => !/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(e)) || /(?:^|\.)(localhost|local|internal|lan|home|test|invalid|example|onion)$/.test(n) || n === "home.arpa" || n.endsWith(".home.arpa")) throw Error("Resource URLs must use HTTPS and a public domain without credentials.");
 	return t.hostname = n, t.hash = "", t.href;
 }
-function cd(e) {
+function ud(e) {
 	if (!e || ![
 		"script",
 		"style",
@@ -11937,32 +11995,32 @@ function cd(e) {
 		"image",
 		"data"
 	].includes(e.kind)) throw Error("Unsupported resource kind.");
-	if (sd(e.url) !== e.url) throw Error("The resource URL must be its canonical final HTTPS URL.");
+	if (ld(e.url) !== e.url) throw Error("The resource URL must be its canonical final HTTPS URL.");
 	if (!e.origin || typeof e.approvedAt != "string" || e.approvedAt.length > 64 || !Number.isFinite(Date.parse(e.approvedAt))) throw Error("Resource approval is required.");
 	if (e.varyByClient !== void 0 && typeof e.varyByClient != "boolean") throw Error("Invalid resource Vary metadata.");
-	if (ga(e.origin), sd(e.origin.url), sd(e.origin.finalUrl) !== e.url) throw Error("Resource provenance does not match its final URL.");
-	if ((e.kind === "script" || e.kind === "style") && !od(e.hash)) throw Error("The resource requires one canonical sha384 SRI hash.");
+	if (ga(e.origin), ld(e.origin.url), ld(e.origin.finalUrl) !== e.url) throw Error("Resource provenance does not match its final URL.");
+	if ((e.kind === "script" || e.kind === "style") && !cd(e.hash)) throw Error("The resource requires one canonical sha384 SRI hash.");
 }
 //#endregion
 //#region src/runtime/remoteResources.ts
-function ld(e, t, n = []) {
+function dd(e, t, n = []) {
 	let r = [], i = [], a = /* @__PURE__ */ new Map(), o = /* @__PURE__ */ new Set();
 	for (let e of t) {
 		if (e.kind !== "script" && e.kind !== "style") continue;
 		let t = `${e.kind}:${e.url}`;
 		try {
 			if (o.has(t)) throw Error("Duplicate declaration.");
-			o.add(t), cd(e), r.push(e);
+			o.add(t), ud(e), r.push(e);
 		} catch (t) {
 			i.push(`External ${e.kind} ${e.url}: ${String(t)}`);
 		}
 		for (let t of [e.url, e.origin?.url]) if (t) try {
-			let n = `${e.kind}:${sd(t)}`;
+			let n = `${e.kind}:${ld(t)}`;
 			a.has(n) && a.get(n) !== e && i.push(`Ambiguous external resource alias: ${t}`), a.set(n, e);
 		} catch {}
 	}
 	for (let e of n) for (let t of [e.url, e.finalUrl]) try {
-		let n = sd(t), r = `script:${n}`;
+		let n = ld(t), r = `script:${n}`;
 		a.has(r) && a.get(r)?.origin !== e && i.push(`External Script ${n} is already provided by a selected embedded library.`), a.set(r, {
 			kind: "script",
 			url: n,
@@ -11984,7 +12042,7 @@ function ld(e, t, n = []) {
 		if (r && o !== void 0) {
 			let n;
 			try {
-				n = sd(o);
+				n = ld(o);
 			} catch {}
 			if (n && a.has(`${r}:${n}`)) {
 				let a = (t.get("type") ?? "").toLowerCase().trim();
@@ -12011,7 +12069,7 @@ function ld(e, t, n = []) {
 		errors: i
 	};
 }
-function ud(e, t, n, r, i = 1e4) {
+function fd(e, t, n, r, i = 1e4) {
 	let a = !1, o = !1, s = e.map((e) => {
 		let t, n;
 		return {
@@ -12058,7 +12116,7 @@ function ud(e, t, n, r, i = 1e4) {
 }
 //#endregion
 //#region src/runtime/p5GlobalAdapter.ts
-function dd(e) {
+function pd(e) {
 	let t = window, n = ["1.11.1", "1.11.11"], r = /* @__PURE__ */ new Set(), i = /* @__PURE__ */ new Set(), a = /* @__PURE__ */ new Set(), o, s, c = !1, l = !1, u = !1, d, f = 0, p = e.context, m, h, g, _, v = (e) => {
 		throw Error("MacroFlush p5: " + e);
 	}, y = (e) => {
@@ -12184,6 +12242,20 @@ function dd(e) {
 					set(t, n, r) {
 						return Reflect.set(e.clip, n, r);
 					},
+					defineProperty(t, n, r) {
+						return Reflect.defineProperty([
+							"isNew",
+							"paramNames",
+							"listParams"
+						].includes(String(n)) ? e.clip : t, n, r);
+					},
+					deleteProperty(t, n) {
+						return Reflect.deleteProperty([
+							"isNew",
+							"paramNames",
+							"listParams"
+						].includes(String(n)) ? e.clip : t, n);
+					},
 					ownKeys() {
 						return Reflect.ownKeys(e.clip);
 					},
@@ -12282,7 +12354,7 @@ function dd(e) {
 }
 //#endregion
 //#region src/runtime/p5IsolatedGuards.ts
-function fd(e, t) {
+function md(e, t) {
 	let n = window, r = n.p5.instance, i = /* @__PURE__ */ new Map(), a = Symbol("main canvas"), o = !1, s = (t) => {
 		throw Object.assign(/* @__PURE__ */ Error(`P5 replay ${e}: ${t} is unsupported in isolated 2D mode; use timeline mode.`), { p5ReplayCode: "unsupported-api" });
 	}, c = () => {
@@ -12373,10 +12445,10 @@ function fd(e, t) {
 }
 //#endregion
 //#region src/runtime/vendor/feedback.global.js?raw
-var pd = "\"use strict\";var MacroFlushFeedbackKernel=(()=>{var q=Object.defineProperty;var ae=Object.getOwnPropertyDescriptor;var ie=Object.getOwnPropertyNames;var de=Object.prototype.hasOwnProperty;var se=(e,t,n)=>t in e?q(e,t,{enumerable:!0,configurable:!0,writable:!0,value:n}):e[t]=n;var ce=(e,t)=>{for(var n in t)q(e,n,{get:t[n],enumerable:!0})},le=(e,t,n,l)=>{if(t&&typeof t==\"object\"||typeof t==\"function\")for(let u of ie(t))!de.call(e,u)&&u!==n&&q(e,u,{get:()=>t[u],enumerable:!(l=ae(t,u))||l.enumerable});return e};var ue=e=>le(q({},\"__esModule\",{value:!0}),e);var B=(e,t,n)=>se(e,typeof t!=\"symbol\"?t+\"\":t,n);var me={};ce(me,{FEEDBACK_LIMITS:()=>g,createFeedbackDeliveryCursor:()=>Q,createFeedbackInputIndex:()=>ee,createFeedbackSampler:()=>Y,createFeedbackTouchIndex:()=>te,feedbackTouchClientCoordinates:()=>re,planFeedbackInput:()=>Z,planFeedbackTouchInput:()=>oe,validateFeedbackDeliveryContext:()=>A});var g=Object.freeze({maxAssetBytes:16777216,maxProjectBytes:67108864,maxAssets:64,maxChannels:32,maxRecords:5e5,maxDurationUs:36e8,maxStringBytes:1024,maxRecordBytes:16384,maxArgs:16,maxValue:1e9,maxEventsPerTick:4096,maxLoopBoundariesPerTick:16,maxPointerHz:120,maxOscMessagesPerSecond:1e3,maxPageRecords:1e3,maxPageBytes:1048576,maxResourceCloneBytes:67108864,maxJsonDepth:32}),N=Object.freeze({offset:0,rate:1,loop:!1}),b=class extends Error{constructor(n,l,u={}){super(`Feedback: ${l}`);B(this,\"code\");B(this,\"assetId\");B(this,\"channelId\");this.name=\"FeedbackError\",this.code=n,this.assetId=u.assetId,this.channelId=u.channelId}};function R(e){return e.kind===\"pointer\"||e.kind===\"number\"||e.kind===\"osc\"}var V=new TextEncoder,pe=new Set([\"move\",\"down\",\"up\",\"enter\",\"leave\",\"cancel\",\"click\",\"double-click\",\"wheel\"]);var be=new Set([\"__proto__\",\"prototype\",\"constructor\"]);function h(e,t){throw new b(e,t)}function M(e,t){return(!e||typeof e!=\"object\"||Array.isArray(e))&&h(\"invalid-format\",`${t} must be an object.`),e}function E(e,t,n){Object.keys(e).some(l=>!t.includes(l))&&h(\"invalid-format\",`${n} contains an unknown field.`)}function $(e,t){(typeof e!=\"string\"||!e.trim()||e.includes(\"\\0\")||V.encode(e).length>g.maxStringBytes)&&h(\"invalid-value\",`${t} must be a non-empty string of at most ${g.maxStringBytes} UTF-8 bytes.`)}function O(e,t){(typeof e!=\"number\"||!Number.isFinite(e)||Math.abs(e)>g.maxValue)&&h(\"invalid-value\",`${t} is out of range.`)}function U(e,t,n,l){(typeof e!=\"number\"||!Number.isSafeInteger(e)||e<t||e>n)&&h(\"invalid-time\",`${l} must be an integer in range.`)}function _(e,t){O(e.x,`${t}.x`),O(e.y,`${t}.y`),(typeof e.buttons!=\"number\"||!Number.isInteger(e.buttons)||e.buttons<0||e.buttons>31||typeof e.inside!=\"boolean\")&&h(\"invalid-value\",`${t} has invalid buttons/inside.`)}function H(e){return Array.isArray(e)?((!e.length||e.length>g.maxArgs)&&h(\"invalid-value\",\"Numeric vectors require 1..16 values.\"),e.forEach(t=>O(t,\"Numeric vector value\")),e):(O(e,\"Numeric value\"),e)}function D(e,t=g.maxAssetBytes){let n=0,l=new Set,u=i=>{n+=i,n>t&&h(\"size-limit\",`JSON exceeds ${t} bytes.`)},x=i=>{i.length>t-n&&h(\"size-limit\",`JSON exceeds ${t} bytes.`),u(V.encode(JSON.stringify(i)).length)},v=(i,y)=>{if(y>g.maxJsonDepth&&h(\"size-limit\",\"JSON nesting is too deep.\"),i===null){u(4);return}if(typeof i==\"string\"){x(i);return}if(typeof i==\"boolean\"){u(i?4:5);return}if(typeof i==\"number\"&&Number.isFinite(i)){u(JSON.stringify(i).length);return}(!i||typeof i!=\"object\")&&h(\"invalid-format\",\"Expected finite, plain JSON data.\"),l.has(i)&&h(\"invalid-format\",\"JSON contains a cycle.\");let o=Object.getPrototypeOf(i);if((Array.isArray(i)?o!==Array.prototype:o!==Object.prototype&&o!==null)&&h(\"invalid-format\",\"JSON must use plain objects/arrays.\"),Object.getOwnPropertySymbols(i).length&&h(\"invalid-format\",\"JSON cannot contain symbol keys.\"),l.add(i),u(2),Array.isArray(i)){i.length>g.maxRecords&&h(\"size-limit\",\"JSON array exceeds the record limit.\"),Object.getOwnPropertyNames(i).length!==i.length+1&&h(\"invalid-format\",\"JSON arrays cannot have holes or extra properties.\");for(let d=0;d<i.length;d++){d&&u(1);let r=Object.getOwnPropertyDescriptor(i,String(d));(!r||!r.enumerable||!(\"value\"in r))&&h(\"invalid-format\",\"JSON cannot contain accessors or sparse arrays.\"),v(r.value,y+1)}}else Object.getOwnPropertyNames(i).forEach((r,c)=>{be.has(r)&&h(\"invalid-format\",\"JSON contains a reserved object key.\");let a=Object.getOwnPropertyDescriptor(i,r);(!a.enumerable||!(\"value\"in a))&&h(\"invalid-format\",\"JSON cannot contain accessors or hidden fields.\"),c&&u(1),x(r),u(1),v(a.value,y+1)});l.delete(i)};return v(e,0),n}function X(e){return e&&typeof e==\"object\"&&(Object.values(e).forEach(X),Object.freeze(e)),e}function W(e){let t=D(e),n=M(e,\"Feedback document\");E(n,[\"formatVersion\",\"timeUnit\",\"durationUs\",\"source\",\"channels\"],\"Feedback document\"),n.formatVersion!==1&&h(\"unsupported-version\",\"Only Feedback formatVersion 1 is supported.\"),n.timeUnit!==\"us\"&&h(\"invalid-time\",\"Feedback timeUnit must be us.\"),U(n.durationUs,0,g.maxDurationUs,\"durationUs\");let l=n.durationUs,u=M(n.source,\"source\");E(u,[\"compositionId\",\"width\",\"height\"],\"source\"),O(u.width,\"source.width\"),O(u.height,\"source.height\"),(u.width<1||u.height<1)&&h(\"invalid-value\",\"Source dimensions must be at least one logical pixel.\"),u.compositionId!==void 0&&$(u.compositionId,\"source.compositionId\"),Array.isArray(n.channels)||h(\"invalid-format\",\"Feedback requires a channels array.\"),n.channels.length>g.maxChannels&&h(\"size-limit\",\"Feedback requires at most 32 channels.\");let x=new Set,v=new Set,i=[],y=0,o=n.channels.map(d=>{let r=M(d,\"channel\");$(r.id,\"channel.id\"),$(r.kind,\"channel.kind\"),x.has(r.id)&&h(\"invalid-format\",`Duplicate channel ${r.id}.`),x.add(r.id);let c=[\"pointer\",\"number\",\"osc\"].includes(r.kind);if(!c)return r.records!==void 0&&!Array.isArray(r.records)&&h(\"invalid-format\",`Unknown channel ${r.id} has invalid records.`),y+=Array.isArray(r.records)?r.records.length:0,Array.isArray(r.records)&&r.records.forEach(m=>D(m,g.maxRecordBytes)),y>g.maxRecords&&h(\"size-limit\",\"Feedback exceeds 500,000 records.\"),i.push({code:\"unsupported-channel\",channelId:r.id,message:`Channel ${r.id} (${r.kind}) is retained but cannot be used.`}),{id:r.id,kind:r.kind,supported:c,records:Array.isArray(r.records)?r.records.length:0};E(r,r.kind===\"pointer\"?[\"id\",\"kind\",\"initial\",\"records\"]:r.kind===\"number\"?[\"id\",\"kind\",\"interpolation\",\"initial\",\"records\"]:[\"id\",\"kind\",\"address\",\"records\"],`Channel ${r.id}`),Array.isArray(r.records)||h(\"invalid-format\",`Channel ${r.id} requires records.`),y+=r.records.length,y>g.maxRecords&&h(\"size-limit\",\"Feedback exceeds 500,000 records.\");let a=-1;if(r.kind===\"pointer\"){let m=M(r.initial,\"pointer.initial\");E(m,[\"x\",\"y\",\"buttons\",\"inside\"],\"pointer.initial\"),_(m,\"pointer.initial\")}else if(r.kind===\"number\"){r.interpolation!==\"linear\"&&r.interpolation!==\"hold\"&&h(\"invalid-value\",\"Numeric interpolation must be linear or hold.\");let m=H(r.initial);a=Array.isArray(m)?m.length:-1}else $(r.address,\"OSC address\"),r.address.startsWith(\"/\")||h(\"invalid-value\",\"OSC address must start with /.\");let p=-1,f=-1;for(let m of r.records){let s=M(m,`Channel ${r.id} record`);if(D(s,g.maxRecordBytes),U(s.t,0,l,`Channel ${r.id} time`),U(s.seq,0,Number.MAX_SAFE_INTEGER,`Channel ${r.id} seq`),(s.t<p||s.seq<=f||v.has(s.seq))&&h(\"invalid-time\",`Channel ${r.id} has unordered or duplicate records.`),v.add(s.seq),p=s.t,f=s.seq,r.kind===\"pointer\"){E(s,[\"t\",\"seq\",\"x\",\"y\",\"buttons\",\"inside\",\"event\",\"button\",\"deltaX\",\"deltaY\"],\"pointer record\"),_(s,\"pointer record\"),s.event!==null&&(typeof s.event!=\"string\"||!pe.has(s.event))&&h(\"invalid-value\",\"Invalid pointer event.\");let k=[\"down\",\"up\",\"click\",\"double-click\"].includes(String(s.event));(k||s.button!==void 0)&&(typeof s.button!=\"number\"||!Number.isInteger(s.button)||s.button<0||s.button>4)&&h(\"invalid-value\",\"Invalid pointer button.\"),!k&&s.button!==void 0&&h(\"invalid-value\",\"Only button events may contain button.\"),(s.event===\"down\"&&!(s.buttons&[1,4,2,8,16][s.button])||s.event===\"up\"&&s.buttons&[1,4,2,8,16][s.button]||s.event===\"cancel\"&&s.buttons!==0||s.event===\"enter\"&&s.inside!==!0||s.event===\"leave\"&&s.inside!==!1)&&h(\"invalid-value\",\"Pointer event/state disagree.\"),s.event===\"wheel\"?(O(s.deltaX,\"deltaX\"),O(s.deltaY,\"deltaY\")):(s.deltaX!==void 0||s.deltaY!==void 0)&&h(\"invalid-value\",\"Only wheel events may contain deltas.\")}else if(r.kind===\"number\"){E(s,[\"t\",\"seq\",\"value\"],\"number record\");let k=H(s.value);(Array.isArray(k)?k.length:-1)!==a&&h(\"invalid-value\",\"Numeric values must have a fixed shape.\")}else{E(s,[\"t\",\"seq\",\"args\"],\"OSC record\"),(!Array.isArray(s.args)||s.args.length>g.maxArgs)&&h(\"invalid-value\",\"OSC requires at most 16 args.\");for(let k of s.args)typeof k==\"number\"?O(k,\"OSC arg\"):typeof k==\"string\"?(k.includes(\"\\0\")||V.encode(k).length>g.maxStringBytes)&&h(\"invalid-value\",\"OSC string is too large or contains NUL.\"):typeof k!=\"boolean\"&&h(\"invalid-value\",\"OSC args must be numbers, strings or booleans.\")}}return{id:r.id,kind:r.kind,supported:c,records:r.records.length}});return X({document:JSON.parse(JSON.stringify(e)),summary:{bytes:t,duration:n.durationUs/1e6,records:y,channels:o},warnings:i})}function J(e=N,t){let n=M(e,\"mapping\");E(n,[\"offset\",\"rate\",\"loop\"],\"mapping\"),(typeof n.offset!=\"number\"||!Number.isFinite(n.offset)||Math.abs(n.offset)>3600||typeof n.rate!=\"number\"||!Number.isFinite(n.rate)||Math.abs(n.rate)>16||typeof n.loop!=\"boolean\")&&h(\"invalid-time\",\"Mapping requires offset (-3600..3600), rate (-16..16), and loop.\"),n.loop&&t&&(t.durationUs||h(\"invalid-time\",\"Cannot loop an empty Feedback duration.\"),t.channels.some(l=>R(l)&&l.records.some(u=>u.t===t.durationUs&&(l.kind===\"osc\"||l.kind===\"pointer\"&&\"event\"in u&&u.event!==null)))&&h(\"invalid-time\",\"Looping Feedback cannot contain an event at its exact endpoint.\"))}function S(e){let t=Math.round(e*1e6);if(!Number.isFinite(e)||!Number.isSafeInteger(t))throw new b(\"invalid-time\",\"Time must be finite seconds within the safe microsecond range.\");return t}function j(e,t,n=N){if(J(n),!Number.isFinite(e))throw new b(\"invalid-time\",\"Clip-local time must be finite seconds.\");if(!Number.isSafeInteger(t)||t<0||t>g.maxDurationUs)throw new b(\"invalid-time\",\"Invalid Feedback duration.\");let l=S(e*n.rate+n.offset);if(n.loop){if(!t)throw new b(\"invalid-time\",\"Cannot loop an empty Feedback duration.\");return(l%t+t)%t}return Math.min(t,Math.max(0,l))}function L(e,t){let n=0,l=e.length;for(;n<l;){let u=Math.floor((n+l)/2);e[u].t<=t?n=u+1:l=u}return n}function Y(e){let t=W(e),n=t.document,l=n.channels.some(o=>R(o)&&o.records.some(d=>d.t===n.durationUs&&(o.kind===\"osc\"||o.kind===\"pointer\"&&\"event\"in d&&d.event!==null))),u=new Map(n.channels.map(o=>[o.id,o])),x=o=>{let d=u.get(o);if(!d)throw new b(\"missing-channel\",`Channel ${o} is missing.`,{channelId:o});if(!R(d))throw new b(\"unsupported-channel\",`Channel ${o} (${d.kind}) cannot be read.`,{channelId:o});return d},v=(o,d)=>{let r=o.space??\"composition\";if(r===\"composition\")return[1,1];if(r===\"normalized\")return[1/n.source.width,1/n.source.height];if(r!==\"clip\"||!d||![d.clipWidth,d.clipHeight].every(c=>Number.isFinite(c)&&c>0&&c<=g.maxValue))throw new b(\"invalid-value\",\"Clip space requires positive logical Clip dimensions.\");return[d.clipWidth/n.source.width,d.clipHeight/n.source.height]},i=(o,d,r)=>{let[c,a]=v(d,r);return{kind:\"pointer\",x:o.x*c,y:o.y*a,buttons:o.buttons,inside:o.inside}},y=(o,d,r={},c)=>{let a=x(o);if(a.kind!==\"pointer\"&&r.space!==void 0)throw new b(\"invalid-value\",\"Only pointer channels accept a coordinate space.\");let p=L(a.records,d)-1;if(a.kind===\"osc\"){let F=a.records[p];return F?{kind:\"osc\",address:a.address,args:[...F.args]}:null}let f=a.records[p],m=a.records[p+1],s=m?Math.max(0,Math.min(1,(d-(f?.t??0))/Math.max(1,m.t-(f?.t??0)))):0;if(a.kind===\"pointer\"){let F=a.records[p]??a.initial,I=a.records[p+1],P=I&&F.inside&&I.inside&&I.event!==\"cancel\"&&!(\"event\"in F&&F.event===\"cancel\");return i({...F,x:P?F.x+(I.x-F.x)*s:F.x,y:P?F.y+(I.y-F.y)*s:F.y},r,c)}let k=a.records[p]?.value??a.initial,C=a.records[p+1]?.value,w=(F,I)=>a.interpolation===\"linear\"?F+(I-F)*s:F;return{kind:\"number\",value:Array.isArray(k)?k.map((F,I)=>C===void 0?F:w(F,C[I])):C===void 0?k:w(k,C)}};return{document:n,summary:t.summary,warnings:t.warnings,validateMapping(o){if(J(o),o.loop&&(!n.durationUs||l))throw new b(\"invalid-time\",\"Cannot loop empty Feedback or an endpoint event.\")},at(o,d,r={},c){return y(o,Math.min(n.durationUs,Math.max(0,S(d))),r,c)},sample(o,d,r=N,c={},a){if(J(r),r.loop&&l)throw new b(\"invalid-time\",\"Looping Feedback cannot contain an event at its exact endpoint.\");return y(o,j(d,n.durationUs,r),c,a)},events(o,d,r,c={},a){if(d>r)throw new b(\"invalid-time\",\"Event range must be ascending.\");let p=S(d),f=S(r),m=x(o);if(m.kind!==\"pointer\"&&c.space!==void 0)throw new b(\"invalid-value\",\"Only pointer channels accept a coordinate space.\");m.kind===\"pointer\"&&v(c,a);let s=[];if(m.kind===\"number\")return s;let k=L(m.records,p),C=L(m.records,f);for(let w=k;w<C;w++){let z=m.records[w];if(m.kind===\"pointer\"){let F=m.records[w];if(F.event===null)continue;let[I,P]=v(c,a);s.push({...i(F,c,a),channelId:o,time:F.t/1e6,seq:F.seq,event:F.event,...F.button===void 0?{}:{button:F.button},...F.deltaX===void 0?{}:{deltaX:F.deltaX*I},...F.deltaY===void 0?{}:{deltaY:F.deltaY*P}})}else s.push({kind:\"osc\",channelId:o,time:z.t/1e6,seq:z.seq,address:m.address,args:[...m.records[w].args]});if(s.length>g.maxEventsPerTick)throw new b(\"event-budget\",`Channel ${o} exceeds the event limit; request a smaller interval.`,{channelId:o})}return s}}}function G(e,t){if(!Number.isSafeInteger(e)||e<1)throw new b(\"invalid-time\",`Invalid ${t}.`);return e}function A(e){if(!e||Object.getPrototypeOf(e)!==Object.prototype)throw new b(\"invalid-format\",\"Invalid input delivery context.\");if(Object.getOwnPropertySymbols(e).length)throw new b(\"invalid-format\",\"Invalid input delivery symbol field.\");let t=[\"transportEpoch\",\"deliveryId\",\"mode\",\"previousLocalTime\"];for(let[n,l]of Object.entries(Object.getOwnPropertyDescriptors(e)))if(!t.includes(n)||!l.enumerable||!(\"value\"in l))throw new b(\"invalid-format\",\"Invalid input delivery field.\");if(G(e.transportEpoch,\"transport epoch\"),G(e.deliveryId,\"delivery ID\"),e.mode===\"historical\")throw new b(\"unsupported-playback\",\"Historical input delivery requires P4.\");if(![\"sample-only\",\"continuous\"].includes(e.mode))throw new b(\"invalid-value\",\"Invalid input delivery mode.\");if(e.previousLocalTime!==void 0&&S(e.previousLocalTime),e.mode===\"continuous\"&&e.previousLocalTime===void 0)throw new b(\"invalid-time\",\"Continuous input requires a previous local time.\")}function Q(){let e=0,t=0;return{consume(n){if(A(n),n.transportEpoch<e||n.transportEpoch===e&&n.deliveryId<t)throw new b(\"invalid-time\",\"Stale input delivery.\");return n.transportEpoch===e&&n.deliveryId===t?!1:(e=n.transportEpoch,t=n.deliveryId,!0)}}}function Z(e){let{sampler:t,binding:n,time:l,fps:u,coordinates:x,delivery:v}=e,i={offset:n.offset,rate:n.rate,loop:n.loop};if(S(l),!Number.isFinite(u)||u<=0)throw new b(\"invalid-value\",\"Input requires a positive FPS.\");v&&A(v),t.validateMapping(i);let y=v?Object.freeze({...v}):void 0;if(n.pointerChannelId===void 0)return Object.freeze({current:null,previousNominal:null,events:Object.freeze([]),delivery:y});let o=n.pointerChannelId,d={space:n.space},r=m=>{let s=t.sample(o,m,i,d,x);if(!s||s.kind!==\"pointer\")throw new b(\"unsupported-channel\",`Channel ${o} is not pointer input.`,{channelId:o});return Object.freeze(s)},c=r(l),a=r(Math.max(0,l-1/u)),p=[],f=(m,s,k)=>{for(let C of t.events(o,m/1e6,s/1e6,d,x)){if(C.kind!==\"pointer\")throw new b(\"unsupported-channel\",\"Only pointer events can be standard input.\");if(p.length>=g.maxEventsPerTick)throw new b(\"event-budget\",\"Input interval exceeds the event limit.\",{channelId:o});p.push(Object.freeze({cycle:k,event:Object.freeze(C)}))}};if(v?.mode===\"continuous\"&&n.rate>0){let m=v.previousLocalTime;if(m>l)throw new b(\"invalid-time\",\"Continuous input cannot move backwards.\");let s=S(m*n.rate+n.offset),k=S(l*n.rate+n.offset);if(!n.loop)f(s,k,0);else if(k>s){let C=t.document.durationUs,w=Math.floor(s/C),F=Math.floor(k/C)-w;if(F>g.maxLoopBoundariesPerTick)throw new b(\"event-budget\",\"Input interval exceeds the loop-boundary limit.\",{channelId:o});let I=P=>(P%C+C)%C;for(let P=0;P<=F;P++)f(P===0?I(s):-1,P===F?I(k):C-1,w+P)}}return Object.freeze({current:c,previousNominal:a,events:Object.freeze(p),delivery:y})}function ee(e,t){let n=e.document.channels.find(d=>d.id===t);if(!n||n.kind!==\"pointer\")throw new b(\"unsupported-channel\",\"Standard input requires a pointer channel.\");let l=n,u=l.records.filter(d=>d.event!==null),x=u.filter(d=>d.event===\"down\"),v=new Map,i=l.initial;for(let d of u)v.set(d.seq,i),i=d;let y=(d,r,c)=>{let a=e.document.source,p=r===\"clip\"?c.clipWidth/a.width:r===\"normalized\"?1/a.width:1,f=r===\"clip\"?c.clipHeight/a.height:r===\"normalized\"?1/a.height:1;return{...d,x:d.x*p,y:d.y*f}},o=(d,r)=>{let c=0,a=x.length;for(;c<a;){let p=Math.floor((c+a)/2),f=x[p];f.t<d||f.t===d&&f.seq<=r?c=p+1:a=p}return x[c-1]?.button??0};return{previous(d,r,c){let a=v.get(d);if(!a)throw new b(\"invalid-value\",\"Input event is not in the recording.\");return y(a,r,c)},eventButton(d){return o(d.t,d.seq)},button(d,r){return o(j(d,e.document.durationUs,{offset:r.offset,rate:r.rate,loop:r.loop}),1/0)}}}function K(e,t,n=1/0){let l=0,u=e.length;for(;l<u;){let x=Math.floor((l+u)/2),v=e[x];v.t<t||v.t===t&&v.seq<=n?l=x+1:u=x}return l}var ne=(e,t)=>e.t>t.t||e.t===t.t&&e.seq>t.seq;function T(e,t){throw new b(\"unsupported-playback\",`Touch channel ${e}: ${t}`,{channelId:e})}function te(e,t){if(D(t,g.maxRecordBytes),!Array.isArray(t)||!t.length||t.length>g.maxChannels)throw new b(\"size-limit\",\"Touch input requires 1..32 channels.\");if(t.some(i=>typeof i!=\"string\"||!i.trim()||i.includes(\"\\0\")||new TextEncoder().encode(i).length>g.maxStringBytes)||new Set(t).size!==t.length)throw new b(\"invalid-format\",\"Touch channel IDs must be nonempty, unique strings.\");let n=Object.freeze([...t]),l=Object.freeze(n.map((i,y)=>{let o=e.document.channels.find(a=>a.id===i);if(!o)throw new b(\"missing-channel\",`Touch channel ${i} is missing.`,{channelId:i});o.kind!==\"pointer\"&&T(i,\"not a pointer channel.\");let d=o;d.initial.buttons!==0&&T(i,\"the recording starts pressed.\");let r=!1,c=[];for(let a of d.records)[null,\"down\",\"move\",\"up\",\"cancel\"].includes(a.event)||T(i,`event ${a.event} is not supported touch input.`),(a.buttons!==0&&a.buttons!==1||a.button!==void 0&&a.button!==0)&&T(i,\"only button 0 with state 0/1 is supported.\"),a.event===\"down\"?(r&&T(i,\"a down occurs before the previous contact ends.\"),r=!0):(a.event===\"up\"||a.event===\"cancel\")&&(r||T(i,\"an ending event has no matching down.\"),r=!1),a.buttons!==(r?1:0)&&T(i,\"button state changes without a contact boundary.\"),(a.event===\"down\"||a.event===\"up\"||a.event===\"cancel\"||a.event===\"move\"&&r)&&c.push(a);return r&&T(i,\"a contact has no up or cancel event.\"),Object.freeze({id:y+1,channel:d,events:Object.freeze(c),owns:new WeakSet(c)})})),u=(i,y,o,d)=>{let r=e.document.source,c=o===\"clip\"?d.clipWidth/r.width:o===\"normalized\"?1/r.width:1,a=o===\"clip\"?d.clipHeight/r.height:o===\"normalized\"?1/r.height:1;return Object.freeze({id:i.id,channelId:i.channel.id,x:y.x*c,y:y.y*a})},x=(i,y)=>{if(![\"composition\",\"normalized\",\"clip\"].includes(i)||![y.clipWidth,y.clipHeight].every(o=>Number.isFinite(o)&&o>0&&o<=g.maxValue))throw new b(\"invalid-value\",\"Touch input requires a known space and positive logical dimensions.\")},v=(i,y,o,d,r)=>{x(o,d);let c=[],a;for(let f of l){let m=f.channel.records[K(f.channel.records,i,y)-1]??f.channel.initial;if(m.buttons!==0)if(r){let k=e.sample(f.channel.id,r.time,r.mapping,{space:o},d);k?.kind!==\"pointer\"&&T(f.channel.id,\"the current sample is not pointer input.\"),c.push(Object.freeze({id:f.id,channelId:f.channel.id,x:k.x,y:k.y}))}else c.push(u(f,m,o,d));let s=f.events[K(f.events,i,y)-1];s&&(!a||ne(s,a.record))&&(a={entry:f,record:s})}let p=c[0]??(a?u(a.entry,a.record,o,d):u(l[0],l[0].channel.initial,o,d));return Object.freeze({touches:Object.freeze(c),mouse:p,mouseIsPressed:c.length!==0})};return Object.freeze({channelIds:n,durationUs:e.document.durationUs,eventCount:l.reduce((i,y)=>i+y.events.length,0),validateMapping:i=>e.validateMapping(i),sample(i,y,o,d){let r=j(i,e.document.durationUs,y);return v(r,1/0,o,d,{time:i,mapping:y})},eventState(i,y,o,d){if(!Number.isSafeInteger(i)||i<0||i>e.document.durationUs||!Number.isSafeInteger(y)||y<-1)throw new b(\"invalid-time\",\"Invalid touch event state cut.\");return v(i,y,o,d)},*events(i,y){if(![i,y].every(Number.isSafeInteger)||i>y)throw new b(\"invalid-time\",\"Touch event range must be ascending integer microseconds.\");let o=[],d=(c,a)=>ne(a.record,c.record),r=c=>{let a=o.length;for(o.push(c);a>0;){let p=Math.floor((a-1)/2);if(!d(o[a],o[p]))break;[o[a],o[p]]=[o[p],o[a]],a=p}};for(let c of l){let a=K(c.events,i),p=c.events[a];p&&p.t<=y&&r({entry:c,offset:a,record:p})}for(;o.length;){let c=o[0],a=o.pop();if(o.length){o[0]=a;let m=0;for(;;){let s=m*2+1,k=s+1,C=m;if(s<o.length&&d(o[s],o[C])&&(C=s),k<o.length&&d(o[k],o[C])&&(C=k),C===m)break;[o[m],o[C]]=[o[C],o[m]],m=C}}yield Object.freeze({id:c.entry.id,channelId:c.entry.channel.id,record:c.record});let p=c.offset+1,f=c.entry.events[p];f&&f.t<=y&&r({entry:c.entry,offset:p,record:f})}},point(i,y,o){x(y,o);let d=l[i.id-1];if(!d||d.channel.id!==i.channelId||!d.owns.has(i.record))throw new b(\"invalid-value\",\"Touch event belongs to another index.\");return u(d,i.record,y,o)}})}function re(e,t,n){if(![t.clipWidth,t.clipHeight].every(x=>Number.isFinite(x)&&x>0&&x<=g.maxValue)||![e.x,e.y,n.left,n.top,n.width,n.height].every(Number.isFinite)||n.width<0||n.height<0)throw new b(\"invalid-value\",\"Invalid touch client coordinate context.\");let l=n.left+e.x*n.width/t.clipWidth,u=n.top+e.y*n.height/t.clipHeight;if(![l,u].every(Number.isFinite))throw new b(\"invalid-value\",\"Touch client coordinates overflow.\");return Object.freeze({clientX:l,clientY:u})}function oe(e){let{index:t,binding:n,time:l,fps:u,coordinates:x,delivery:v}=e;if(S(l),!Number.isFinite(u)||u<=0)throw new b(\"invalid-value\",\"Touch input requires a positive FPS.\");if(v&&A(v),n.inputMode!==\"touch\"||\"pointerChannelId\"in n||!Array.isArray(n.pointerChannelIds)||n.pointerChannelIds.length!==t.channelIds.length||n.pointerChannelIds.some((a,p)=>a!==t.channelIds[p]))throw new b(\"invalid-format\",\"Touch binding must match its ordered channel index.\");let i={offset:n.offset,rate:n.rate,loop:n.loop};t.validateMapping(i);let y=t.sample(l,i,n.space,x),o=t.sample(Math.max(0,l-1/u),i,n.space,x),d=[],r=(a,p,f)=>{for(let m of t.events(a,p)){if(d.length>=g.maxEventsPerTick)throw new b(\"event-budget\",\"Touch interval exceeds the shared event limit.\",{channelId:m.channelId});d.push({cycle:f,row:m})}};if(v?.mode===\"continuous\"&&n.rate>0){let a=v.previousLocalTime;if(a>l)throw new b(\"invalid-time\",\"Continuous touch input cannot move backwards.\");let p=S(a*n.rate+n.offset),f=S(l*n.rate+n.offset);if(!n.loop)r(p,f,0);else if(f>p){let m=t.durationUs,s=Math.floor(p/m),k=Math.floor(f/m);if(k-s>g.maxLoopBoundariesPerTick)throw new b(\"event-budget\",\"Touch interval exceeds the shared loop-boundary limit.\");let C=w=>(w%m+m)%m;for(let w=s;w<=k;w++)r(w===s?C(p):-1,w===k?C(f):m-1,w)}}let c=d.map(({cycle:a,row:p})=>{let f=p.record.event,m=f===\"down\"?\"touchstart\":f===\"move\"?\"touchmove\":f===\"up\"?\"touchend\":\"touchcancel\",s=f===\"down\"?\"touchStarted\":f===\"move\"?\"touchMoved\":\"touchEnded\";return Object.freeze({cycle:a,timeUs:p.record.t,seq:p.record.seq,channelId:p.channelId,type:m,callback:s,state:t.eventState(p.record.t,p.record.seq,n.space,x),changed:t.point(p,n.space,x),previousMouse:t.eventState(p.record.t,p.record.seq-1,n.space,x).mouse})});return Object.freeze({current:y,previousNominal:o,events:Object.freeze(c),delivery:v?Object.freeze({...v}):void 0})}return ue(me);})();\n";
+var hd = "\"use strict\";var MacroFlushFeedbackKernel=(()=>{var q=Object.defineProperty;var ae=Object.getOwnPropertyDescriptor;var ie=Object.getOwnPropertyNames;var de=Object.prototype.hasOwnProperty;var se=(e,t,n)=>t in e?q(e,t,{enumerable:!0,configurable:!0,writable:!0,value:n}):e[t]=n;var ce=(e,t)=>{for(var n in t)q(e,n,{get:t[n],enumerable:!0})},le=(e,t,n,l)=>{if(t&&typeof t==\"object\"||typeof t==\"function\")for(let u of ie(t))!de.call(e,u)&&u!==n&&q(e,u,{get:()=>t[u],enumerable:!(l=ae(t,u))||l.enumerable});return e};var ue=e=>le(q({},\"__esModule\",{value:!0}),e);var B=(e,t,n)=>se(e,typeof t!=\"symbol\"?t+\"\":t,n);var me={};ce(me,{FEEDBACK_LIMITS:()=>g,createFeedbackDeliveryCursor:()=>Q,createFeedbackInputIndex:()=>ee,createFeedbackSampler:()=>Y,createFeedbackTouchIndex:()=>te,feedbackTouchClientCoordinates:()=>re,planFeedbackInput:()=>Z,planFeedbackTouchInput:()=>oe,validateFeedbackDeliveryContext:()=>A});var g=Object.freeze({maxAssetBytes:16777216,maxProjectBytes:67108864,maxAssets:64,maxChannels:32,maxRecords:5e5,maxDurationUs:36e8,maxStringBytes:1024,maxRecordBytes:16384,maxArgs:16,maxValue:1e9,maxEventsPerTick:4096,maxLoopBoundariesPerTick:16,maxPointerHz:120,maxOscMessagesPerSecond:1e3,maxPageRecords:1e3,maxPageBytes:1048576,maxResourceCloneBytes:67108864,maxJsonDepth:32}),N=Object.freeze({offset:0,rate:1,loop:!1}),b=class extends Error{constructor(n,l,u={}){super(`Feedback: ${l}`);B(this,\"code\");B(this,\"assetId\");B(this,\"channelId\");this.name=\"FeedbackError\",this.code=n,this.assetId=u.assetId,this.channelId=u.channelId}};function R(e){return e.kind===\"pointer\"||e.kind===\"number\"||e.kind===\"osc\"}var V=new TextEncoder,pe=new Set([\"move\",\"down\",\"up\",\"enter\",\"leave\",\"cancel\",\"click\",\"double-click\",\"wheel\"]);var be=new Set([\"__proto__\",\"prototype\",\"constructor\"]);function h(e,t){throw new b(e,t)}function M(e,t){return(!e||typeof e!=\"object\"||Array.isArray(e))&&h(\"invalid-format\",`${t} must be an object.`),e}function E(e,t,n){Object.keys(e).some(l=>!t.includes(l))&&h(\"invalid-format\",`${n} contains an unknown field.`)}function $(e,t){(typeof e!=\"string\"||!e.trim()||e.includes(\"\\0\")||V.encode(e).length>g.maxStringBytes)&&h(\"invalid-value\",`${t} must be a non-empty string of at most ${g.maxStringBytes} UTF-8 bytes.`)}function O(e,t){(typeof e!=\"number\"||!Number.isFinite(e)||Math.abs(e)>g.maxValue)&&h(\"invalid-value\",`${t} is out of range.`)}function U(e,t,n,l){(typeof e!=\"number\"||!Number.isSafeInteger(e)||e<t||e>n)&&h(\"invalid-time\",`${l} must be an integer in range.`)}function _(e,t){O(e.x,`${t}.x`),O(e.y,`${t}.y`),(typeof e.buttons!=\"number\"||!Number.isInteger(e.buttons)||e.buttons<0||e.buttons>31||typeof e.inside!=\"boolean\")&&h(\"invalid-value\",`${t} has invalid buttons/inside.`)}function H(e){return Array.isArray(e)?((!e.length||e.length>g.maxArgs)&&h(\"invalid-value\",\"Numeric vectors require 1..16 values.\"),e.forEach(t=>O(t,\"Numeric vector value\")),e):(O(e,\"Numeric value\"),e)}function D(e,t=g.maxAssetBytes){let n=0,l=new Set,u=i=>{n+=i,n>t&&h(\"size-limit\",`JSON exceeds ${t} bytes.`)},x=i=>{i.length>t-n&&h(\"size-limit\",`JSON exceeds ${t} bytes.`),u(V.encode(JSON.stringify(i)).length)},v=(i,y)=>{if(y>g.maxJsonDepth&&h(\"size-limit\",\"JSON nesting is too deep.\"),i===null){u(4);return}if(typeof i==\"string\"){x(i);return}if(typeof i==\"boolean\"){u(i?4:5);return}if(typeof i==\"number\"&&Number.isFinite(i)){u(JSON.stringify(i).length);return}(!i||typeof i!=\"object\")&&h(\"invalid-format\",\"Expected finite, plain JSON data.\"),l.has(i)&&h(\"invalid-format\",\"JSON contains a cycle.\");let o=Object.getPrototypeOf(i);if((Array.isArray(i)?o!==Array.prototype:o!==Object.prototype&&o!==null)&&h(\"invalid-format\",\"JSON must use plain objects/arrays.\"),Object.getOwnPropertySymbols(i).length&&h(\"invalid-format\",\"JSON cannot contain symbol keys.\"),l.add(i),u(2),Array.isArray(i)){i.length>g.maxRecords&&h(\"size-limit\",\"JSON array exceeds the record limit.\"),Object.getOwnPropertyNames(i).length!==i.length+1&&h(\"invalid-format\",\"JSON arrays cannot have holes or extra properties.\");for(let d=0;d<i.length;d++){d&&u(1);let r=Object.getOwnPropertyDescriptor(i,String(d));(!r||!r.enumerable||!(\"value\"in r))&&h(\"invalid-format\",\"JSON cannot contain accessors or sparse arrays.\"),v(r.value,y+1)}}else Object.getOwnPropertyNames(i).forEach((r,c)=>{be.has(r)&&h(\"invalid-format\",\"JSON contains a reserved object key.\");let a=Object.getOwnPropertyDescriptor(i,r);(!a.enumerable||!(\"value\"in a))&&h(\"invalid-format\",\"JSON cannot contain accessors or hidden fields.\"),c&&u(1),x(r),u(1),v(a.value,y+1)});l.delete(i)};return v(e,0),n}function X(e){return e&&typeof e==\"object\"&&(Object.values(e).forEach(X),Object.freeze(e)),e}function W(e){let t=D(e),n=M(e,\"Feedback document\");E(n,[\"formatVersion\",\"timeUnit\",\"durationUs\",\"source\",\"channels\"],\"Feedback document\"),n.formatVersion!==1&&h(\"unsupported-version\",\"Only Feedback formatVersion 1 is supported.\"),n.timeUnit!==\"us\"&&h(\"invalid-time\",\"Feedback timeUnit must be us.\"),U(n.durationUs,0,g.maxDurationUs,\"durationUs\");let l=n.durationUs,u=M(n.source,\"source\");E(u,[\"compositionId\",\"width\",\"height\"],\"source\"),O(u.width,\"source.width\"),O(u.height,\"source.height\"),(u.width<1||u.height<1)&&h(\"invalid-value\",\"Source dimensions must be at least one logical pixel.\"),u.compositionId!==void 0&&$(u.compositionId,\"source.compositionId\"),Array.isArray(n.channels)||h(\"invalid-format\",\"Feedback requires a channels array.\"),n.channels.length>g.maxChannels&&h(\"size-limit\",\"Feedback requires at most 32 channels.\");let x=new Set,v=new Set,i=[],y=0,o=n.channels.map(d=>{let r=M(d,\"channel\");$(r.id,\"channel.id\"),$(r.kind,\"channel.kind\"),x.has(r.id)&&h(\"invalid-format\",`Duplicate channel ${r.id}.`),x.add(r.id);let c=[\"pointer\",\"number\",\"osc\"].includes(r.kind);if(!c)return r.records!==void 0&&!Array.isArray(r.records)&&h(\"invalid-format\",`Unknown channel ${r.id} has invalid records.`),y+=Array.isArray(r.records)?r.records.length:0,Array.isArray(r.records)&&r.records.forEach(m=>D(m,g.maxRecordBytes)),y>g.maxRecords&&h(\"size-limit\",\"Feedback exceeds 500,000 records.\"),i.push({code:\"unsupported-channel\",channelId:r.id,message:`Channel ${r.id} (${r.kind}) is retained but cannot be used.`}),{id:r.id,kind:r.kind,supported:c,records:Array.isArray(r.records)?r.records.length:0};E(r,r.kind===\"pointer\"?[\"id\",\"kind\",\"initial\",\"records\"]:r.kind===\"number\"?[\"id\",\"kind\",\"interpolation\",\"initial\",\"records\"]:[\"id\",\"kind\",\"address\",\"records\"],`Channel ${r.id}`),Array.isArray(r.records)||h(\"invalid-format\",`Channel ${r.id} requires records.`),y+=r.records.length,y>g.maxRecords&&h(\"size-limit\",\"Feedback exceeds 500,000 records.\");let a=-1;if(r.kind===\"pointer\"){let m=M(r.initial,\"pointer.initial\");E(m,[\"x\",\"y\",\"buttons\",\"inside\"],\"pointer.initial\"),_(m,\"pointer.initial\")}else if(r.kind===\"number\"){r.interpolation!==\"linear\"&&r.interpolation!==\"hold\"&&h(\"invalid-value\",\"Numeric interpolation must be linear or hold.\");let m=H(r.initial);a=Array.isArray(m)?m.length:-1}else $(r.address,\"OSC address\"),r.address.startsWith(\"/\")||h(\"invalid-value\",\"OSC address must start with /.\");let p=-1,f=-1;for(let m of r.records){let s=M(m,`Channel ${r.id} record`);if(D(s,g.maxRecordBytes),U(s.t,0,l,`Channel ${r.id} time`),U(s.seq,0,Number.MAX_SAFE_INTEGER,`Channel ${r.id} seq`),(s.t<p||s.seq<=f||v.has(s.seq))&&h(\"invalid-time\",`Channel ${r.id} has unordered or duplicate records.`),v.add(s.seq),p=s.t,f=s.seq,r.kind===\"pointer\"){E(s,[\"t\",\"seq\",\"x\",\"y\",\"buttons\",\"inside\",\"event\",\"button\",\"deltaX\",\"deltaY\"],\"pointer record\"),_(s,\"pointer record\"),s.event!==null&&(typeof s.event!=\"string\"||!pe.has(s.event))&&h(\"invalid-value\",\"Invalid pointer event.\");let k=[\"down\",\"up\",\"click\",\"double-click\"].includes(String(s.event));(k||s.button!==void 0)&&(typeof s.button!=\"number\"||!Number.isInteger(s.button)||s.button<0||s.button>4)&&h(\"invalid-value\",\"Invalid pointer button.\"),!k&&s.button!==void 0&&h(\"invalid-value\",\"Only button events may contain button.\"),(s.event===\"down\"&&!(s.buttons&[1,4,2,8,16][s.button])||s.event===\"up\"&&s.buttons&[1,4,2,8,16][s.button]||s.event===\"cancel\"&&s.buttons!==0||s.event===\"enter\"&&s.inside!==!0||s.event===\"leave\"&&s.inside!==!1)&&h(\"invalid-value\",\"Pointer event/state disagree.\"),s.event===\"wheel\"?(O(s.deltaX,\"deltaX\"),O(s.deltaY,\"deltaY\")):(s.deltaX!==void 0||s.deltaY!==void 0)&&h(\"invalid-value\",\"Only wheel events may contain deltas.\")}else if(r.kind===\"number\"){E(s,[\"t\",\"seq\",\"value\"],\"number record\");let k=H(s.value);(Array.isArray(k)?k.length:-1)!==a&&h(\"invalid-value\",\"Numeric values must have a fixed shape.\")}else{E(s,[\"t\",\"seq\",\"args\"],\"OSC record\"),(!Array.isArray(s.args)||s.args.length>g.maxArgs)&&h(\"invalid-value\",\"OSC requires at most 16 args.\");for(let k of s.args)typeof k==\"number\"?O(k,\"OSC arg\"):typeof k==\"string\"?(k.includes(\"\\0\")||V.encode(k).length>g.maxStringBytes)&&h(\"invalid-value\",\"OSC string is too large or contains NUL.\"):typeof k!=\"boolean\"&&h(\"invalid-value\",\"OSC args must be numbers, strings or booleans.\")}}return{id:r.id,kind:r.kind,supported:c,records:r.records.length}});return X({document:JSON.parse(JSON.stringify(e)),summary:{bytes:t,duration:n.durationUs/1e6,records:y,channels:o},warnings:i})}function J(e=N,t){let n=M(e,\"mapping\");E(n,[\"offset\",\"rate\",\"loop\"],\"mapping\"),(typeof n.offset!=\"number\"||!Number.isFinite(n.offset)||Math.abs(n.offset)>3600||typeof n.rate!=\"number\"||!Number.isFinite(n.rate)||Math.abs(n.rate)>16||typeof n.loop!=\"boolean\")&&h(\"invalid-time\",\"Mapping requires offset (-3600..3600), rate (-16..16), and loop.\"),n.loop&&t&&(t.durationUs||h(\"invalid-time\",\"Cannot loop an empty Feedback duration.\"),t.channels.some(l=>R(l)&&l.records.some(u=>u.t===t.durationUs&&(l.kind===\"osc\"||l.kind===\"pointer\"&&\"event\"in u&&u.event!==null)))&&h(\"invalid-time\",\"Looping Feedback cannot contain an event at its exact endpoint.\"))}function S(e){let t=Math.round(e*1e6);if(!Number.isFinite(e)||!Number.isSafeInteger(t))throw new b(\"invalid-time\",\"Time must be finite seconds within the safe microsecond range.\");return t}function j(e,t,n=N){if(J(n),!Number.isFinite(e))throw new b(\"invalid-time\",\"Clip-local time must be finite seconds.\");if(!Number.isSafeInteger(t)||t<0||t>g.maxDurationUs)throw new b(\"invalid-time\",\"Invalid Feedback duration.\");let l=S(e*n.rate+n.offset);if(n.loop){if(!t)throw new b(\"invalid-time\",\"Cannot loop an empty Feedback duration.\");return(l%t+t)%t}return Math.min(t,Math.max(0,l))}function L(e,t){let n=0,l=e.length;for(;n<l;){let u=Math.floor((n+l)/2);e[u].t<=t?n=u+1:l=u}return n}function Y(e){let t=W(e),n=t.document,l=n.channels.some(o=>R(o)&&o.records.some(d=>d.t===n.durationUs&&(o.kind===\"osc\"||o.kind===\"pointer\"&&\"event\"in d&&d.event!==null))),u=new Map(n.channels.map(o=>[o.id,o])),x=o=>{let d=u.get(o);if(!d)throw new b(\"missing-channel\",`Channel ${o} is missing.`,{channelId:o});if(!R(d))throw new b(\"unsupported-channel\",`Channel ${o} (${d.kind}) cannot be read.`,{channelId:o});return d},v=(o,d)=>{let r=o.space??\"composition\";if(r===\"composition\")return[1,1];if(r===\"normalized\")return[1/n.source.width,1/n.source.height];if(r!==\"clip\"||!d||![d.clipWidth,d.clipHeight].every(c=>Number.isFinite(c)&&c>0&&c<=g.maxValue))throw new b(\"invalid-value\",\"Clip space requires positive logical Clip dimensions.\");return[d.clipWidth/n.source.width,d.clipHeight/n.source.height]},i=(o,d,r)=>{let[c,a]=v(d,r);return{kind:\"pointer\",x:o.x*c,y:o.y*a,buttons:o.buttons,inside:o.inside}},y=(o,d,r={},c)=>{let a=x(o);if(a.kind!==\"pointer\"&&r.space!==void 0)throw new b(\"invalid-value\",\"Only pointer channels accept a coordinate space.\");let p=L(a.records,d)-1;if(a.kind===\"osc\"){let F=a.records[p];return F?{kind:\"osc\",address:a.address,args:[...F.args]}:null}let f=a.records[p],m=a.records[p+1],s=m?Math.max(0,Math.min(1,(d-(f?.t??0))/Math.max(1,m.t-(f?.t??0)))):0;if(a.kind===\"pointer\"){let F=a.records[p]??a.initial,I=a.records[p+1],P=I&&F.inside&&I.inside&&I.event!==\"cancel\"&&!(\"event\"in F&&F.event===\"cancel\");return i({...F,x:P?F.x+(I.x-F.x)*s:F.x,y:P?F.y+(I.y-F.y)*s:F.y},r,c)}let k=a.records[p]?.value??a.initial,C=a.records[p+1]?.value,w=(F,I)=>a.interpolation===\"linear\"?F+(I-F)*s:F;return{kind:\"number\",value:Array.isArray(k)?k.map((F,I)=>C===void 0?F:w(F,C[I])):C===void 0?k:w(k,C)}};return{document:n,summary:t.summary,warnings:t.warnings,validateMapping(o){if(J(o),o.loop&&(!n.durationUs||l))throw new b(\"invalid-time\",\"Cannot loop empty Feedback or an endpoint event.\")},at(o,d,r={},c){return y(o,Math.min(n.durationUs,Math.max(0,S(d))),r,c)},sample(o,d,r=N,c={},a){if(J(r),r.loop&&l)throw new b(\"invalid-time\",\"Looping Feedback cannot contain an event at its exact endpoint.\");return y(o,j(d,n.durationUs,r),c,a)},events(o,d,r,c={},a){if(d>r)throw new b(\"invalid-time\",\"Event range must be ascending.\");let p=S(d),f=S(r),m=x(o);if(m.kind!==\"pointer\"&&c.space!==void 0)throw new b(\"invalid-value\",\"Only pointer channels accept a coordinate space.\");m.kind===\"pointer\"&&v(c,a);let s=[];if(m.kind===\"number\")return s;let k=L(m.records,p),C=L(m.records,f);for(let w=k;w<C;w++){let z=m.records[w];if(m.kind===\"pointer\"){let F=m.records[w];if(F.event===null)continue;let[I,P]=v(c,a);s.push({...i(F,c,a),channelId:o,time:F.t/1e6,seq:F.seq,event:F.event,...F.button===void 0?{}:{button:F.button},...F.deltaX===void 0?{}:{deltaX:F.deltaX*I},...F.deltaY===void 0?{}:{deltaY:F.deltaY*P}})}else s.push({kind:\"osc\",channelId:o,time:z.t/1e6,seq:z.seq,address:m.address,args:[...m.records[w].args]});if(s.length>g.maxEventsPerTick)throw new b(\"event-budget\",`Channel ${o} exceeds the event limit; request a smaller interval.`,{channelId:o})}return s}}}function G(e,t){if(!Number.isSafeInteger(e)||e<1)throw new b(\"invalid-time\",`Invalid ${t}.`);return e}function A(e){if(!e||Object.getPrototypeOf(e)!==Object.prototype)throw new b(\"invalid-format\",\"Invalid input delivery context.\");if(Object.getOwnPropertySymbols(e).length)throw new b(\"invalid-format\",\"Invalid input delivery symbol field.\");let t=[\"transportEpoch\",\"deliveryId\",\"mode\",\"previousLocalTime\"];for(let[n,l]of Object.entries(Object.getOwnPropertyDescriptors(e)))if(!t.includes(n)||!l.enumerable||!(\"value\"in l))throw new b(\"invalid-format\",\"Invalid input delivery field.\");if(G(e.transportEpoch,\"transport epoch\"),G(e.deliveryId,\"delivery ID\"),e.mode===\"historical\")throw new b(\"unsupported-playback\",\"Historical input delivery requires P4.\");if(![\"sample-only\",\"continuous\"].includes(e.mode))throw new b(\"invalid-value\",\"Invalid input delivery mode.\");if(e.previousLocalTime!==void 0&&S(e.previousLocalTime),e.mode===\"continuous\"&&e.previousLocalTime===void 0)throw new b(\"invalid-time\",\"Continuous input requires a previous local time.\")}function Q(){let e=0,t=0;return{consume(n){if(A(n),n.transportEpoch<e||n.transportEpoch===e&&n.deliveryId<t)throw new b(\"invalid-time\",\"Stale input delivery.\");return n.transportEpoch===e&&n.deliveryId===t?!1:(e=n.transportEpoch,t=n.deliveryId,!0)}}}function Z(e){let{sampler:t,binding:n,time:l,fps:u,coordinates:x,delivery:v}=e,i={offset:n.offset,rate:n.rate,loop:n.loop};if(S(l),!Number.isFinite(u)||u<=0)throw new b(\"invalid-value\",\"Input requires a positive FPS.\");v&&A(v),t.validateMapping(i);let y=v?Object.freeze({...v}):void 0;if(n.pointerChannelId===void 0)return Object.freeze({current:null,previousNominal:null,events:Object.freeze([]),delivery:y});let o=n.pointerChannelId,d={space:n.space},r=m=>{let s=t.sample(o,m,i,d,x);if(!s||s.kind!==\"pointer\")throw new b(\"unsupported-channel\",`Channel ${o} is not pointer input.`,{channelId:o});return Object.freeze(s)},c=r(l),a=r(Math.max(0,l-1/u)),p=[],f=(m,s,k)=>{for(let C of t.events(o,m/1e6,s/1e6,d,x)){if(C.kind!==\"pointer\")throw new b(\"unsupported-channel\",\"Only pointer events can be standard input.\");if(p.length>=g.maxEventsPerTick)throw new b(\"event-budget\",\"Input interval exceeds the event limit.\",{channelId:o});p.push(Object.freeze({cycle:k,event:Object.freeze(C)}))}};if(v?.mode===\"continuous\"&&n.rate>0){let m=v.previousLocalTime;if(m>l)throw new b(\"invalid-time\",\"Continuous input cannot move backwards.\");let s=S(m*n.rate+n.offset),k=S(l*n.rate+n.offset);if(!n.loop)f(s,k,0);else if(k>s){let C=t.document.durationUs,w=Math.floor(s/C),F=Math.floor(k/C)-w;if(F>g.maxLoopBoundariesPerTick)throw new b(\"event-budget\",\"Input interval exceeds the loop-boundary limit.\",{channelId:o});let I=P=>(P%C+C)%C;for(let P=0;P<=F;P++)f(P===0?I(s):-1,P===F?I(k):C-1,w+P)}}return Object.freeze({current:c,previousNominal:a,events:Object.freeze(p),delivery:y})}function ee(e,t){let n=e.document.channels.find(d=>d.id===t);if(!n||n.kind!==\"pointer\")throw new b(\"unsupported-channel\",\"Standard input requires a pointer channel.\");let l=n,u=l.records.filter(d=>d.event!==null),x=u.filter(d=>d.event===\"down\"),v=new Map,i=l.initial;for(let d of u)v.set(d.seq,i),i=d;let y=(d,r,c)=>{let a=e.document.source,p=r===\"clip\"?c.clipWidth/a.width:r===\"normalized\"?1/a.width:1,f=r===\"clip\"?c.clipHeight/a.height:r===\"normalized\"?1/a.height:1;return{...d,x:d.x*p,y:d.y*f}},o=(d,r)=>{let c=0,a=x.length;for(;c<a;){let p=Math.floor((c+a)/2),f=x[p];f.t<d||f.t===d&&f.seq<=r?c=p+1:a=p}return x[c-1]?.button??0};return{previous(d,r,c){let a=v.get(d);if(!a)throw new b(\"invalid-value\",\"Input event is not in the recording.\");return y(a,r,c)},eventButton(d){return o(d.t,d.seq)},button(d,r){return o(j(d,e.document.durationUs,{offset:r.offset,rate:r.rate,loop:r.loop}),1/0)}}}function K(e,t,n=1/0){let l=0,u=e.length;for(;l<u;){let x=Math.floor((l+u)/2),v=e[x];v.t<t||v.t===t&&v.seq<=n?l=x+1:u=x}return l}var ne=(e,t)=>e.t>t.t||e.t===t.t&&e.seq>t.seq;function T(e,t){throw new b(\"unsupported-playback\",`Touch channel ${e}: ${t}`,{channelId:e})}function te(e,t){if(D(t,g.maxRecordBytes),!Array.isArray(t)||!t.length||t.length>g.maxChannels)throw new b(\"size-limit\",\"Touch input requires 1..32 channels.\");if(t.some(i=>typeof i!=\"string\"||!i.trim()||i.includes(\"\\0\")||new TextEncoder().encode(i).length>g.maxStringBytes)||new Set(t).size!==t.length)throw new b(\"invalid-format\",\"Touch channel IDs must be nonempty, unique strings.\");let n=Object.freeze([...t]),l=Object.freeze(n.map((i,y)=>{let o=e.document.channels.find(a=>a.id===i);if(!o)throw new b(\"missing-channel\",`Touch channel ${i} is missing.`,{channelId:i});o.kind!==\"pointer\"&&T(i,\"not a pointer channel.\");let d=o;d.initial.buttons!==0&&T(i,\"the recording starts pressed.\");let r=!1,c=[];for(let a of d.records)[null,\"down\",\"move\",\"up\",\"cancel\"].includes(a.event)||T(i,`event ${a.event} is not supported touch input.`),(a.buttons!==0&&a.buttons!==1||a.button!==void 0&&a.button!==0)&&T(i,\"only button 0 with state 0/1 is supported.\"),a.event===\"down\"?(r&&T(i,\"a down occurs before the previous contact ends.\"),r=!0):(a.event===\"up\"||a.event===\"cancel\")&&(r||T(i,\"an ending event has no matching down.\"),r=!1),a.buttons!==(r?1:0)&&T(i,\"button state changes without a contact boundary.\"),(a.event===\"down\"||a.event===\"up\"||a.event===\"cancel\"||a.event===\"move\"&&r)&&c.push(a);return r&&T(i,\"a contact has no up or cancel event.\"),Object.freeze({id:y+1,channel:d,events:Object.freeze(c),owns:new WeakSet(c)})})),u=(i,y,o,d)=>{let r=e.document.source,c=o===\"clip\"?d.clipWidth/r.width:o===\"normalized\"?1/r.width:1,a=o===\"clip\"?d.clipHeight/r.height:o===\"normalized\"?1/r.height:1;return Object.freeze({id:i.id,channelId:i.channel.id,x:y.x*c,y:y.y*a})},x=(i,y)=>{if(![\"composition\",\"normalized\",\"clip\"].includes(i)||![y.clipWidth,y.clipHeight].every(o=>Number.isFinite(o)&&o>0&&o<=g.maxValue))throw new b(\"invalid-value\",\"Touch input requires a known space and positive logical dimensions.\")},v=(i,y,o,d,r)=>{x(o,d);let c=[],a;for(let f of l){let m=f.channel.records[K(f.channel.records,i,y)-1]??f.channel.initial;if(m.buttons!==0)if(r){let k=e.sample(f.channel.id,r.time,r.mapping,{space:o},d);k?.kind!==\"pointer\"&&T(f.channel.id,\"the current sample is not pointer input.\"),c.push(Object.freeze({id:f.id,channelId:f.channel.id,x:k.x,y:k.y}))}else c.push(u(f,m,o,d));let s=f.events[K(f.events,i,y)-1];s&&(!a||ne(s,a.record))&&(a={entry:f,record:s})}let p=c[0]??(a?u(a.entry,a.record,o,d):u(l[0],l[0].channel.initial,o,d));return Object.freeze({touches:Object.freeze(c),mouse:p,mouseIsPressed:c.length!==0})};return Object.freeze({channelIds:n,durationUs:e.document.durationUs,eventCount:l.reduce((i,y)=>i+y.events.length,0),validateMapping:i=>e.validateMapping(i),sample(i,y,o,d){let r=j(i,e.document.durationUs,y);return v(r,1/0,o,d,{time:i,mapping:y})},eventState(i,y,o,d){if(!Number.isSafeInteger(i)||i<0||i>e.document.durationUs||!Number.isSafeInteger(y)||y<-1)throw new b(\"invalid-time\",\"Invalid touch event state cut.\");return v(i,y,o,d)},*events(i,y){if(![i,y].every(Number.isSafeInteger)||i>y)throw new b(\"invalid-time\",\"Touch event range must be ascending integer microseconds.\");let o=[],d=(c,a)=>ne(a.record,c.record),r=c=>{let a=o.length;for(o.push(c);a>0;){let p=Math.floor((a-1)/2);if(!d(o[a],o[p]))break;[o[a],o[p]]=[o[p],o[a]],a=p}};for(let c of l){let a=K(c.events,i),p=c.events[a];p&&p.t<=y&&r({entry:c,offset:a,record:p})}for(;o.length;){let c=o[0],a=o.pop();if(o.length){o[0]=a;let m=0;for(;;){let s=m*2+1,k=s+1,C=m;if(s<o.length&&d(o[s],o[C])&&(C=s),k<o.length&&d(o[k],o[C])&&(C=k),C===m)break;[o[m],o[C]]=[o[C],o[m]],m=C}}yield Object.freeze({id:c.entry.id,channelId:c.entry.channel.id,record:c.record});let p=c.offset+1,f=c.entry.events[p];f&&f.t<=y&&r({entry:c.entry,offset:p,record:f})}},point(i,y,o){x(y,o);let d=l[i.id-1];if(!d||d.channel.id!==i.channelId||!d.owns.has(i.record))throw new b(\"invalid-value\",\"Touch event belongs to another index.\");return u(d,i.record,y,o)}})}function re(e,t,n){if(![t.clipWidth,t.clipHeight].every(x=>Number.isFinite(x)&&x>0&&x<=g.maxValue)||![e.x,e.y,n.left,n.top,n.width,n.height].every(Number.isFinite)||n.width<0||n.height<0)throw new b(\"invalid-value\",\"Invalid touch client coordinate context.\");let l=n.left+e.x*n.width/t.clipWidth,u=n.top+e.y*n.height/t.clipHeight;if(![l,u].every(Number.isFinite))throw new b(\"invalid-value\",\"Touch client coordinates overflow.\");return Object.freeze({clientX:l,clientY:u})}function oe(e){let{index:t,binding:n,time:l,fps:u,coordinates:x,delivery:v}=e;if(S(l),!Number.isFinite(u)||u<=0)throw new b(\"invalid-value\",\"Touch input requires a positive FPS.\");if(v&&A(v),n.inputMode!==\"touch\"||\"pointerChannelId\"in n||!Array.isArray(n.pointerChannelIds)||n.pointerChannelIds.length!==t.channelIds.length||n.pointerChannelIds.some((a,p)=>a!==t.channelIds[p]))throw new b(\"invalid-format\",\"Touch binding must match its ordered channel index.\");let i={offset:n.offset,rate:n.rate,loop:n.loop};t.validateMapping(i);let y=t.sample(l,i,n.space,x),o=t.sample(Math.max(0,l-1/u),i,n.space,x),d=[],r=(a,p,f)=>{for(let m of t.events(a,p)){if(d.length>=g.maxEventsPerTick)throw new b(\"event-budget\",\"Touch interval exceeds the shared event limit.\",{channelId:m.channelId});d.push({cycle:f,row:m})}};if(v?.mode===\"continuous\"&&n.rate>0){let a=v.previousLocalTime;if(a>l)throw new b(\"invalid-time\",\"Continuous touch input cannot move backwards.\");let p=S(a*n.rate+n.offset),f=S(l*n.rate+n.offset);if(!n.loop)r(p,f,0);else if(f>p){let m=t.durationUs,s=Math.floor(p/m),k=Math.floor(f/m);if(k-s>g.maxLoopBoundariesPerTick)throw new b(\"event-budget\",\"Touch interval exceeds the shared loop-boundary limit.\");let C=w=>(w%m+m)%m;for(let w=s;w<=k;w++)r(w===s?C(p):-1,w===k?C(f):m-1,w)}}let c=d.map(({cycle:a,row:p})=>{let f=p.record.event,m=f===\"down\"?\"touchstart\":f===\"move\"?\"touchmove\":f===\"up\"?\"touchend\":\"touchcancel\",s=f===\"down\"?\"touchStarted\":f===\"move\"?\"touchMoved\":\"touchEnded\";return Object.freeze({cycle:a,timeUs:p.record.t,seq:p.record.seq,channelId:p.channelId,type:m,callback:s,state:t.eventState(p.record.t,p.record.seq,n.space,x),changed:t.point(p,n.space,x),previousMouse:t.eventState(p.record.t,p.record.seq-1,n.space,x).mouse})});return Object.freeze({current:y,previousNominal:o,events:Object.freeze(c),delivery:v?Object.freeze({...v}):void 0})}return ue(me);})();\n";
 //#endregion
 //#region src/runtime/feedbackRuntime.ts
-function md(e) {
+function gd(e) {
 	let t = 0, n, r = /* @__PURE__ */ new Map(), i = (t) => {
 		let i = e.lookup(t), a = r.get(t);
 		return n || !i || !a || i.feedbackRevision !== a.revision ? e.unavailable(t, n ?? `Feedback resource unavailable: ${i?.name ?? t}`) : (e.available(t), a);
@@ -12428,8 +12500,157 @@ function md(e) {
 	};
 }
 //#endregion
+//#region src/runtime/feedbackMouseHandlers.ts
+function _d(e) {
+	let t = /* @__PURE__ */ new Map(), n = [], r = !1, i = !1, a = (e) => {
+		throw TypeError("Feedback mouse handlers: " + e);
+	};
+	return {
+		register(o, s) {
+			try {
+				if ((i || !e.canRegister()) && a("Register at Clip top-level or inside setup(), not onFrame or Script assets."), e.isolated) throw Object.assign(/* @__PURE__ */ Error("Feedback mouse handlers do not support isolated p5 replay."), { feedbackInputCode: "unsupported-playback" });
+				let c = typeof s[0] == "string", l = s[+!!c];
+				(typeof l != "function" || s.length < (c ? 2 : 1) || s.length > (c ? 3 : 1)) && a("Expected (callback) or (name, callback, options?)."), n.filter((e) => e.active).length >= 128 && a("Registration limit (128) exceeded.");
+				let u = c ? s[2] : void 0;
+				if (u !== void 0 && (!u || Object.getPrototypeOf(u) !== Object.prototype || Object.getOwnPropertySymbols(u).length || Object.keys(u).some((e) => ![
+					"channelId",
+					"space",
+					"offset",
+					"rate",
+					"loop"
+				].includes(e))) && a("Invalid options."), !c && !e.binding?.pointerChannelId) return r || (r = !0, e.warn("Feedback mouse handlers: no saved Pointer assignment; callback is inactive.")), () => {};
+				let d = c ? e.resolve(s[0]) : {
+					id: e.binding.assetId,
+					kind: "feedback"
+				};
+				d.kind !== "feedback" && a("Named asset is not Feedback."), e.kernel || a("Feedback resources are unavailable.");
+				let f = e.snapshot(d.id), p = e.binding?.assetId === d.id ? e.binding : null, m = f.sampler.document.channels.filter((e) => e.kind === "pointer"), h = c ? u?.channelId ?? (m.length === 1 ? m[0].id : void 0) : p.pointerChannelId;
+				(typeof h != "string" || !m.some((e) => e.id === h)) && a("Select a pointer channelId (required when the asset has multiple pointer channels).");
+				let g = u?.space ?? p?.space ?? "clip";
+				[
+					"clip",
+					"composition",
+					"normalized"
+				].includes(g) || a("Invalid coordinate space.");
+				let _ = {
+					assetId: d.id,
+					pointerChannelId: h,
+					space: g,
+					offset: u?.offset ?? p?.offset ?? 0,
+					rate: u?.rate ?? p?.rate ?? 1,
+					loop: u?.loop ?? p?.loop ?? !1
+				};
+				typeof _.loop != "boolean" && a("loop must be boolean."), f.sampler.validateMapping({
+					offset: _.offset,
+					rate: _.rate,
+					loop: _.loop
+				});
+				let v = new Set(n.filter((e) => e.active).map((e) => e.group));
+				for (let [e, n] of t) v.has(n) || t.delete(e);
+				let y = JSON.stringify(_), b = t.get(y);
+				b || (b = {
+					binding: _,
+					cursor: e.kernel.createFeedbackDeliveryCursor()
+				}, t.set(y, b));
+				let x = {
+					kind: o,
+					group: b,
+					callback: l,
+					active: !0
+				};
+				return n = n.filter((e) => e.active), n.push(x), () => {
+					x.active = !1;
+				};
+			} catch (t) {
+				throw e.report(t), t;
+			}
+		},
+		prepare(t) {
+			if (i || !n.some((e) => e.active)) return;
+			let r = e.kernel, o = n.filter((e) => e.active), s = e.dimensions(), c = [], l = 0;
+			for (let n of new Set(o.map((e) => e.group))) {
+				let i = e.snapshot(n.binding.assetId), o = JSON.stringify([
+					i.revision,
+					s,
+					t.fps
+				]), u = n.identity !== o;
+				!u && t.feedbackDelivery && n.epoch !== void 0 && (t.feedbackDelivery.transportEpoch < n.epoch || t.feedbackDelivery.transportEpoch === n.epoch && t.feedbackDelivery.deliveryId < n.deliveryId) && a("Stale input delivery.");
+				let d = u ? r.createFeedbackInputIndex(i.sampler, n.binding.pointerChannelId) : n.index;
+				t.feedbackDelivery && r.validateFeedbackDeliveryContext(t.feedbackDelivery);
+				let f = u && t.feedbackDelivery ? {
+					transportEpoch: t.feedbackDelivery.transportEpoch,
+					deliveryId: t.feedbackDelivery.deliveryId,
+					mode: "sample-only"
+				} : t.feedbackDelivery, p = r.planFeedbackInput({
+					sampler: i.sampler,
+					binding: n.binding,
+					time: t.time,
+					fps: t.fps,
+					coordinates: s,
+					delivery: f
+				});
+				l += p.events.length, l > r.FEEDBACK_LIMITS.maxEventsPerTick && a("Combined event budget exceeded."), c.push({
+					group: n,
+					resource: i,
+					identity: o,
+					index: d,
+					plan: p
+				});
+			}
+			let u = [];
+			for (let [e, n] of c.entries()) {
+				let { group: i, resource: a, identity: o, index: c, plan: l } = n, d = i.identity === o ? i.cursor : r.createFeedbackDeliveryCursor(), f = t.feedbackDelivery ? d.consume(t.feedbackDelivery) : !1;
+				if (i.cursor = d, i.identity = o, i.index = c, t.feedbackDelivery && (i.epoch = t.feedbackDelivery.transportEpoch, i.deliveryId = t.feedbackDelivery.deliveryId), f) for (let { cycle: n, event: r } of l.events) {
+					if (![
+						"down",
+						"move",
+						"up",
+						"cancel"
+					].includes(r.event)) continue;
+					let o = c.previous(r.seq, i.binding.space, s), l = Object.freeze({
+						channelId: i.binding.pointerChannelId,
+						time: r.time,
+						seq: r.seq,
+						x: r.x,
+						y: r.y,
+						px: o.x,
+						py: o.y,
+						buttons: r.buttons,
+						button: r.button ?? c.eventButton({
+							t: Math.round(r.time * 1e6),
+							seq: r.seq
+						}),
+						inside: r.inside,
+						canceled: r.event === "cancel",
+						cycle: n,
+						frameTime: t.time,
+						type: r.event === "cancel" ? "up" : r.event
+					});
+					u.push({
+						group: i,
+						event: l,
+						order: e,
+						at: (n * a.sampler.document.durationUs / 1e6 + r.time - i.binding.offset) / i.binding.rate
+					});
+				}
+			}
+			u.sort((e, t) => e.at - t.at || e.order - t.order || e.event.seq - t.event.seq);
+			for (let { group: t, event: n } of u) for (let r of o) if (r.group === t && r.kind === n.type) try {
+				r.callback.constructor?.name === "AsyncFunction" && a("Callbacks must be synchronous.");
+				let e = r.callback(n);
+				e && typeof e.then == "function" && (Promise.resolve(e).catch(() => void 0), a("Callbacks must be synchronous."));
+			} catch (t) {
+				e.report(t);
+			}
+		},
+		dispose() {
+			i = !0, n = [], t.clear();
+		}
+	};
+}
+//#endregion
 //#region src/runtime/feedbackInput.ts
-function hd(e) {
+function vd(e) {
 	let t = e.binding, n = e.kernel, r = n.createFeedbackDeliveryCursor(), i, a, o, s, c, l = !1, u, d, f = (e) => {
 		l && (u ??= e.error ?? Error(e.message));
 	};
@@ -12566,7 +12787,7 @@ function hd(e) {
 }
 //#endregion
 //#region src/runtime/feedbackP5Input.ts
-function gd(e) {
+function yd(e) {
 	let t = window, n = [
 		"mousedown",
 		"mouseup",
@@ -12671,7 +12892,7 @@ function gd(e) {
 }
 //#endregion
 //#region src/runtime/feedbackP5TouchInput.ts
-function _d() {
+function bd() {
 	let e = window, t = [
 		"touchStarted",
 		"touchMoved",
@@ -12758,7 +12979,7 @@ function _d() {
 }
 //#endregion
 //#region src/runtime/feedbackTouchInput.ts
-function vd(e) {
+function xd(e) {
 	let { kernel: t, binding: n, p5: r } = e, i, a, o, s, c = t.createFeedbackDeliveryCursor(), l, u = () => {
 		let r = e.snapshot(n.assetId);
 		return i !== r.sampler && (a = t.createFeedbackTouchIndex(r.sampler, n.pointerChannelIds), i = r.sampler), r.sampler.validateMapping({
@@ -12864,7 +13085,7 @@ function vd(e) {
 }
 //#endregion
 //#region src/runtime/feedbackHtml.ts
-function yd(e, t = "") {
+function Sd(e, t = "") {
 	let n = [], r = [], i = /* @__PURE__ */ new Set([
 		"text/javascript",
 		"application/javascript",
@@ -12922,22 +13143,22 @@ function yd(e, t = "") {
 }
 //#endregion
 //#region src/runtime/createClipDocument.ts
-var bd = /\.use\(\s*["']centi3d["']/;
-function xd(e) {
-	return bd.test(e.js);
+var Cd = /\.use\(\s*["']centi3d["']/;
+function wd(e) {
+	return Cd.test(e.js);
 }
-async function Sd() {
+async function Td() {
 	return (await import("./three.global-lsYzNWMC.js")).default;
 }
-function Cd(e, t, n, r, i = [], a = !1, o = {}) {
-	return Td(e, t, n, r, i, "", !1, a, o);
+function Ed(e, t, n, r, i = [], a = !1, o = {}) {
+	return Od(e, t, n, r, i, "", !1, a, o);
 }
-async function wd(e, t, n, r, i = [], a = !1, o = !1, s = {}) {
-	return Td(e, t, n, r, i, xd(t) ? await Sd() : "", a, o, s);
+async function Dd(e, t, n, r, i = [], a = !1, o = !1, s = {}) {
+	return Od(e, t, n, r, i, wd(t) ? await Td() : "", a, o, s);
 }
-function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
+function Od(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
 	i = di(i, c.libraries);
-	let l = c.capabilities?.includes("p5") === !0, u = l && c.p5Playback === "isolated-replay", d = !u && (c.hasFeedback === !0 || i.some((e) => e.kind === "feedback")), f = d && c.feedbackInputEnabled === !0 && c.feedback?.inputMode === "touch" && l && !u, p = f || d && c.feedbackInputEnabled === !0 && c.feedback?.pointerChannelId !== void 0 && c.feedback.inputMode === void 0, m = ld(t.html, r, i.filter((e) => e.scriptMode === "global" && e.scriptOrigin).map((e) => e.scriptOrigin)), h = m.resources.length > 0 || m.errors.length > 0, g = d ? yd(m.html, c.documentToken ?? "") : {
+	let l = c.capabilities?.includes("p5") === !0, u = l && c.p5Playback === "isolated-replay", d = !u && (c.hasFeedback === !0 || i.some((e) => e.kind === "feedback")), f = d && c.feedbackInputEnabled === !0 && c.feedback?.inputMode === "touch" && l && !u, p = f || d && c.feedbackInputEnabled === !0 && c.feedback?.pointerChannelId !== void 0 && c.feedback.inputMode === void 0, m = dd(t.html, r, i.filter((e) => e.scriptMode === "global" && e.scriptOrigin).map((e) => e.scriptOrigin)), h = m.resources.length > 0 || m.errors.length > 0, g = d ? Sd(m.html, c.documentToken ?? "") : {
 		html: m.html,
 		scripts: []
 	};
@@ -12952,7 +13173,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
 		};
 		t(Nu(m.html));
 	}
-	let _ = nd([
+	let _ = id([
 		t.js,
 		...g.scripts.map((e) => e.source),
 		...i.filter((e) => e.kind === "script").map((e) => e.scriptSource ?? "")
@@ -12978,7 +13199,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   const THREE = ${a ? `(() => { ${a}; return THREE; })()` : "undefined"};
   const bitmapFontPrototype = (() => {
     const Centi = function() {};
-    ${Gu}
+    ${qu}
     return Centi.prototype;
   })();
   const clipId = ${JSON.stringify(e)};
@@ -12999,8 +13220,8 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   window.__macroflushAssetsReady = liveAssetUpdates ? new Promise(resolve => { initialAssetsResolve = resolve; }) : Promise.resolve();
   const editorThreeDHelpers = ${o && a ? `(${Iu.toString()})(THREE)` : "null"};
   window.addEventListener("pagehide", () => editorThreeDHelpers?.dispose());
-  const hashExportRandomSeed = ${Yu.toString()};
-  const createSeededRandom = ${Xu.toString()};
+  const hashExportRandomSeed = ${Zu.toString()};
+  const createSeededRandom = ${Qu.toString()};
   const nativeMathRandom = Math.random;
   const reconcileManagedThreeDObjects = (${Pu.toString()});
   const readThreeDFrameInput = (${Fu.toString()});
@@ -13012,17 +13233,23 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   const scriptRegistry = (${zu.toString()})(assetDescriptors);
   window.__macroflushRegisterScript = scriptRegistry.register;
   let genericScriptUseReported = false;
+  let mouseScriptDepth = 0;
   window.useScript = (name) => {
     if (liveAssetUpdates && !genericScriptUseReported) {
       genericScriptUseReported = true;
       parent.postMessage({ type: "macroflush:generic-script-use", clipId, documentToken }, "*");
     }
-    return scriptRegistry.use(name);
+    mouseScriptDepth++;
+    try { return scriptRegistry.use(name); } finally { mouseScriptDepth--; }
   };
   const scriptVersions = new Map();
   let stagingScript = false;
   const builtinParamKeys = new Set(Object.keys(builtinDefinitions));
   const paramSchemas = new Map();
+  const readonlyClipApiKeys = new Set(["isNew", "paramNames", "listParams"]);
+  const paramEnumeration = (${Hu.toString()})(paramSchemas, builtinParamKeys);
+  const paramIsNew = (${Vu.toString()})(Array.from(builtinParamKeys));
+  const updateParamIsNew = message => paramIsNew.begin(paramSchemas.values(), message.frame);
   const pendingParams = new Map();
   const pendingMetadata = new Map();
   const pendingParamChanges = new Map();
@@ -13265,7 +13492,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       stack: error instanceof Error ? error.stack : undefined
     }, "*");
   };
-  ${h ? `const remotePreparation = (${ud.toString()})(${Dd(m.resources)}, ${Dd(m.errors)}, imageWorkTimers, message => {
+  ${h ? `const remotePreparation = (${fd.toString()})(${Ad(m.resources)}, ${Ad(m.errors)}, imageWorkTimers, message => {
     setupFailure = message;
     reportRuntimeError(message, hasFeedback ? "feedback external resource" : "external resource");
     notifyDocumentReady();
@@ -13395,7 +13622,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
 
   window.addEventListener("error", (event) => {
     if (stagingScript) return;
-    ${h ? `if (!activeGlobalLibrary && ${Dd(m.resources.filter((e) => e.kind === "script").map((e) => e.url))}.includes(event.filename || document.currentScript?.src)) {
+    ${h ? `if (!activeGlobalLibrary && ${Ad(m.resources.filter((e) => e.kind === "script").map((e) => e.url))}.includes(event.filename || document.currentScript?.src)) {
       remotePreparation.fail("External script " + (event.filename || document.currentScript?.src) + ": " + (event.message || "initializer failed"));
       return;
     }` : ""}
@@ -13457,6 +13684,9 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   };
 
   const registerParams = (definitions, origin = "host", notify = true) => {
+    for (const key of readonlyClipApiKeys) {
+      if (Object.prototype.hasOwnProperty.call(definitions, key)) throw new Error('MacroFlush: "' + key + '" is reserved for clip.' + key + ' and cannot be a parameter.');
+    }
     for (const [key, rawSchema] of Object.entries(definitions)) {
       const previous = paramSchemas.get(key);
       const writable = resolveWritable(key, rawSchema, previous, origin);
@@ -13467,7 +13697,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
         value: rawSchema.value ?? previous?.value ?? rawSchema.default ?? previous?.default
       });
       if (key === "size" && (origin === "script" || origin === "metadata")) {
-        schema = (${Vu.toString()})(previous, schema);
+        schema = (${Uu.toString()})(previous, schema);
       }
       paramSchemas.set(key, schema);
     }
@@ -13475,6 +13705,9 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   };
 
   const clipTarget = {
+    get isNew() { return paramIsNew.read(); },
+    get paramNames() { return paramEnumeration.names(); },
+    listParams() { return paramEnumeration.list(); },
     setParam(targetClipId, key, value) {
       if (!crossClipFrameToken) throw new Error("clip.setParam is available only during a hosted frame transaction.");
       if (typeof targetClipId !== "string" || typeof key !== "string") {
@@ -13512,9 +13745,11 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     },
     defineParams(definitions) {
       registerParams(definitions, "script");
+      return Object.freeze(Object.keys(definitions));
     },
     meta: new Proxy({}, {
       set(_target, key, metadata) {
+        if (readonlyClipApiKeys.has(key)) throw new Error('MacroFlush: "' + key + '" is reserved for clip.' + key + '.');
         if (typeof key !== "string" || !metadata || typeof metadata !== "object") return false;
         const current = paramSchemas.get(key);
         if (!current) {
@@ -13570,6 +13805,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       return paramSchemas.get(key)?.value ?? pendingParams.get(key);
     },
     set(target, key, value) {
+      if (readonlyClipApiKeys.has(key)) throw new Error("MacroFlush: clip." + key + " is read-only.");
       if (typeof key !== "string") return false;
       if (!paramSchemas.has(key)) {
         pendingParams.set(key, value);
@@ -13577,18 +13813,27 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       }
       setParam(key, value, true);
       return true;
+    },
+    defineProperty(target, key, descriptor) {
+      if (readonlyClipApiKeys.has(key)) throw new Error("MacroFlush: clip." + key + " is read-only.");
+      return Reflect.defineProperty(target, key, descriptor);
+    },
+    deleteProperty(target, key) {
+      if (readonlyClipApiKeys.has(key)) throw new Error("MacroFlush: clip." + key + " is read-only.");
+      return Reflect.deleteProperty(target, key);
     }
   });
 
   let p5IsolatedGuards;
   const feedbackOwnedEvents = new WeakSet();
-  const feedbackP5Input = ${f ? `(${_d.toString()})()` : p && l ? `(${gd.toString()})(event => feedbackOwnedEvents.has(event))` : "null"};
-  const p5Adapter = p5Enabled ? (${dd.toString()})({ clip: window.clip,
+  const feedbackP5Input = ${f ? `(${bd.toString()})()` : p && l ? `(${yd.toString()})(event => feedbackOwnedEvents.has(event))` : "null"};
+  const p5Adapter = p5Enabled ? (${pd.toString()})({ clip: window.clip,
     input: feedbackP5Input ? { ${f ? "kind: \"touch\"," : ""} owns: event => feedbackOwnedEvents.has(event), attach: sketch => feedbackP5Input.attach(sketch), dispose: () => feedbackP5Input.dispose() } : undefined,
     beforeSetup: message => { feedbackTime = 0; feedbackInput?.prime(message.fps); },
-    context: ${Dd(c.runtimeContext ?? null)}, seed: hashExportRandomSeed(${Dd(c.p5SeedIdentity ?? e)}, 0), markDirty: markFrameDirty,
+    context: ${Ad(c.runtimeContext ?? null)}, seed: hashExportRandomSeed(${Ad(c.p5SeedIdentity ?? e)}, 0), markDirty: markFrameDirty,
     afterSetup: message => {
       feedbackTime = message.time;
+      updateParamIsNew(message);
       if (!p5Isolated) return;
       p5IsolatedGuards.seal();
       for (const [key, value] of Object.entries(message.params || {})) setParam(key, value, false);
@@ -13605,7 +13850,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       if (setupFailure) throw new Error(setupFailure);
       if (${!!c.capabilities?.includes("centi3d")}) throw new Error("MacroFlush: p5 and centi3d capabilities cannot both be active on the same Clip.");
       p5Adapter.prepare();
-      if (p5Isolated) p5IsolatedGuards = (${fd.toString()})(clipId, ${Dd(c.p5ReplayBudget ?? null)});
+      if (p5Isolated) p5IsolatedGuards = (${md.toString()})(clipId, ${Ad(c.p5ReplayBudget ?? null)});
     };
     window.__macroflushValidateP5 = () => {
       if (setupFailure) throw new Error(setupFailure);
@@ -13651,15 +13896,15 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     return asset;
   };
 
-  const feedbackKernel = ${d ? `(() => { ${pd}; return MacroFlushFeedbackKernel; })()` : "null"};
-  const feedbackBinding = ${Dd(c.feedback ?? null)};
+  const feedbackKernel = ${d ? `(() => { ${hd}; return MacroFlushFeedbackKernel; })()` : "null"};
+  const feedbackBinding = ${Ad(c.feedback ?? null)};
   const feedbackDimensions = () => {
     const p5Size = p5Adapter?.logicalSize;
     const canvas = p5Adapter?.canvas || document.querySelector("#canvas") || document.querySelector("canvas");
     const size = paramSchemas.get("size")?.value || [640, 360];
     return { clipWidth: p5Size?.[0] || canvas?.width || size[0], clipHeight: p5Size?.[1] || canvas?.height || size[1] };
   };
-  const feedbackState = (${md.toString()})({ sampler: feedbackKernel?.createFeedbackSampler,
+  const feedbackState = (${gd.toString()})({ sampler: feedbackKernel?.createFeedbackSampler,
     lookup: id => assetDescriptors.find(asset => asset.id === id && asset.kind === "feedback"),
     unavailable: (id, error) => {
       const asset = assetDescriptors.find(asset => asset.id === id) || { id, name: id };
@@ -13669,9 +13914,9 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     time: () => feedbackTime,
     dimensions: feedbackDimensions
   });
-  const feedbackInput = ${f ? `(${vd.toString()})({ kernel: feedbackKernel, binding: feedbackBinding,
+  const feedbackInput = ${f ? `(${xd.toString()})({ kernel: feedbackKernel, binding: feedbackBinding,
     snapshot: id => feedbackState.snapshot(id), owned: feedbackOwnedEvents, p5: feedbackP5Input,
-    canvas: () => p5Adapter?.canvas, dimensions: feedbackDimensions })` : p ? `(${hd.toString()})({ kernel: feedbackKernel, binding: feedbackBinding,
+    canvas: () => p5Adapter?.canvas, dimensions: feedbackDimensions })` : p ? `(${vd.toString()})({ kernel: feedbackKernel, binding: feedbackBinding,
     snapshot: id => feedbackState.snapshot(id), owned: feedbackOwnedEvents, p5: feedbackP5Input,
     canvas: () => p5Adapter?.canvas,
     dimensions: feedbackDimensions })` : "null"};
@@ -13703,8 +13948,20 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   });
   window.addEventListener("pagehide", () => { if (feedbackTimer !== null) imageWorkTimers.cancel(feedbackTimer); feedbackState.dispose(); feedbackReject?.(new Error("Feedback realm disposed.")); });
 
-  const assetImages = (${id.toString()})(() => assetDescriptors, typeof THREE === "undefined" ? null : THREE, () => new Image(), imageWorkTimers);
-  const assetImageWork = (${ad.toString()})({ report: reportRuntimeError, ...imageWorkTimers });
+  const feedbackMouseHandlers = (${_d.toString()})({
+    kernel: feedbackKernel, binding: feedbackBinding, resolve: name => resolveAssetName(name, false),
+    snapshot: id => feedbackState.snapshot(id), dimensions: feedbackDimensions,
+    canRegister: () => !setupComplete && mouseScriptDepth === 0 && !stagingScript,
+    isolated: p5Isolated, report: error => reportRuntimeError(error, "feedback mouse handler"),
+    warn: message => console.warn(message)
+  });
+  window.onMouseDown = (...args) => feedbackMouseHandlers.register("down", args);
+  window.onMouseMove = (...args) => feedbackMouseHandlers.register("move", args);
+  window.onMouseUp = (...args) => feedbackMouseHandlers.register("up", args);
+  window.addEventListener("pagehide", () => feedbackMouseHandlers.dispose());
+
+  const assetImages = (${od.toString()})(() => assetDescriptors, typeof THREE === "undefined" ? null : THREE, () => new Image(), imageWorkTimers);
+  const assetImageWork = (${sd.toString()})({ report: reportRuntimeError, ...imageWorkTimers });
   window.addEventListener("pagehide", () => { assetImageWork.dispose(); assetImages.dispose(); });
   const imageApi = (method, name, options) => {
     try {
@@ -14160,7 +14417,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     const asset = resolveAssetName(name, false);
     if (asset.kind === "feedback") throw new Error("Feedback assets are read with feedback(name), not placed with add().");
     const state = {
-      id: ${Dd(c.displayObjectIdentity ?? e)} + ":display:" + nextDisplayObjectId++,
+      id: ${Ad(c.displayObjectIdentity ?? e)} + ":display:" + nextDisplayObjectId++,
       assetId: asset.id,
       x: Number(options.x) || 0,
       y: Number(options.y) || 0,
@@ -14373,7 +14630,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     context.fillStyle = centiFillStyle;
     context.strokeStyle = centiStrokeStyle;
   };
-  const macroFlushReservedGlobals = new Set(["clip", "onFrame", "add"]);
+  const macroFlushReservedGlobals = new Set(["clip", "onFrame", "add", "onMouseDown", "onMouseMove", "onMouseUp"]);
   const centiMathFunctions = ["abs", "acos", "asin", "atan", "atan2", "ceil", "cos", "exp", "floor", "imul", "log", "max", "min", "pow", "random", "round", "sin", "sqrt", "tan"];
   const centiMathConstants = {
     E: Math.E,
@@ -14486,14 +14743,14 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   const matrixPrototype = (() => {
     const Centi = function() {};
     Object.assign(Centi, CentiNamespace);
-    ${Ku}
+    ${Ju}
     CentiNamespace.Matrix = Centi.Matrix;
     return Centi.prototype;
   })();
 
   const KdTree = (() => {
     const exports = {};
-    ${qu}
+    ${Yu}
     return exports.kdTree;
   })();
 
@@ -14505,7 +14762,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   let timelineTimeMs = 0;
   const timelineTweens = new Set();
   const easingModule = (() => {
-    ${Ju.replace(/\r\n/g, "\n").replace(/export type KeyframeEasing =[\s\S]*?;\n/, "").replace(/: string \| undefined(?=[,)\s])/g, "").replace(/\?: number\[\]/g, "").replace(/: number\[\](?=[,)\s])/g, "").replace(/: number(?=[,)\s])/g, "").replace(/ as keyof typeof namedEasingFunctions/g, "").replace(/^export /gm, "")}
+    ${Xu.replace(/\r\n/g, "\n").replace(/export type KeyframeEasing =[\s\S]*?;\n/, "").replace(/: string \| undefined(?=[,)\s])/g, "").replace(/\?: number\[\]/g, "").replace(/: number\[\](?=[,)\s])/g, "").replace(/: number(?=[,)\s])/g, "").replace(/ as keyof typeof namedEasingFunctions/g, "").replace(/^export /gm, "")}
     return { centiEase, namedEasingFunctions };
   })();
   const ease = easingModule.centiEase;
@@ -14794,8 +15051,14 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       pixel(x, y, snap = true) {
         api.rect(snap ? Math.floor(x) : x, snap ? Math.floor(y) : y, 1, 1);
       },
-      rect(x, y, width, height) {
+      rect(x, y, width, height, radii) {
         const ctx = getContext();
+        if (arguments.length === 5) {
+          ctx.beginPath();
+          ctx.roundRect(x, y, width, height, radii);
+          drawPath();
+          return;
+        }
         if (fillMode) ctx.fillRect(x, y, width, height);
         else ctx.strokeRect(x, y, width, height);
         markFrameDirty();
@@ -15273,7 +15536,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   };
 
   const fontUsage = assetDescriptors.some(asset => asset.kind === "font" && asset.fontFamily)
-    ? (${$u.toString()})(document, error => {
+    ? (${td.toString()})(document, error => {
       if (recordingSetupSources) setupSourceUses.set("font", error);
       if (activeExportFrameId) exportFrameFailure = error;
     }) : null;
@@ -15298,7 +15561,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       try {
         fontUsage?.validateDom();
         exportSceneObjects = structuredClone([...displayObjects.values()]);
-        (${Zu.toString()})(exportSceneObjects, assetDescriptors);
+        (${$u.toString()})(exportSceneObjects, assetDescriptors);
       } catch (error) { sceneFailure = error instanceof Error ? error.message : String(error); }
     }
     const failure = canvasSizeFailure || feedbackPreparationFailure || exportFrameFailure || setupFailure || setupSourceUses.values().next().value || unresolvedSourceUses.values().next().value || sceneFailure;
@@ -15606,6 +15869,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     if (!applyHostParams()) return;
 
     if (!setupComplete) {
+      updateParamIsNew(message);
       setupComplete = true;
       for (const callback of setupCallbacks) {
         try {
@@ -15620,6 +15884,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     }
     recordingSetupSources = false;
     feedbackTime = message.time;
+    updateParamIsNew(message);
 
     if (centi3dEnabled) {
       createCenti3dApi();
@@ -15675,6 +15940,8 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
     context?.save();
     context?.setTransform(1, 0, 0, 1, 0, 0);
     try {
+      try { feedbackMouseHandlers.prepare(message); }
+      catch (error) { reportRuntimeError(error, "feedback mouse handlers", message.compFrame); }
       if (message.entering) {
         runCallbacks(enterCallbacks);
       }
@@ -15749,6 +16016,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       }
     } finally {
       context?.restore();
+      paramIsNew.commit(paramSchemas.values());
     }
 
     if (p5Isolated) {
@@ -15777,7 +16045,7 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   if (liveAssetUpdates) parent.postMessage({ type: "macroflush:assets-request", clipId, documentToken }, "*");
   if (hasFeedback) parent.postMessage({ type: "macroflush:feedback-request", clipId, documentToken }, "*");
 })();
-`, b = Uu(r.filter((e) => e.kind !== "script" && e.kind !== "style" || m.resources.includes(e)), typeof window > "u" ? void 0 : window.location.origin, i.some((e) => e.kind === "font" && e.sourceUrl?.startsWith("data:")), i.some((e) => e.kind === "model-3d"), s, c.hasDataUriImages === !0 || i.some((e) => e.kind === "image" && e.sourceUrl?.startsWith("data:"))), x = i.filter((e) => e.kind === "font" && e.fontFamily), S = "window.__macroflushNotifyReady();", C = l || x.length || c.liveAssets || _.length || h || d ? `<script>${Ed(`(() => {
+`, b = Gu(r.filter((e) => e.kind !== "script" && e.kind !== "style" || m.resources.includes(e)), typeof window > "u" ? void 0 : window.location.origin, i.some((e) => e.kind === "font" && e.sourceUrl?.startsWith("data:")), i.some((e) => e.kind === "model-3d"), s, c.hasDataUriImages === !0 || i.some((e) => e.kind === "image" && e.sourceUrl?.startsWith("data:"))), x = i.filter((e) => e.kind === "font" && e.fontFamily), S = "window.__macroflushNotifyReady();", C = l || x.length || c.liveAssets || _.length || h || d ? `<script>${kd(`(() => {
     const preparation = window.__macroflushFontPreparation;
     const remotePreparation = window.__macroflushRemotePreparation;
     const assetsReady = window.__macroflushAssetsReady;
@@ -15793,10 +16061,10 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       if (closed) return;
       ${l ? "window.__macroflushPrepareP5();" : ""}
       ${d ? `window.__macroflushFeedbackAuthored(true);
-      const authoredScripts = ${Dd(g.scripts)};
+      const authoredScripts = ${Ad(g.scripts)};
       for (let index = 0; index < authoredScripts.length; index++) {
         const item = authoredScripts[index];
-        const marker = [...document.querySelectorAll("script[data-macroflush-feedback-script]")].find(tag => tag.getAttribute("data-macroflush-feedback-script") === ${Dd(c.documentToken ?? "")} + ":" + index);
+        const marker = [...document.querySelectorAll("script[data-macroflush-feedback-script]")].find(tag => tag.getAttribute("data-macroflush-feedback-script") === ${Ad(c.documentToken ?? "")} + ":" + index);
         if (!marker) throw new Error("Feedback authored Script placeholder is missing.");
         const tag = document.createElement("script");
         for (const attr of item.attrs) tag.setAttribute(attr.name, attr.value);
@@ -15828,17 +16096,17 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
       ${l ? "" : `else parent.postMessage({ type: "macroflush:runtime-error", clipId: ${JSON.stringify(e)}, documentToken: ${JSON.stringify(c.documentToken ?? "")}, feedbackError: ${d}, error: String(error) }, "*");`}
       ${l && !d ? S : ""}
     });
-  })();`)}<\/script>` : `<script>${Ed(t.js)}<\/script><script>${S}<\/script>`, w = i.filter((e) => e.kind === "script" && e.scriptMode !== "global").map((e) => `<script>${Ed(`window.__macroflushRegisterScript(${JSON.stringify(e.id)}, function() {\n${e.scriptSource ?? ""}\n});`)}<\/script>`).join("\n"), T = (c.libraries ?? []).map((e) => i.find((t) => t.id === e)).map((e) => `<script>window.__macroflushLoadGlobalLibrary(${Dd(e.name)}, ${Dd(e.scriptSource ?? "")});<\/script>`).join("\n"), E = m.errors.length ? "" : m.resources.map((e, t) => {
-		let n = `onload="${l && e.kind === "script" ? `window.__macroflushObserveP5(${Od(JSON.stringify(e.url))});` : ""}window.__macroflushRemotePreparation.complete(${t}, true)" onerror="window.__macroflushRemotePreparation.complete(${t}, false)"`, r = `integrity="${e.hash}" crossorigin="anonymous" ${n}`;
-		return e.kind === "script" ? `<script src="${Od(e.url)}" ${r}><\/script>` : `<link rel="stylesheet" href="${Od(e.url)}" ${r} />`;
+  })();`)}<\/script>` : `<script>${kd(t.js)}<\/script><script>${S}<\/script>`, w = i.filter((e) => e.kind === "script" && e.scriptMode !== "global").map((e) => `<script>${kd(`window.__macroflushRegisterScript(${JSON.stringify(e.id)}, function() {\n${e.scriptSource ?? ""}\n});`)}<\/script>`).join("\n"), T = (c.libraries ?? []).map((e) => i.find((t) => t.id === e)).map((e) => `<script>window.__macroflushLoadGlobalLibrary(${Ad(e.name)}, ${Ad(e.scriptSource ?? "")});<\/script>`).join("\n"), E = m.errors.length ? "" : m.resources.map((e, t) => {
+		let n = `onload="${l && e.kind === "script" ? `window.__macroflushObserveP5(${jd(JSON.stringify(e.url))});` : ""}window.__macroflushRemotePreparation.complete(${t}, true)" onerror="window.__macroflushRemotePreparation.complete(${t}, false)"`, r = `integrity="${e.hash}" crossorigin="anonymous" ${n}`;
+		return e.kind === "script" ? `<script src="${jd(e.url)}" ${r}><\/script>` : `<link rel="stylesheet" href="${jd(e.url)}" ${r} />`;
 	}).join("\n");
 	return `<!doctype html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Security-Policy" content="${b}" />
-    ${x.length ? `<script>${Ed(`window.__macroflushFontPreparation = (${Qu.toString()})(${JSON.stringify(x)});`)}<\/script>` : ""}
-    <script>${Ed(y)}<\/script>
+    ${x.length ? `<script>${kd(`window.__macroflushFontPreparation = (${ed.toString()})(${JSON.stringify(x)});`)}<\/script>` : ""}
+    <script>${kd(y)}<\/script>
     ${w}
     ${T}
     ${E}
@@ -15861,13 +16129,13 @@ function Td(e, t, n, r, i, a, o = !1, s = !1, c = {}) {
   </body>
 </html>`;
 }
-function Ed(e) {
+function kd(e) {
 	return e.replace(/<\/script/gi, "<\\/script");
 }
-function Dd(e) {
+function Ad(e) {
 	return JSON.stringify(e).replace(/[<\u2028\u2029]/g, (e) => e === "<" ? "\\u003c" : e === "\u2028" ? "\\u2028" : "\\u2029");
 }
-function Od(e) {
+function jd(e) {
 	return e.replace(/[&"<>]/g, (e) => ({
 		"&": "&amp;",
 		"\"": "&quot;",
@@ -15877,7 +16145,7 @@ function Od(e) {
 }
 //#endregion
 //#region src/core/feedbackProducers.ts
-function kd(e) {
+function Md(e) {
 	if (![
 		"editor",
 		"player",
@@ -15903,7 +16171,7 @@ function kd(e) {
 		}
 	};
 }
-function Ad() {
+function Nd() {
 	let e = /* @__PURE__ */ new Map(), t = !1, n = (e, t) => {
 		if (typeof e != "string" || !e || e.length > 16384) throw new j("invalid-value", `Invalid ${t}.`);
 	}, r = (e) => {
@@ -15957,7 +16225,7 @@ function Ad() {
 }
 //#endregion
 //#region src/core/feedbackTouchIndex.ts
-function jd(e, t, n = Infinity) {
+function Pd(e, t, n = Infinity) {
 	let r = 0, i = e.length;
 	for (; r < i;) {
 		let a = Math.floor((r + i) / 2), o = e[a];
@@ -15965,19 +16233,19 @@ function jd(e, t, n = Infinity) {
 	}
 	return r;
 }
-var Md = (e, t) => e.t > t.t || e.t === t.t && e.seq > t.seq;
-function Nd(e, t) {
+var Fd = (e, t) => e.t > t.t || e.t === t.t && e.seq > t.seq;
+function Id(e, t) {
 	throw new j("unsupported-playback", `Touch channel ${e}: ${t}`, { channelId: e });
 }
-function Pd(e, t) {
+function Ld(e, t) {
 	if (Me(t, A.maxRecordBytes), !Array.isArray(t) || !t.length || t.length > A.maxChannels) throw new j("size-limit", "Touch input requires 1..32 channels.");
 	if (t.some((e) => typeof e != "string" || !e.trim() || e.includes("\0") || new TextEncoder().encode(e).length > A.maxStringBytes) || new Set(t).size !== t.length) throw new j("invalid-format", "Touch channel IDs must be nonempty, unique strings.");
 	let n = Object.freeze([...t]), r = Object.freeze(n.map((t, n) => {
 		let r = e.document.channels.find((e) => e.id === t);
 		if (!r) throw new j("missing-channel", `Touch channel ${t} is missing.`, { channelId: t });
-		r.kind !== "pointer" && Nd(t, "not a pointer channel.");
+		r.kind !== "pointer" && Id(t, "not a pointer channel.");
 		let i = r;
-		i.initial.buttons !== 0 && Nd(t, "the recording starts pressed.");
+		i.initial.buttons !== 0 && Id(t, "the recording starts pressed.");
 		let a = !1, o = [];
 		for (let e of i.records) [
 			null,
@@ -15985,8 +16253,8 @@ function Pd(e, t) {
 			"move",
 			"up",
 			"cancel"
-		].includes(e.event) || Nd(t, `event ${e.event} is not supported touch input.`), (e.buttons !== 0 && e.buttons !== 1 || e.button !== void 0 && e.button !== 0) && Nd(t, "only button 0 with state 0/1 is supported."), e.event === "down" ? (a && Nd(t, "a down occurs before the previous contact ends."), a = !0) : (e.event === "up" || e.event === "cancel") && (a || Nd(t, "an ending event has no matching down."), a = !1), e.buttons !== +!!a && Nd(t, "button state changes without a contact boundary."), (e.event === "down" || e.event === "up" || e.event === "cancel" || e.event === "move" && a) && o.push(e);
-		return a && Nd(t, "a contact has no up or cancel event."), Object.freeze({
+		].includes(e.event) || Id(t, `event ${e.event} is not supported touch input.`), (e.buttons !== 0 && e.buttons !== 1 || e.button !== void 0 && e.button !== 0) && Id(t, "only button 0 with state 0/1 is supported."), e.event === "down" ? (a && Id(t, "a down occurs before the previous contact ends."), a = !0) : (e.event === "up" || e.event === "cancel") && (a || Id(t, "an ending event has no matching down."), a = !1), e.buttons !== +!!a && Id(t, "button state changes without a contact boundary."), (e.event === "down" || e.event === "up" || e.event === "cancel" || e.event === "move" && a) && o.push(e);
+		return a && Id(t, "a contact has no up or cancel event."), Object.freeze({
 			id: n + 1,
 			channel: i,
 			events: Object.freeze(o),
@@ -16010,11 +16278,11 @@ function Pd(e, t) {
 		a(o, s);
 		let l = [], u;
 		for (let a of r) {
-			let r = a.channel.records[jd(a.channel.records, t, n) - 1] ?? a.channel.initial;
+			let r = a.channel.records[Pd(a.channel.records, t, n) - 1] ?? a.channel.initial;
 			if (r.buttons !== 0) {
 				if (c) {
 					let t = e.sample(a.channel.id, c.time, c.mapping, { space: o }, s);
-					t?.kind !== "pointer" && Nd(a.channel.id, "the current sample is not pointer input."), l.push(Object.freeze({
+					t?.kind !== "pointer" && Id(a.channel.id, "the current sample is not pointer input."), l.push(Object.freeze({
 						id: a.id,
 						channelId: a.channel.id,
 						x: t.x,
@@ -16022,8 +16290,8 @@ function Pd(e, t) {
 					}));
 				} else l.push(i(a, r, o, s));
 			}
-			let d = a.events[jd(a.events, t, n) - 1];
-			d && (!u || Md(d, u.record)) && (u = {
+			let d = a.events[Pd(a.events, t, n) - 1];
+			d && (!u || Fd(d, u.record)) && (u = {
 				entry: a,
 				record: d
 			});
@@ -16053,7 +16321,7 @@ function Pd(e, t) {
 		},
 		*events(e, t) {
 			if (![e, t].every(Number.isSafeInteger) || e > t) throw new j("invalid-time", "Touch event range must be ascending integer microseconds.");
-			let n = [], i = (e, t) => Md(t.record, e.record), a = (e) => {
+			let n = [], i = (e, t) => Fd(t.record, e.record), a = (e) => {
 				let t = n.length;
 				for (n.push(e); t > 0;) {
 					let e = Math.floor((t - 1) / 2);
@@ -16062,7 +16330,7 @@ function Pd(e, t) {
 				}
 			};
 			for (let n of r) {
-				let r = jd(n.events, e), i = n.events[r];
+				let r = Pd(n.events, e), i = n.events[r];
 				i && i.t <= t && a({
 					entry: n,
 					offset: r,
@@ -16103,11 +16371,11 @@ function Pd(e, t) {
 }
 //#endregion
 //#region src/core/feedbackStatus.ts
-var Fd = /* @__PURE__ */ new WeakMap();
-function Id(e) {
-	return Ld(e, !0);
+var Rd = /* @__PURE__ */ new WeakMap();
+function zd(e) {
+	return Bd(e, !0);
 }
-function Ld(e, t) {
+function Bd(e, t) {
 	let { binding: n } = e, r = n && (n.inputMode !== void 0 || n.pointerChannelIds !== void 0), i = n ? {
 		assetId: n.assetId,
 		...n.pointerChannelId === void 0 ? {} : { pointerChannelId: n.pointerChannelId },
@@ -16153,11 +16421,11 @@ function Ld(e, t) {
 		}
 		if (r) {
 			if (!e.p5Global) return a("unsupported", "unsupported-playback", "Standard touch input requires the p5 global capability; DOM touch/pointer dispatch is unsupported.");
-			let t = Fd.get(o.recording);
-			t || (t = /* @__PURE__ */ new Map(), Fd.set(o.recording, t));
+			let t = Rd.get(o.recording);
+			t || (t = /* @__PURE__ */ new Map(), Rd.set(o.recording, t));
 			for (let e of n.pointerChannelIds) {
 				if (!t.has(e)) try {
-					Pd(c, [e]), t.set(e, null);
+					Ld(c, [e]), t.set(e, null);
 				} catch (n) {
 					t.set(e, {
 						code: n instanceof j ? n.code : "unsupported-playback",
@@ -16183,116 +16451,116 @@ function Ld(e, t) {
 	}
 }
 Object.freeze(["radians", "degrees"]);
-var Rd = Object.freeze({
+var Vd = Object.freeze({
 	key: "rotation",
 	shape: "xyz"
-}), zd = Object.freeze({
+}), Hd = Object.freeze({
 	key: "angle",
 	shape: "scalar"
-}), Bd = Object.freeze([Rd]), Vd = Object.freeze([Rd, zd]), Hd = Object.freeze([]), Ud = {
-	"camera-3d": Bd,
-	"light-3d": Vd,
-	"null-3d": Bd,
-	"mesh-3d": Bd,
-	"model-3d": Bd
-}, Wd = /* @__PURE__ */ new WeakMap();
-function Gd(e) {
-	return Object.prototype.hasOwnProperty.call(Ud, e);
+}), Ud = Object.freeze([Vd]), Wd = Object.freeze([Vd, Hd]), Gd = Object.freeze([]), Kd = {
+	"camera-3d": Ud,
+	"light-3d": Wd,
+	"null-3d": Ud,
+	"mesh-3d": Ud,
+	"model-3d": Ud
+}, qd = /* @__PURE__ */ new WeakMap();
+function Jd(e) {
+	return Object.prototype.hasOwnProperty.call(Kd, e);
 }
-function Kd(e) {
-	return Gd(e) ? Ud[e] : Hd;
+function Yd(e) {
+	return Jd(e) ? Kd[e] : Gd;
 }
-function qd(e) {
-	let t = Wd.get(e);
+function Xd(e) {
+	let t = qd.get(e);
 	if (!t) {
 		let n = /* @__PURE__ */ new Map();
 		for (let t of e) n.has(t.id) || n.set(t.id, Object.freeze({
 			id: t.id,
 			kind: t.kind
 		}));
-		t = n, Wd.set(e, t);
+		t = n, qd.set(e, t);
 	}
 	return t;
 }
-function Jd(e, t, n) {
+function Zd(e, t, n) {
 	if (e.kind !== "object-3d") return null;
 	let r = e.assetId ? n.get(e.assetId) : void 0;
-	if (!r || !Gd(r.kind)) throw Error(`Unknown managed object asset on ${e.id}.`);
-	return Kd(r.kind).find((e) => e.key === t) ?? null;
+	if (!r || !Jd(r.kind)) throw Error(`Unknown managed object asset on ${e.id}.`);
+	return Yd(r.kind).find((e) => e.key === t) ?? null;
 }
-function Yd(e = "radians") {
+function Qd(e = "radians") {
 	if (e !== "radians" && e !== "degrees") throw Error("angleUnit must be radians or degrees.");
 	return e;
 }
-function Xd(e, t, n) {
+function $d(e, t, n) {
 	if (typeof e != "number" || !Number.isFinite(e) || !Number.isFinite(e * t)) throw Error(`Invalid finite managed angle at ${n}.`);
 	return e * t;
 }
-function Zd(e, t) {
+function ef(e, t) {
 	if (e === void 0 || t === void 0) throw Error("Conversion requires an explicit angleUnit at both boundaries.");
-	return Yd(e), Yd(t), e === t ? 1 : e === "radians" ? 180 / Math.PI : Math.PI / 180;
+	return Qd(e), Qd(t), e === t ? 1 : e === "radians" ? 180 / Math.PI : Math.PI / 180;
 }
-function Qd(e, t, n, r = "angle") {
-	return Xd(e, Zd(t, n), r);
+function tf(e, t, n, r = "angle") {
+	return $d(e, ef(t, n), r);
 }
-function $d(e, t, n, r, i = t.key) {
-	let a = Zd(n, r);
-	if (t.shape === "scalar") return Xd(e, a, i);
+function nf(e, t, n, r, i = t.key) {
+	let a = ef(n, r);
+	if (t.shape === "scalar") return $d(e, a, i);
 	if (!Array.isArray(e) || e.length !== 3) throw Error(`Invalid managed XYZ rotation at ${i}.`);
 	return [
 		0,
 		1,
 		2
-	].map((t) => Xd(e[t], a, `${i}[${t}]`));
+	].map((t) => $d(e[t], a, `${i}[${t}]`));
 }
-function ef(e, t, n, r, i = t.key) {
-	let a = Zd(n, r);
+function rf(e, t, n, r, i = t.key) {
+	let a = ef(n, r);
 	if (!e || typeof e != "object" || Array.isArray(e) || e.type !== (t.shape === "xyz" ? "vec3" : "number")) throw Error(`Invalid managed angle schema at ${i}.`);
 	let o = { ...e };
-	for (let a of ["default", "value"]) Object.prototype.hasOwnProperty.call(e, a) && e[a] !== void 0 && (o[a] = $d(e[a], t, n, r, `${i}.${a}`));
+	for (let a of ["default", "value"]) Object.prototype.hasOwnProperty.call(e, a) && e[a] !== void 0 && (o[a] = nf(e[a], t, n, r, `${i}.${a}`));
 	for (let t of [
 		"min",
 		"max",
 		"step"
-	]) Object.prototype.hasOwnProperty.call(e, t) && e[t] !== void 0 && (o[t] = Xd(e[t], a, `${i}.${t}`));
+	]) Object.prototype.hasOwnProperty.call(e, t) && e[t] !== void 0 && (o[t] = $d(e[t], a, `${i}.${t}`));
 	return o;
 }
 //#endregion
 //#region src/core/managedAngleCodec.ts
-var tf = (e, t) => Object.prototype.hasOwnProperty.call(e, t), nf = (e) => !!(e && typeof e == "object" && !Array.isArray(e));
-function rf(e) {
-	if (!nf(e) || ![
+var af = (e, t) => Object.prototype.hasOwnProperty.call(e, t), of = (e) => !!(e && typeof e == "object" && !Array.isArray(e));
+function sf(e) {
+	if (!of(e) || ![
 		1,
 		2,
 		3
 	].includes(Number(e.clipFormatVersion)) || typeof e.clipFormatVersion != "number" || !Array.isArray(e.assets) || e.clipFormatVersion === 1 && !Array.isArray(e.layers)) throw Error("Managed angles require a legacy V1, V2 or V3 project.");
-	if (tf(e, "managedAngleCodecVersion") || tf(e, "angleUnit") || tf(e, "sourceFormatVersion")) throw Error("Managed angle tags must be outside the legacy project body.");
+	if (af(e, "managedAngleCodecVersion") || af(e, "angleUnit") || af(e, "sourceFormatVersion")) throw Error("Managed angle tags must be outside the legacy project body.");
 }
-function af(e) {
-	if (!nf(e) || e.managedAngleCodecVersion !== 1 || e.angleUnit !== "degrees" || ![
+function cf(e) {
+	if (!of(e) || e.managedAngleCodecVersion !== 1 || e.angleUnit !== "degrees" || ![
 		1,
 		2,
 		3
-	].includes(Number(e.sourceFormatVersion)) || typeof e.sourceFormatVersion != "number" || tf(e, "clipFormatVersion") || !nf(e.document) || tf(e.document, "clipFormatVersion")) throw Error("Unsupported managed angle document unit, version or shape.");
-	rf({
+	].includes(Number(e.sourceFormatVersion)) || typeof e.sourceFormatVersion != "number" || af(e, "clipFormatVersion") || !of(e.document) || af(e.document, "clipFormatVersion")) throw Error("Unsupported managed angle document unit, version or shape.");
+	sf({
 		...e.document,
 		clipFormatVersion: e.sourceFormatVersion
 	});
 }
-function of(e, t, n) {
-	let r = structuredClone(e), i = qd(r.assets), a = (e) => e.map((e) => ({
+function lf(e, t, n) {
+	let r = structuredClone(e), i = Xd(r.assets), a = (e) => e.map((e) => ({
 		...e,
 		clips: e.clips.map((e) => {
 			if (e.kind !== "object-3d") return e;
-			Jd(e, "rotation", i);
+			Zd(e, "rotation", i);
 			let r = { ...e.params }, a = e.keyframeTracks;
-			for (let o of Kd(i.get(e.assetId).kind)) {
+			for (let o of Yd(i.get(e.assetId).kind)) {
 				let i = o.key;
-				tf(r, i) && (r[i] = ef(r[i], o, t, n, `${e.id}.params.${i}`)), a && tf(a, i) && (a = {
+				af(r, i) && (r[i] = rf(r[i], o, t, n, `${e.id}.params.${i}`)), a && af(a, i) && (a = {
 					...a,
 					[i]: a[i].map((r) => ({
 						...r,
-						value: $d(r.value, o, t, n, `${e.id}.keyframeTracks.${i}.value`)
+						value: nf(r.value, o, t, n, `${e.id}.keyframeTracks.${i}.value`)
 					}))
 				});
 			}
@@ -16310,12 +16578,12 @@ function of(e, t, n) {
 				layers: a(e.composition.layers)
 			}
 		};
-		if (!Gd(e.kind)) return e;
+		if (!Jd(e.kind)) return e;
 		let r = e, i = { ...r.descriptor }, o = i.transform;
-		for (let r of Kd(e.kind)) r.key === "rotation" && nf(o) && tf(o, "rotation") && o.rotation !== void 0 ? i.transform = {
+		for (let r of Yd(e.kind)) r.key === "rotation" && of(o) && af(o, "rotation") && o.rotation !== void 0 ? i.transform = {
 			...o,
-			rotation: $d(o.rotation, r, t, n, `${e.id}.descriptor.transform.rotation`)
-		} : r.key === "angle" && tf(i, "angle") && i.angle !== void 0 && (i.angle = $d(i.angle, r, t, n, `${e.id}.descriptor.angle`));
+			rotation: nf(o.rotation, r, t, n, `${e.id}.descriptor.transform.rotation`)
+		} : r.key === "angle" && af(i, "angle") && i.angle !== void 0 && (i.angle = nf(i.angle, r, t, n, `${e.id}.descriptor.angle`));
 		return {
 			...r,
 			descriptor: i
@@ -16327,10 +16595,10 @@ function of(e, t, n) {
 		...r.clipFormatVersion === 1 ? { layers: a(r.layers) } : {}
 	};
 }
-function sf(e) {
-	if (nf(e) && (tf(e, "managedAngleCodecVersion") || tf(e, "angleUnit") || tf(e, "sourceFormatVersion"))) return af(e), structuredClone(e);
-	rf(e);
-	let { clipFormatVersion: t, ...n } = of(e, "radians", "degrees");
+function uf(e) {
+	if (of(e) && (af(e, "managedAngleCodecVersion") || af(e, "angleUnit") || af(e, "sourceFormatVersion"))) return cf(e), structuredClone(e);
+	sf(e);
+	let { clipFormatVersion: t, ...n } = lf(e, "radians", "degrees");
 	return {
 		managedAngleCodecVersion: 1,
 		angleUnit: "degrees",
@@ -16346,7 +16614,7 @@ var $ = class extends Error {
 		super(t), this.code = e, this.name = "SourceResolutionError";
 	}
 };
-function cf(e) {
+function df(e) {
 	if (e === void 0 || e.trim() === "") return { status: "missing" };
 	let t = e.trim();
 	if (/^data:/i.test(t)) {
@@ -16391,7 +16659,7 @@ function cf(e) {
 }
 //#endregion
 //#region src/core/projectFormatV3.ts
-function lf(e) {
+function ff(e) {
 	if (!e || typeof e != "object" || Array.isArray(e)) throw Error("Invalid SourceRef.");
 	let t = e, n = t.kind === "embedded" ? ["kind", "dataUrl"] : t.kind === "linked" ? [
 		"kind",
@@ -16407,11 +16675,11 @@ function lf(e) {
 		if (t.base !== "project" || typeof t.path != "string" || !t.path.trim() || /^(?:\/|\\|[a-zA-Z][a-zA-Z\d+.-]*:)/.test(t.path)) throw Error("Linked SourceRef must use a project-relative path.");
 		return;
 	}
-	let r = cf(t.kind === "embedded" ? t.dataUrl : t.kind === "url" ? t.url : void 0);
+	let r = df(t.kind === "embedded" ? t.dataUrl : t.kind === "url" ? t.url : void 0);
 	if (r.status !== "ready" || r.source.kind !== t.kind) throw Error("Invalid persistent SourceRef.");
 	if (t.kind === "url" && r.source.kind === "url" && t.base !== r.source.base) throw Error("SourceRef URL base does not match its URL.");
 }
-function uf(e) {
+function pf(e) {
 	if (!e || typeof e != "object" || e.clipFormatVersion !== 3) throw Error("Expected a V3 project.");
 	let t = structuredClone(e);
 	if (!Array.isArray(t.assets)) throw Error("V3 project assets are invalid.");
@@ -16425,7 +16693,7 @@ function uf(e) {
 		].includes(e.kind)) return e;
 		if ("sourceUrl" in e || "stemSources" in e) throw Error("V3 binary assets must use sourceRef/stemRefs, not legacy URLs.");
 		let t = e;
-		if (t.sourceRef !== void 0 && lf(t.sourceRef), t.stemRefs !== void 0) {
+		if (t.sourceRef !== void 0 && ff(t.sourceRef), t.stemRefs !== void 0) {
 			if (e.kind !== "audio" || !t.stemRefs || typeof t.stemRefs != "object" || Array.isArray(t.stemRefs)) throw Error("Only audio assets can contain stemRefs.");
 			for (let [e, n] of Object.entries(t.stemRefs)) {
 				if (![
@@ -16434,7 +16702,7 @@ function uf(e) {
 					"other",
 					"vocals"
 				].includes(e)) throw Error("Unknown stem reference.");
-				lf(n);
+				ff(n);
 			}
 		}
 		if (e.kind === "model-3d" && t.sourceRef?.kind !== "embedded") throw new $("unsupported", "V3 models remain embedded until dependency-aware 3D support is implemented.");
@@ -16452,10 +16720,10 @@ function uf(e) {
 }
 //#endregion
 //#region src/core/sourceResolver.ts
-function df() {
+function mf() {
 	return new $("aborted", "Source resolution was aborted.");
 }
-function ff() {
+function hf() {
 	let e = /* @__PURE__ */ new Map(), t = /* @__PURE__ */ new WeakMap(), n = 0, r = !1, i = (e) => e ? (t.has(e) || t.set(e, ++n), t.get(e)) : 0, a = (e) => {
 		e.refs === 0 && e.resource && !e.disposed && (e.disposed = !0, e.resource.release());
 	}, o = (t, n, r, i) => {
@@ -16516,7 +16784,7 @@ function ff() {
 	};
 	return {
 		async acquire(t, n, c = {}) {
-			if (r || c.signal?.aborted) throw df();
+			if (r || c.signal?.aborted) throw mf();
 			if (!n.assetId || !n.revision || !n.securityScope) throw new $("invalid", "Asset, revision and security scope are required.");
 			let l = { ...n }, u = { ...t }, d = u.kind === "embedded" ? u.dataUrl : JSON.stringify(u.kind === "linked" ? [
 				u.kind,
@@ -16548,9 +16816,9 @@ function ff() {
 			let g;
 			try {
 				let e = await (c.signal ? Promise.race([h.promise, new Promise((e, t) => {
-					g = () => t(df()), c.signal.addEventListener("abort", g, { once: !0 }), c.signal.aborted && g();
+					g = () => t(mf()), c.signal.addEventListener("abort", g, { once: !0 }), c.signal.aborted && g();
 				})]) : h.promise);
-				if (r || c.signal?.aborted) throw df();
+				if (r || c.signal?.aborted) throw mf();
 				let t = !1, n = h;
 				return {
 					url: e.url,
@@ -16575,17 +16843,17 @@ function ff() {
 }
 //#endregion
 //#region src/core/projectSources.ts
-function pf(e) {
-	return e && typeof e == "object" && "clipFormatVersion" in e && e.clipFormatVersion === 3 ? uf(e) : wa(e);
+function gf(e) {
+	return e && typeof e == "object" && "clipFormatVersion" in e && e.clipFormatVersion === 3 ? pf(e) : wa(e);
 }
-function mf() {
-	let e = ff(), t = !1, n = 0, r = 0, i = () => {
+function _f() {
+	let e = hf(), t = !1, n = 0, r = 0, i = () => {
 		t && !n && !r && e.dispose();
 	};
 	return {
 		async resolve(a, o, s) {
 			if (t) throw new $("aborted", "Project source session is closed.");
-			let c = pf(a), l = [], u = [];
+			let c = gf(a), l = [], u = [];
 			n++;
 			try {
 				let n = async (n, r, i) => {
@@ -16703,15 +16971,15 @@ function mf() {
 }
 //#endregion
 //#region src/core/editorProjectDocument.ts
-var hf = (e) => [
+var vf = (e) => [
 	"image",
 	"video",
 	"audio",
 	"font",
 	"model-3d"
-].includes(e.kind), gf = (e) => e?.kind === "embedded" ? e.dataUrl : void 0;
-function _f(e) {
-	let t = pf(e);
+].includes(e.kind), yf = (e) => e?.kind === "embedded" ? e.dataUrl : void 0;
+function bf(e) {
+	let t = gf(e);
 	return t.assets = t.assets.map((e) => {
 		let { sourceRevision: t, stemRevisions: n, ...r } = e;
 		return r;
@@ -16720,9 +16988,9 @@ function _f(e) {
 		clipFormatVersion: 2,
 		persistentFormatVersion: 3,
 		assets: t.assets.map((e) => {
-			if (!hf(e)) return e;
-			let t = e, n = gf(t.sourceRef), r = Object.fromEntries(Object.entries(t.stemRefs ?? {}).flatMap(([e, t]) => {
-				let n = gf(t);
+			if (!vf(e)) return e;
+			let t = e, n = yf(t.sourceRef), r = Object.fromEntries(Object.entries(t.stemRefs ?? {}).flatMap(([e, t]) => {
+				let n = yf(t);
 				return n ? [[e, n]] : [];
 			}));
 			return {
@@ -16735,24 +17003,24 @@ function _f(e) {
 }
 //#endregion
 //#region src/core/managedEditorDocument.ts
-function vf(e) {
-	return sf(_f(e));
+function xf(e) {
+	return uf(bf(e));
 }
-function yf(e, t) {
+function Sf(e, t) {
 	let n = e.document.assets.find((e) => e.kind === "composition" && e.id === t);
 	if (!n) throw Error(`Composition asset not found: ${t}`);
 	return n;
 }
-function bf(e, t) {
+function Cf(e, t) {
 	return {
 		managedAngleCodecVersion: 1,
 		angleUnit: "degrees",
 		compositionId: t,
-		composition: yf(e, t).composition,
+		composition: Sf(e, t).composition,
 		assets: e.document.assets
 	};
 }
-function xf(e, t) {
+function wf(e, t) {
 	let n = new Map(t.map((e) => [e.id, e]));
 	return {
 		...e,
@@ -16777,18 +17045,18 @@ function xf(e, t) {
 }
 //#endregion
 //#region src/player/legacyPlayerProject.ts
-var Sf = (e) => typeof e == "object" && !!e && !Array.isArray(e);
-function Cf(e, t = (e) => console.warn(e)) {
+var Tf = (e) => typeof e == "object" && !!e && !Array.isArray(e);
+function Ef(e, t = (e) => console.warn(e)) {
 	if (!e || ![
 		1,
 		2,
 		3
 	].includes(e.clipFormatVersion) || "angleUnit" in e || "managedAngleCodecVersion" in e) throw Error("The public Player requires a legacy radian project file.");
 	if (e.clipFormatVersion === 3) {
-		let t = vf(e);
+		let t = xf(e);
 		return {
 			document: t,
-			workspace: bf(t, t.document.rootCompositionId),
+			workspace: Cf(t, t.document.rootCompositionId),
 			remoteAssetPolicy: t.document.remoteAssetPolicy
 		};
 	}
@@ -16806,7 +17074,7 @@ function Cf(e, t = (e) => console.warn(e)) {
 			2
 		].every((t) => typeof e[t] == "number" && Number.isFinite(e[t])))) return e;
 		try {
-			return $d(e, t, "radians", "degrees", n);
+			return nf(e, t, "radians", "degrees", n);
 		} catch {
 			return a(n), t.shape === "scalar" ? NaN : [
 				NaN,
@@ -16817,16 +17085,16 @@ function Cf(e, t = (e) => console.warn(e)) {
 	}, s = (e, t) => {
 		if (typeof e != "number" || !Number.isFinite(e)) return e;
 		try {
-			return Qd(e, "radians", "degrees", t);
+			return tf(e, "radians", "degrees", t);
 		} catch {
 			return a(t), NaN;
 		}
 	}, c = (e, t, n = "params") => {
-		if (!Sf(e)) return e;
-		let r = Object.fromEntries(Object.entries(e).map(([e, t]) => [e, Sf(t) ? { ...t } : t]));
-		for (let e of Kd(t ?? "")) {
+		if (!Tf(e)) return e;
+		let r = Object.fromEntries(Object.entries(e).map(([e, t]) => [e, Tf(t) ? { ...t } : t]));
+		for (let e of Yd(t ?? "")) {
 			let t = r[e.key];
-			if (Sf(t)) {
+			if (Tf(t)) {
 				for (let r of ["value", "default"]) r in t && (t[r] = o(t[r], e, `${n}.${e.key}.${r}`));
 				for (let r of [
 					"min",
@@ -16842,12 +17110,12 @@ function Cf(e, t = (e) => console.warn(e)) {
 		layers: e.layers.map((e) => ({
 			...e,
 			clips: e.clips.map((e) => {
-				let n = e.kind === "object-3d" ? r.get(e.assetId)?.kind : void 0, i = Kd(n ?? ""), a = e.keyframeTracks;
+				let n = e.kind === "object-3d" ? r.get(e.assetId)?.kind : void 0, i = Yd(n ?? ""), a = e.keyframeTracks;
 				for (let n of i) {
 					let r = a?.[n.key];
 					Array.isArray(r) && (a = {
 						...a,
-						[n.key]: r.map((r, i) => Sf(r) ? {
+						[n.key]: r.map((r, i) => Tf(r) ? {
 							...r,
 							value: o(r.value, n, `${t}.${e.id}.keys.${n.key}.${i}`)
 						} : r)
@@ -16865,9 +17133,9 @@ function Cf(e, t = (e) => console.warn(e)) {
 			...e,
 			composition: l(e.composition, e.id)
 		};
-		if (!Gd(e.kind) || !("descriptor" in e) || !Sf(e.descriptor)) return e;
+		if (!Jd(e.kind) || !("descriptor" in e) || !Tf(e.descriptor)) return e;
 		let t = { ...e.descriptor };
-		for (let n of Kd(e.kind)) n.key === "rotation" && Sf(t.transform) && "rotation" in t.transform ? t.transform = {
+		for (let n of Yd(e.kind)) n.key === "rotation" && Tf(t.transform) && "rotation" in t.transform ? t.transform = {
 			...t.transform,
 			rotation: o(t.transform.rotation, n, `${e.id}.descriptor.rotation`)
 		} : n.key === "angle" && "angle" in t && (t.angle = o(t.angle, n, `${e.id}.descriptor.angle`));
@@ -16894,9 +17162,9 @@ function Cf(e, t = (e) => console.warn(e)) {
 }
 //#endregion
 //#region src/core/managedEditorSources.ts
-function wf(e, t) {
+function Df(e, t) {
 	qi(e);
-	let n = xf(bf(e, e.document.rootCompositionId), t);
+	let n = wf(Cf(e, e.document.rootCompositionId), t);
 	return {
 		...e,
 		document: {
@@ -16907,8 +17175,8 @@ function wf(e, t) {
 }
 //#endregion
 //#region src/player/managedAnglePlayerApi.ts
-function Tf(e, t, n = {}) {
-	let r = Yd(n.angleUnit);
+function Of(e, t, n = {}) {
+	let r = Qd(n.angleUnit);
 	Ki(t());
 	let i = {
 		setClipParam: e.setClipParam.bind(e),
@@ -16917,11 +17185,11 @@ function Tf(e, t, n = {}) {
 		get: e.get.bind(e)
 	}, a = (e, t) => {
 		if (!t) return null;
-		if (!n.legacyInput) return Jd(t.clip, t.key, qd(e.assets));
+		if (!n.legacyInput) return Zd(t.clip, t.key, Xd(e.assets));
 		if (t.clip.kind !== "object-3d") return null;
 		let r = "";
 		for (let n of e.assets) n.id === t.clip.assetId && (r = n.kind);
-		return Kd(r).find((e) => e.key === t.key) ?? null;
+		return Yd(r).find((e) => e.key === t.key) ?? null;
 	};
 	function o(e, t) {
 		let n = e.composition, r = t;
@@ -16950,7 +17218,7 @@ function Tf(e, t, n = {}) {
 		if (!(u.shape === "scalar" ? typeof d == "number" && Number.isFinite(d) : Array.isArray(d) && d.length === 3 && d.every((e) => typeof e == "number" && Number.isFinite(e)))) return n.legacyInput ? s(i) : !1;
 		let f;
 		try {
-			f = $d(d, u, r, "degrees");
+			f = nf(d, u, r, "degrees");
 		} catch {
 			return !1;
 		}
@@ -16963,7 +17231,7 @@ function Tf(e, t, n = {}) {
 		let c = o(s, e), l = a(s, c);
 		if (!l) return i;
 		try {
-			return $d(i, l, "degrees", r);
+			return nf(i, l, "degrees", r);
 		} catch (e) {
 			if (n.legacyInput) return i;
 			throw e;
@@ -16986,7 +17254,7 @@ function Tf(e, t, n = {}) {
 }
 //#endregion
 //#region src/core/p5ReplayHistory.ts
-function Ef(e, t, n = []) {
+function kf(e, t, n = []) {
 	if (![
 		t.width,
 		t.height,
@@ -17042,13 +17310,13 @@ function Ef(e, t, n = []) {
 }
 //#endregion
 //#region src/core/p5ReplaySession.ts
-var Df = class extends Error {
+var Af = class extends Error {
 	diagnostic;
 	constructor(e) {
 		super(e.message), this.diagnostic = e, this.name = "P5ReplayError";
 	}
 };
-function Of(e) {
+function jf(e) {
 	for (let [t, n] of Object.entries(e.budget)) if (!Number.isFinite(n) || n <= 0) throw Error(`Invalid p5 replay budget: ${t}`);
 	if (!Number.isInteger(e.budget.maxDrawsPerReset) || !Number.isInteger(e.budget.chunkDraws)) throw Error("P5 draw budgets must be integers.");
 	let t = e.now ?? (() => performance.now()), n = 0, r = !1, i = Promise.resolve(), a, o = /* @__PURE__ */ new Set(), s, c, l = {
@@ -17059,7 +17327,7 @@ function Of(e) {
 		completedDraws: 0,
 		totalDraws: 0,
 		startFrame: null
-	}, u = (t, n, r) => new Df({
+	}, u = (t, n, r) => new Af({
 		code: t,
 		clipId: e.clipId,
 		frame: n,
@@ -17165,7 +17433,7 @@ function Of(e) {
 			throw u("draw-failed", o, "replay did not complete");
 		} catch (e) {
 			y ? await h() : await m(v);
-			let t = e instanceof Df ? e : u(g.aborted ? "canceled" : "draw-failed", o, e instanceof Error ? e.message : String(e));
+			let t = e instanceof Af ? e : u(g.aborted ? "canceled" : "draw-failed", o, e instanceof Error ? e.message : String(e));
 			throw t.diagnostic.code !== "canceled" && !r && d({
 				phase: "error",
 				generation: i,
@@ -17220,14 +17488,14 @@ function Of(e) {
 }
 //#endregion
 //#region src/runtime/p5ReplayRealm.ts
-var kf = /* @__PURE__ */ new WeakSet(), Af = !1, jf = () => {
-	Af || (Af = !0, window.addEventListener("message", (e) => {
-		!e.source || !kf.has(e.source) || (e.data?.bitmap?.close?.(), e.data?.helperBitmap?.close?.());
+var Mf = /* @__PURE__ */ new WeakSet(), Nf = !1, Pf = () => {
+	Nf || (Nf = !0, window.addEventListener("message", (e) => {
+		!e.source || !Mf.has(e.source) || (e.data?.bitmap?.close?.(), e.data?.helperBitmap?.close?.());
 	}));
 };
-function Mf(e) {
+function Ff(e) {
 	return async (t) => {
-		jf();
+		Pf();
 		let n = document.createElement("iframe");
 		n.sandbox.add("allow-scripts"), n.setAttribute("aria-hidden", "true"), Object.assign(n.style, {
 			position: "absolute",
@@ -17243,7 +17511,7 @@ function Mf(e) {
 			u = t;
 		});
 		l.catch(() => void 0), d.catch(() => void 0);
-		let f, p = (t, n) => new Df({
+		let f, p = (t, n) => new Af({
 			code: t,
 			clipId: e.diagnosticClipId ?? e.clipId,
 			frame: f?.frame ?? 0,
@@ -17314,7 +17582,7 @@ function Mf(e) {
 			}
 			c(), m(p("unsupported-api", `isolated realm sent denied message ${String(o.type)}`));
 		}, _ = () => m(p("canceled", "candidate canceled")), v = () => {
-			r || (r = !0, m(p("canceled", "candidate disposed")), clearTimeout(y), t.signal.removeEventListener("abort", _), window.removeEventListener("message", g), n.contentWindow && kf.add(n.contentWindow), n.remove());
+			r || (r = !0, m(p("canceled", "candidate disposed")), clearTimeout(y), t.signal.removeEventListener("abort", _), window.removeEventListener("message", g), n.contentWindow && Mf.add(n.contentWindow), n.remove());
 		}, y = setTimeout(() => m(p("preparation-failed", "candidate preparation timed out")), e.preparationTimeoutMs ?? 15e3);
 		window.addEventListener("message", g), t.signal.addEventListener("abort", _, { once: !0 });
 		try {
@@ -17360,7 +17628,7 @@ function Mf(e) {
 }
 //#endregion
 //#region src/runtime/p5ClipReplay.ts
-function Nf(e) {
+function If(e) {
 	let { history: t } = e, n = t.definition, r = e.sourceId ?? n.id, i = structuredClone(e.descriptors), a = [], o = {
 		draws: 0,
 		cpuMs: 0,
@@ -17368,7 +17636,7 @@ function Nf(e) {
 		peakPixels: 0,
 		peakSurfaces: 0,
 		peakAccountedBytes: 0
-	}, s = Mf({
+	}, s = Ff({
 		clipId: r,
 		clipName: n.name,
 		diagnosticClipId: n.id,
@@ -17381,7 +17649,7 @@ function Nf(e) {
 			...t.tick(e),
 			clipId: r
 		}),
-		document: (a) => Cd(r, n.source, n.params, n.remoteAssets, i, e.nativeAssetSources, {
+		document: (a) => Ed(r, n.source, n.params, n.remoteAssets, i, e.nativeAssetSources, {
 			documentToken: a.documentToken,
 			libraries: n.libraries,
 			capabilities: n.capabilities,
@@ -17394,7 +17662,7 @@ function Nf(e) {
 				compositionHeight: t.context.height
 			}
 		})
-	}), c = Of({
+	}), c = jf({
 		clipId: n.id,
 		clipName: n.name,
 		mode: e.mode,
@@ -17429,7 +17697,7 @@ function Nf(e) {
 			if (a) {
 				let t = fe(n.params, n.keyframeTracks, r);
 				if (Object.keys(t).some((e) => JSON.stringify(t[e]) !== JSON.stringify(a[e]))) {
-					let t = new Df({
+					let t = new Af({
 						code: "unsupported-api",
 						clipId: n.id,
 						frame: o.frame,
@@ -17457,16 +17725,16 @@ function Nf(e) {
 }
 //#endregion
 //#region src/core/runtimeChildClock.ts
-function Pf(e, t, n) {
+function Lf(e, t, n) {
 	let r = e * t;
 	return n === "html" ? Math.round(r) : Math.floor(r);
 }
-function Ff(e, t, n) {
-	return Pf(e, t, n) / t;
+function Rf(e, t, n) {
+	return Lf(e, t, n) / t;
 }
 //#endregion
 //#region src/core/sceneGraphTransform.ts
-function If(e, t) {
+function zf(e, t) {
 	let n = e.rotation * (Math.PI / 180), r = Math.cos(n) * e.scale, i = Math.sin(n) * e.scale, [a, o] = t;
 	return [
 		r,
@@ -17477,7 +17745,7 @@ function If(e, t) {
 		e.y - i * a - r * o
 	];
 }
-function Lf(e, t) {
+function Bf(e, t) {
 	return [
 		e[0] * t[0] + e[2] * t[1],
 		e[1] * t[0] + e[3] * t[1],
@@ -17487,7 +17755,7 @@ function Lf(e, t) {
 		e[1] * t[4] + e[3] * t[5] + e[5]
 	];
 }
-function Rf(e, t, n) {
+function Vf(e, t, n) {
 	let r = [], i = /* @__PURE__ */ new Set(), a = e.get(t);
 	if (!a) return null;
 	for (; a;) {
@@ -17504,7 +17772,7 @@ function Rf(e, t, n) {
 	], s = 1, c = !0;
 	for (let e of r.reverse()) {
 		let t = n(e);
-		o = Lf(o, If(e, e.anchorPoint ?? [t[0] / 2, t[1] / 2])), s *= e.opacity, c &&= e.visible;
+		o = Bf(o, zf(e, e.anchorPoint ?? [t[0] / 2, t[1] / 2])), s *= e.opacity, c &&= e.visible;
 	}
 	return {
 		transform: o,
@@ -17514,47 +17782,47 @@ function Rf(e, t, n) {
 }
 //#endregion
 //#region src/core/mediaTransport.ts
-var zf = { mode: "realtime" }, Bf = { mode: "paused-sample" }, Vf = { mode: "prepared" }, Hf = (e) => e ? zf : Bf, Uf = /* @__PURE__ */ new WeakMap();
-function Wf(e, t) {
+var Hf = { mode: "realtime" }, Uf = { mode: "paused-sample" }, Wf = { mode: "prepared" }, Gf = (e) => e ? Hf : Uf, Kf = /* @__PURE__ */ new WeakMap();
+function qf(e, t) {
 	!t.active || t.context.mode !== "paused-sample" || e.readyState === 0 || t.appliedTarget === t.target || (Math.abs(e.currentTime - t.target) > 1e-6 && (e.currentTime = t.target), t.appliedTarget = t.target);
 }
-function Gf(e) {
-	let t = Uf.get(e);
+function Jf(e) {
+	let t = Kf.get(e);
 	t && (t.active = !1), e.pause();
 }
-function Kf(e) {
-	for (let t of e.values()) t instanceof HTMLMediaElement && Gf(t);
+function Yf(e) {
+	for (let t of e.values()) t instanceof HTMLMediaElement && Jf(t);
 }
-function qf(e, t, n, r, i, a = 0, o = .15) {
+function Xf(e, t, n, r, i, a = 0, o = .15) {
 	if (i.mode === "prepared") return;
 	if (!t) {
-		Gf(e);
+		Jf(e);
 		return;
 	}
-	let s = Uf.get(e);
+	let s = Kf.get(e);
 	if (s || (s = {
 		active: t,
 		target: 0,
 		context: i
-	}, Uf.set(e, s), e.addEventListener("loadedmetadata", () => {
-		let t = Uf.get(e);
-		t && (t.appliedTarget = void 0, Wf(e, t));
+	}, Kf.set(e, s), e.addEventListener("loadedmetadata", () => {
+		let t = Kf.get(e);
+		t && (t.appliedTarget = void 0, qf(e, t));
 	})), s.active = !0, s.target = Math.max(0, (n - a) / r), s.context = i, i.mode === "paused-sample") {
-		e.pause(), Wf(e, s);
+		e.pause(), qf(e, s);
 		return;
 	}
 	s.appliedTarget = void 0, Math.abs(e.currentTime - s.target) > o && (e.currentTime = s.target), e.play().catch(() => void 0);
 }
 //#endregion
 //#region src/player/createClipPlayer.ts
-function Jf(e) {
+function Zf(e) {
 	if (!e || ![
 		1,
 		2,
 		3
 	].includes(e.clipFormatVersion) || "angleUnit" in e || "managedAngleCodecVersion" in e) throw Error("The public Player requires a legacy radian project file.");
 }
-function Yf(e, t, n = !0) {
+function Qf(e, t, n = !0) {
 	if (Ki(e), !t) throw Error("Managed Player remote asset policy is required.");
 	return {
 		...n ? structuredClone(e.composition) : e.composition,
@@ -17562,55 +17830,55 @@ function Yf(e, t, n = !0) {
 		remoteAssetPolicy: t
 	};
 }
-var Xf = /* @__PURE__ */ new WeakMap();
-function Zf(e, t, n = [0, 0]) {
+var $f = /* @__PURE__ */ new WeakMap();
+function ep(e, t, n = [0, 0]) {
 	let [r, i] = t?.dimensions ?? [0, 0];
 	return [typeof e.width == "number" && e.width > 0 ? e.width : r > 0 ? r : n[0], typeof e.height == "number" && e.height > 0 ? e.height : i > 0 ? i : n[1]];
 }
-function Qf(e) {
+function tp(e) {
 	return e instanceof HTMLImageElement ? [e.naturalWidth, e.naturalHeight] : e instanceof HTMLVideoElement ? [e.videoWidth, e.videoHeight] : typeof ImageBitmap < "u" && e instanceof ImageBitmap || e instanceof HTMLCanvasElement || e instanceof OffscreenCanvas ? [e.width, e.height] : [0, 0];
 }
-function $f(e, t) {
+function np(e, t) {
 	if (!Array.isArray(e) || e.length < 2) return t;
 	let n = Number(e[0]), r = Number(e[1]);
 	return [Number.isFinite(n) ? n : t[0], Number.isFinite(r) ? r : t[1]];
 }
-function ep(e, t, n) {
+function rp(e, t, n) {
 	let r = e.params[t];
 	r && (r.value = n);
 }
-function tp(e) {
-	let t = Yd(e.angleUnit);
-	Jf(e.project);
-	let n = Cf(e.project), { angleUnit: r, project: i, ...a } = e, o = rp(a, {
+function ip(e) {
+	let t = Qd(e.angleUnit);
+	Zf(e.project);
+	let n = Ef(e.project), { angleUnit: r, project: i, ...a } = e, o = op(a, {
 		kind: "public",
 		project: e.project,
 		...n
 	});
-	return Object.assign(o.player, Tf(o.player, o.getWorkspace, {
+	return Object.assign(o.player, Of(o.player, o.getWorkspace, {
 		angleUnit: t,
 		legacyInput: !0
 	}));
 }
-function np(e) {
+function ap(e) {
 	if ("angleUnit" in e) throw Error("Internal managed Player controls use degrees; angleUnit is a public API option.");
 	Ki(e.workspace);
-	let t = rp(e, {
+	let t = op(e, {
 		kind: "managed",
 		workspace: e.workspace,
 		remoteAssetPolicy: e.remoteAssetPolicy
 	});
 	return Object.assign(t.player, { setWorkspace: t.setWorkspace });
 }
-function rp(e, t) {
+function op(e, t) {
 	let n = e.editorNativeAssetSources === !0, r = e.canvas ?? document.createElement("canvas"), i = e.iframeHost ?? document.createElement("div"), a = !e.iframeHost, o = Math.max(1, e.frameTransferFps ?? 30), s = e.dirtyOnly ?? !0, c = e.runtimeDepth ?? 0, l = /* @__PURE__ */ new Map(), u = {
 		framesReceived: 0,
 		framesComposited: 0,
 		replacedFrames: 0,
 		lastCompositeMs: 0
-	}, d = null, f = null, p = null, m = null, h = kd("player"), g = Ad(), _ = Ad(), v = "root", y, b = 0, x, S = t.kind === "public" ? t.document : null, C = t.workspace, w = t.kind === "managed" || t.project.clipFormatVersion !== 1, T = Yf(C, t.remoteAssetPolicy, t.kind === "managed"), E = fi(T.assets, n), D = [], O = /* @__PURE__ */ new Map(), ee = [], te = /* @__PURE__ */ new Map(), ne = St(), re = Dt(), ie = null, ae = null, oe = 0, se = null, ce = /* @__PURE__ */ new Map(), le = new Map(T.assets.map((e) => [e.id, e])), ue = /* @__PURE__ */ new Map(), de = /* @__PURE__ */ new Set(), pe = /* @__PURE__ */ new Map(), me = /* @__PURE__ */ new Map(), he = null, ge = null, k = !1, _e = e.mediaPlaying ?? !0, ve = mf(), A, ye, j = 0, be = Promise.resolve(), xe = [], Se = t.kind === "public" && t.project.clipFormatVersion === 3, Ce = (e, t, n) => {
+	}, d = null, f = null, p = null, m = null, h = Md("player"), g = Nd(), _ = Nd(), v = "root", y, b = 0, x, S = t.kind === "public" ? t.document : null, C = t.workspace, w = t.kind === "managed" || t.project.clipFormatVersion !== 1, T = Qf(C, t.remoteAssetPolicy, t.kind === "managed"), E = fi(T.assets, n), D = [], O = /* @__PURE__ */ new Map(), ee = [], te = /* @__PURE__ */ new Map(), ne = St(), re = Dt(), ie = null, ae = null, oe = 0, se = null, ce = /* @__PURE__ */ new Map(), le = new Map(T.assets.map((e) => [e.id, e])), ue = /* @__PURE__ */ new Map(), de = /* @__PURE__ */ new Set(), pe = /* @__PURE__ */ new Map(), me = /* @__PURE__ */ new Map(), he = null, ge = null, k = !1, _e = e.mediaPlaying ?? !0, ve = _f(), A, ye, j = 0, be = Promise.resolve(), xe = [], Se = t.kind === "public" && t.project.clipFormatVersion === 3, Ce = (e, t, n) => {
 		let { assets: r, remoteAssetPolicy: i, ...a } = e;
-		return np({
+		return ap({
 			...n,
 			workspace: {
 				managedAngleCodecVersion: 1,
@@ -17671,10 +17939,10 @@ function rp(e, t) {
 		else if (e.kind === "image") e.image.onload = null, e.image.onerror = null, e.image.src = "";
 		else {
 			let t = e.kind === "video" ? e.video : e.audio;
-			Gf(t), t.removeAttribute("src"), t.load(), t.remove();
+			Jf(t), t.removeAttribute("src"), t.load(), t.remove();
 		}
 		D = [], De(), pe.clear();
-		for (let e of me.values()) e instanceof HTMLMediaElement && (Gf(e), e.removeAttribute("src"), e.load(), e.remove());
+		for (let e of me.values()) e instanceof HTMLMediaElement && (Jf(e), e.removeAttribute("src"), e.load(), e.remove());
 		me.clear(), he &&= (he.width = 0, he.height = 0, null), ge &&= (ge.width = 0, ge.height = 0, null);
 	}, ke = () => {
 		Oe(), xe = [];
@@ -17793,7 +18061,7 @@ function rp(e, t) {
 					continue;
 				}
 			}
-			let o = document.createElement("iframe"), s = crypto.randomUUID(), c = Id({
+			let o = document.createElement("iframe"), s = crypto.randomUUID(), c = zd({
 				binding: a.feedback,
 				p5Global: a.capabilities?.includes("p5") === !0,
 				assets: T.assets,
@@ -17836,7 +18104,7 @@ function rp(e, t) {
 					reject: t
 				}, xe.push(n);
 			}
-			xd(a.source) ? wd(a.id, a.source, a.params, a.remoteAssets, E.descriptors, !1, n, {
+			wd(a.source) ? Dd(a.id, a.source, a.params, a.remoteAssets, E.descriptors, !1, n, {
 				documentToken: s,
 				feedback: a.feedback,
 				feedbackInputEnabled: l.feedbackInputEnabled,
@@ -17854,7 +18122,7 @@ function rp(e, t) {
 					let n = /* @__PURE__ */ Error(`MacroFlush player failed to build clip document for "${a.name}": ${String(t)}`);
 					l.feedbackStartup?.reject(n), e.onError?.(n), console.error(n);
 				}
-			}) : o.srcdoc = Cd(a.id, a.source, a.params, a.remoteAssets, E.descriptors, n, {
+			}) : o.srcdoc = Ed(a.id, a.source, a.params, a.remoteAssets, E.descriptors, n, {
 				documentToken: s,
 				feedback: a.feedback,
 				feedbackInputEnabled: l.feedbackInputEnabled,
@@ -17872,9 +18140,9 @@ function rp(e, t) {
 		let e = new Set(D.flatMap((e) => e.kind === "html" ? [...e.sceneGraph.values()].map((e) => e.assetId) : []));
 		for (let [t, n] of me) e.has(t) || (n instanceof HTMLMediaElement && (n.pause(), n.removeAttribute("src"), n.load(), n.remove()), me.delete(t));
 	}, je = (e, t, n) => {
-		let r = t.kind === "composition" ? [t.composition.width, t.composition.height] : $f(e.params.size?.value, [T.width, T.height]);
-		ep(e, "position", [n.x, n.y]), ep(e, "scale", [n.scale, n.scale]), ep(e, "rotation", n.rotation), ep(e, "opacity", n.opacity), ep(e, "size", r), ep(e, "anchorPoint", n.anchorPoint ?? [r[0] / 2, r[1] / 2]), ep(e, "blendMode", n.blendMode ?? "normal");
-		for (let [t, r] of Object.entries(n.clip ?? {})) ep(e, t, r);
+		let r = t.kind === "composition" ? [t.composition.width, t.composition.height] : np(e.params.size?.value, [T.width, T.height]);
+		rp(e, "position", [n.x, n.y]), rp(e, "scale", [n.scale, n.scale]), rp(e, "rotation", n.rotation), rp(e, "opacity", n.opacity), rp(e, "size", r), rp(e, "anchorPoint", n.anchorPoint ?? [r[0] / 2, r[1] / 2]), rp(e, "blendMode", n.blendMode ?? "normal");
+		for (let [t, r] of Object.entries(n.clip ?? {})) rp(e, t, r);
 	}, Me = () => {
 		let t = /* @__PURE__ */ new Map();
 		for (let e of D) {
@@ -17977,7 +18245,7 @@ function rp(e, t) {
 			};
 			if (pe.set(n, s), D.push(s), r.time !== void 0) {
 				let e = r.clip.kind === "html" && r.clip.capabilities?.includes("p5") && r.clip.p5Playback === "isolated-replay";
-				o.tickTime(e ? r.time : Ff(r.time, r.project.fps, r.clip.kind === "html" ? "html" : "composition"));
+				o.tickTime(e ? r.time : Rf(r.time, r.project.fps, r.clip.kind === "html" ? "html" : "composition"));
 			}
 		}
 		De();
@@ -18068,7 +18336,7 @@ function rp(e, t) {
 				return;
 			}
 			if (r.type === "macroflush:scene") {
-				let t = Array.isArray(r.operations) ? r.operations.filter(cp) : cp(r.operation) ? [r.operation] : [];
+				let t = Array.isArray(r.operations) ? r.operations.filter(dp) : dp(r.operation) ? [r.operation] : [];
 				if (t.length === 0) return;
 				let n = i.sceneGraph;
 				for (let e of t) n = qa(n, e);
@@ -18104,10 +18372,10 @@ function rp(e, t) {
 			if (!o || o.kind !== "html" || i < o.clip.inFrame || i >= o.clip.outFrame) return !1;
 			Pe(o);
 			let s = nt(e, r, T, n.params, [o.frameCanvas.width, o.frameCanvas.height], a);
-			return o.hasFrame && e.drawImage(o.frameCanvas, 0, 0, s[0], s[1]), ap(e, o.sceneGraph, E, me, o.matteCache, i, T.fps, Hf(_e), ze()), e.restore(), o.hasFrame || o.sceneGraph.size > 0;
+			return o.hasFrame && e.drawImage(o.frameCanvas, 0, 0, s[0], s[1]), cp(e, o.sceneGraph, E, me, o.matteCache, i, T.fps, Gf(_e), ze()), e.restore(), o.hasFrame || o.sceneGraph.size > 0;
 		}
-		if (t.kind === "image") return t.ready ? (ip(e, T, n.params, t.image, [t.image.naturalWidth, t.image.naturalHeight], a), !0) : !1;
-		if (t.kind === "video") return !t.ready || t.video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA ? !1 : (ip(e, T, n.params, t.video, [t.video.videoWidth, t.video.videoHeight], a), !0);
+		if (t.kind === "image") return t.ready ? (sp(e, T, n.params, t.image, [t.image.naturalWidth, t.image.naturalHeight], a), !0) : !1;
+		if (t.kind === "video") return !t.ready || t.video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA ? !1 : (sp(e, T, n.params, t.video, [t.video.videoWidth, t.video.videoHeight], a), !0);
 		if (t.kind === "audio") return !1;
 		if (t.kind === "composition-ref" || t.kind === "runtime") {
 			if (t.kind === "runtime" && !Re(t)) return Ie(e, t, t.player.canvas, i, a);
@@ -18116,7 +18384,7 @@ function rp(e, t) {
 		}
 		Pe(t);
 		let o = nt(e, r, T, n.params, [t.frameCanvas.width, t.frameCanvas.height], a);
-		return t.hasFrame && e.drawImage(t.frameCanvas, 0, 0, o[0], o[1]), ap(e, t.sceneGraph, E, me, t.matteCache, i, T.fps, Hf(_e), ze()), e.restore(), t.hasFrame || t.sceneGraph.size > 0;
+		return t.hasFrame && e.drawImage(t.frameCanvas, 0, 0, o[0], o[1]), cp(e, t.sceneGraph, E, me, t.matteCache, i, T.fps, Gf(_e), ze()), e.restore(), t.hasFrame || t.sceneGraph.size > 0;
 	}, Ie = (e, t, n, i, a) => {
 		let o = t.parentClipId ? O.get(t.parentClipId) : void 0, s = o?.kind === "html" ? o.sceneGraph.get(t.objectId) : void 0;
 		if (!o || o.kind !== "html" || !s) return !1;
@@ -18125,9 +18393,9 @@ function rp(e, t) {
 			fps: T.fps,
 			playing: !0,
 			speed: 1
-		}, T), l = Rf(o.sceneGraph, s.id, (e) => Zf(e, E.get(e.assetId)));
+		}, T), l = Vf(o.sceneGraph, s.id, (e) => ep(e, E.get(e.assetId)));
 		if (!c || !l?.visible) return !1;
-		let u = Zf(s, E.get(s.assetId), [n.width, n.height]);
+		let u = ep(s, E.get(s.assetId), [n.width, n.height]);
 		return nt(e, r, T, {
 			...c.params,
 			opacity: 1,
@@ -18222,7 +18490,7 @@ function rp(e, t) {
 			feedbackInputIntent: n.inputDelivery
 		} : t;
 	}, Ge = (e) => {
-		e.kind === "html" && e.documentToken && g.deactivate(e.documentToken), (e.kind === "composition-ref" || e.kind === "runtime") && (e.player.setMediaPlaying(!1), g.deactivate(`child:${e.clip.id}`), Xf.get(e.player)?.deactivate());
+		e.kind === "html" && e.documentToken && g.deactivate(e.documentToken), (e.kind === "composition-ref" || e.kind === "runtime") && (e.player.setMediaPlaying(!1), g.deactivate(`child:${e.clip.id}`), $f.get(e.player)?.deactivate());
 	}, Ke = () => {
 		let t = se, n = ae;
 		if (!(!t || !n)) for (let r of n.readyIds) {
@@ -18262,8 +18530,8 @@ function rp(e, t) {
 			}, "*");
 		}
 	}, qe = (t, r) => {
-		t.replayDirty &&= (t.replay?.dispose(), t.replay = Nf({
-			history: Ef(t.clip, T, di(E.descriptors, t.clip.libraries)),
+		t.replayDirty &&= (t.replay?.dispose(), t.replay = If({
+			history: kf(t.clip, T, di(E.descriptors, t.clip.libraries)),
 			descriptors: di(E.descriptors, t.clip.libraries),
 			container: i,
 			mode: "live",
@@ -18281,7 +18549,7 @@ function rp(e, t) {
 			}
 			t.bitmap && (t.bitmap.close(), u.replacedFrames++), t.bitmap = e, t.lastFrameSeq++, u.framesReceived++, r.frameParamToken && (ae ? (ae.complete(r.frameParamToken, t.clip.id, []), Ke()) : re.complete(r.frameParamToken, t.clip.id, [])), He();
 		}).catch((n) => {
-			k || t.replay !== a || t.replayRequest !== o || n instanceof Df && n.diagnostic.code === "canceled" || (e.onError ? e.onError(n instanceof Error ? n : Error(String(n))) : console.error(n));
+			k || t.replay !== a || t.replayRequest !== o || n instanceof Af && n.diagnostic.code === "canceled" || (e.onError ? e.onError(n instanceof Error ? n : Error(String(n))) : console.error(n));
 		});
 	}, Je = (e) => {
 		if (p !== null) return x = "cue", d = p, f = e, p = null, d;
@@ -18325,7 +18593,7 @@ function rp(e, t) {
 			playing: _e,
 			speed: 1
 		};
-		_e || Kf(me);
+		_e || Yf(me);
 		let u = T.cues && Object.keys(T.cues).length ? l : {
 			...l,
 			frame: t * T.fps
@@ -18344,7 +18612,7 @@ function rp(e, t) {
 		let ee = /* @__PURE__ */ new Map();
 		for (let e of D) {
 			if (e.layerRef.visible === !1 && !de.has(e.clip.id)) {
-				Ge(e), e.kind === "html" ? (e.hasEntered = !1, e.replayRequest = (e.replayRequest ?? 0) + 1, e.replay?.cancelPending()) : e.kind === "runtime" && Re(e) ? e.player.tickTime(e.clip.outFrame / T.fps) : (e.kind === "video" || e.kind === "audio") && qf(e.kind === "video" ? e.video : e.audio, !1, o, T.fps, Hf(_e), e.clip.inFrame);
+				Ge(e), e.kind === "html" ? (e.hasEntered = !1, e.replayRequest = (e.replayRequest ?? 0) + 1, e.replay?.cancelPending()) : e.kind === "runtime" && Re(e) ? e.player.tickTime(e.clip.outFrame / T.fps) : (e.kind === "video" || e.kind === "audio") && Xf(e.kind === "video" ? e.video : e.audio, !1, o, T.fps, Gf(_e), e.clip.inFrame);
 				continue;
 			}
 			let t = Xe(e.clip, e.kind === "html" && e.replayDirty !== void 0 ? u : l, T, d);
@@ -18385,7 +18653,7 @@ function rp(e, t) {
 						Ge(e);
 						continue;
 					}
-					let i = le.get(e.clip.assetId), a = e.clip.kind === "html" ? "html" : "composition", o = i?.kind === "composition" ? i.composition.fps : T.fps, c = Ff(r.time, o, a), u = g.visit({
+					let i = le.get(e.clip.assetId), a = e.clip.kind === "html" ? "html" : "composition", o = i?.kind === "composition" ? i.composition.fps : T.fps, c = Rf(r.time, o, a), u = g.visit({
 						pathId: `child:${e.clip.id}`,
 						definitionKey: JSON.stringify([
 							e.clip.assetId,
@@ -18400,12 +18668,12 @@ function rp(e, t) {
 						mapTime: (e) => {
 							let t = e * T.fps;
 							return t >= n.clip.inFrame && t < n.clip.outFrame ? {
-								time: Ff((t - n.clip.inFrame) / T.fps, o, a),
+								time: Rf((t - n.clip.inFrame) / T.fps, o, a),
 								segmentKey: String(b)
 							} : null;
 						}
 					});
-					u && Xf.get(e.player)?.tick(Object.freeze({
+					u && $f.get(e.player)?.tick(Object.freeze({
 						time: c,
 						inputDelivery: s.inputDelivery,
 						delivery: u
@@ -18417,13 +18685,13 @@ function rp(e, t) {
 					n ? e.player.tickTime(n.time) : (e.player.setMediaPlaying(!1), e.player.tickTime(e.clip.outFrame / T.fps));
 				} else if (t) {
 					let n = Ue(`child:${e.clip.id}`, e.clip.assetId ?? e.clip.id, e.clip, s);
-					n && Xf.get(e.player)?.tick(Object.freeze({
+					n && $f.get(e.player)?.tick(Object.freeze({
 						time: t.time,
 						inputDelivery: s.inputDelivery,
 						delivery: n
 					}));
 				} else Ge(e);
-			} else (e.kind === "video" || e.kind === "audio") && qf(e.kind === "video" ? e.video : e.audio, !!t, o, T.fps, Hf(_e), e.clip.inFrame);
+			} else (e.kind === "video" || e.kind === "audio") && Xf(e.kind === "video" ? e.video : e.audio, !!t, o, T.fps, Gf(_e), e.clip.inFrame);
 		}
 		se = {
 			frame: o,
@@ -18438,8 +18706,8 @@ function rp(e, t) {
 		m !== null && Ye(m, {}, void 0, !0);
 	}, rt = (e) => {
 		if (!(k || _e === e)) {
-			_e = e, e || Kf(me);
-			for (let t of D) !e && (t.kind === "video" || t.kind === "audio") ? Gf(t.kind === "video" ? t.video : t.audio) : (t.kind === "composition-ref" || t.kind === "runtime") && t.player.setMediaPlaying(e);
+			_e = e, e || Yf(me);
+			for (let t of D) !e && (t.kind === "video" || t.kind === "audio") ? Jf(t.kind === "video" ? t.video : t.audio) : (t.kind === "composition-ref" || t.kind === "runtime") && t.player.setMediaPlaying(e);
 		}
 	}, it = (t) => {
 		ye?.abort();
@@ -18448,7 +18716,7 @@ function rp(e, t) {
 			be = Promise.all(xe).then(() => void 0), be.catch(() => void 0);
 			return;
 		}
-		let i = pf(t), a = ye = new AbortController();
+		let i = gf(t), a = ye = new AbortController();
 		be = ve.resolve(i, {
 			securityScope: `web-player:${r}`,
 			assetBaseUrl: e.assetBaseUrl,
@@ -18464,7 +18732,7 @@ function rp(e, t) {
 			Se = !1;
 			try {
 				if (!S) throw Error("Public source resolution requires a normalized document owner.");
-				S = wf(S, e.project.assets), C = bf(S, i), T = Yf(C, S.document.remoteAssetPolicy), E = fi(T.assets, n), Ee(), M(T.width, T.height), ke();
+				S = Df(S, e.project.assets), C = Cf(S, i), T = Qf(C, S.document.remoteAssetPolicy), E = fi(T.assets, n), Ee(), M(T.width, T.height), ke();
 			} catch (t) {
 				throw Oe(), e.release(), t;
 			}
@@ -18476,13 +18744,13 @@ function rp(e, t) {
 	}, at = (e) => {
 		if (k) throw Error("Cannot change a project after the Player is destroyed.");
 		if (t.kind !== "public") throw Error("A managed Player requires setWorkspace(), not a raw project replacement.");
-		Jf(e);
-		let r = Cf(e), i = r.workspace, a = Yf(i, r.remoteAssetPolicy, !1);
+		Zf(e);
+		let r = Ef(e), i = r.workspace, a = Qf(i, r.remoteAssetPolicy, !1);
 		S = r.document, C = i, w = e.clipFormatVersion !== 1, T = a, d = null, f = null, p = null, h.reset(), _.reset(), g.reset(), y = void 0, E = fi(T.assets, n), Ee(), M(T.width, T.height), e.clipFormatVersion === 3 ? Oe() : ke(), A?.release(), A = void 0, it(e);
 	}, ot = (e, r) => {
 		if (k) throw Error("Cannot change a workspace after the Player is destroyed.");
 		if (t.kind !== "managed") throw Error("A public Player cannot install an internal workspace.");
-		let i = Yf(e, r);
+		let i = Qf(e, r);
 		C = e, T = i, d = null, f = null, p = null, h.reset(), _.reset(), g.reset(), y = void 0, E = fi(T.assets, n), Ee(), M(T.width, T.height), ke(), be = Promise.all(xe).then(() => void 0), be.catch(() => void 0);
 	}, st = (e) => {
 		if (k) throw Error("Cannot open a composition after the Player is destroyed.");
@@ -18492,7 +18760,7 @@ function rp(e, t) {
 			...C,
 			compositionId: t.id,
 			composition: t.composition
-		}, T = Yf(C, T.remoteAssetPolicy), d = null, f = null, p = null, m = null, h.reset(), _.reset(), g.reset(), y = void 0, l.clear(), E = fi(T.assets, n), Ee(), M(T.width, T.height), Se || (ke(), be = Promise.all(xe).then(() => void 0), be.catch(() => void 0)), Ze(0), {
+		}, T = Qf(C, T.remoteAssetPolicy), d = null, f = null, p = null, m = null, h.reset(), _.reset(), g.reset(), y = void 0, l.clear(), E = fi(T.assets, n), Ee(), M(T.width, T.height), Se || (ke(), be = Promise.all(xe).then(() => void 0), be.catch(() => void 0)), Ze(0), {
 			compositionId: t.id,
 			width: T.width,
 			height: T.height,
@@ -18585,10 +18853,10 @@ function rp(e, t) {
 		emit: vt,
 		getStats: () => ({ ...u }),
 		destroy() {
-			k || (k = !0, Xf.delete(yt), h.dispose(), _.dispose(), g.dispose(), window.removeEventListener("message", Ne), Oe(), ye?.abort(), A?.release(), ve.dispose(), a && i.remove());
+			k || (k = !0, $f.delete(yt), h.dispose(), _.dispose(), g.dispose(), window.removeEventListener("message", Ne), Oe(), ye?.abort(), A?.release(), ve.dispose(), a && i.remove());
 		}
 	};
-	return Xf.set(yt, {
+	return $f.set(yt, {
 		tick: (e) => Ye(e.time, { inputDelivery: e.inputDelivery }, e),
 		deactivate: () => {
 			_.deactivate("clock"), g.reset();
@@ -18603,13 +18871,13 @@ function rp(e, t) {
 		})
 	};
 }
-function ip(e, t, n, r, i, a) {
+function sp(e, t, n, r, i, a) {
 	let o = [Math.max(1, i[0]), Math.max(1, i[1])];
 	rt(e, r, o, nt(e, e.canvas, t, n, o, a)), e.restore();
 }
-function ap(e, t, n, r, i, a, o, s = zf, c = /* @__PURE__ */ new Map()) {
-	let l = typeof s == "boolean" ? s ? Vf : zf : s, u = l.mode === "prepared";
-	l.mode === "paused-sample" && Kf(r);
+function cp(e, t, n, r, i, a, o, s = Hf, c = /* @__PURE__ */ new Map()) {
+	let l = typeof s == "boolean" ? s ? Wf : Hf : s, u = l.mode === "prepared";
+	l.mode === "paused-sample" && Yf(r);
 	let d = new Map([...t].filter(([, e]) => {
 		let t = n.get(e.assetId)?.kind;
 		return t === "image" || t === "video" || t === "audio" || (t === "html-clip" || t === "composition") && (u || c.has(e.id));
@@ -18647,11 +18915,11 @@ function ap(e, t, n, r, i, a, o, s = zf, c = /* @__PURE__ */ new Map()) {
 	}
 	let v = m.map((e) => ({
 		node: e,
-		parent: op
+		parent: lp
 	}));
 	for (; v.length;) {
-		let { node: e, parent: t } = v.pop(), r = e.object, i = n.get(r.assetId), a = Zf(r, i, Qf(c.get(r.id) ?? _(i))), o = r.anchorPoint ?? [a[0] / 2, a[1] / 2], s = {
-			transform: Lf(t.transform, If(r, o)),
+		let { node: e, parent: t } = v.pop(), r = e.object, i = n.get(r.assetId), a = ep(r, i, tp(c.get(r.id) ?? _(i))), o = r.anchorPoint ?? [a[0] / 2, a[1] / 2], s = {
+			transform: Bf(t.transform, zf(r, o)),
 			opacity: t.opacity * r.opacity,
 			visible: t.visible && r.visible
 		};
@@ -18664,17 +18932,17 @@ function ap(e, t, n, r, i, a, o, s = zf, c = /* @__PURE__ */ new Map()) {
 	let y = (e, t, r, i = {}) => {
 		let s = n.get(t.object.assetId), d = c.get(t.object.id) ?? _(s);
 		if (!s || !d || !i.ignoreVisibility && !r.visible) return;
-		let [f, p] = Zf(t.object, s, Qf(d));
+		let [f, p] = ep(t.object, s, tp(d));
 		if (d instanceof HTMLAudioElement) {
 			if (u) return;
-			d.volume = lp(t.object.volume, 1, 0, 1), qf(d, !!(i.ignoreVisibility || r.visible), a, o, l);
+			d.volume = fp(t.object.volume, 1, 0, 1), Xf(d, !!(i.ignoreVisibility || r.visible), a, o, l);
 			return;
 		}
-		d instanceof HTMLVideoElement && !u && qf(d, !!(i.ignoreVisibility || r.visible), a, o, l), !(f <= 0 || p <= 0 || d instanceof HTMLImageElement && !d.complete || d instanceof HTMLVideoElement && d.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) && (e.save(), e.setTransform(h.a, h.b, h.c, h.d, h.e, h.f), e.transform(...r.transform), e.globalAlpha = lp(r.opacity, 1, 0, 1), e.globalCompositeOperation = i.composite ?? tt[t.object.blendMode ?? "normal"] ?? "source-over", e.drawImage(d, 0, 0, f, p), e.restore());
+		d instanceof HTMLVideoElement && !u && Xf(d, !!(i.ignoreVisibility || r.visible), a, o, l), !(f <= 0 || p <= 0 || d instanceof HTMLImageElement && !d.complete || d instanceof HTMLVideoElement && d.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) && (e.save(), e.setTransform(h.a, h.b, h.c, h.d, h.e, h.f), e.transform(...r.transform), e.globalAlpha = fp(r.opacity, 1, 0, 1), e.globalCompositeOperation = i.composite ?? tt[t.object.blendMode ?? "normal"] ?? "source-over", e.drawImage(d, 0, 0, f, p), e.restore());
 	}, b = (e, t, n) => {
 		let r = g.get(t.object.id);
 		if (!r || !r.visible) return;
-		let a = t.object.maskId && p.has(t.object.id) ? sp(m, t.object.maskId) : void 0, o = a ? g.get(a.object.id) : void 0;
+		let a = t.object.maskId && p.has(t.object.id) ? up(m, t.object.maskId) : void 0, o = a ? g.get(a.object.id) : void 0;
 		if (t.object.id !== n && a && o) {
 			let n = i.get(t.object.id);
 			n || (n = document.createElement("canvas"), i.set(t.object.id, n)), (n.width !== e.canvas.width || n.height !== e.canvas.height) && (n.width = e.canvas.width, n.height = e.canvas.height);
@@ -18691,7 +18959,7 @@ function ap(e, t, n, r, i, a, o, s = zf, c = /* @__PURE__ */ new Map()) {
 	};
 	for (let t of m) b(e, t);
 }
-var op = {
+var lp = {
 	transform: [
 		1,
 		0,
@@ -18703,23 +18971,23 @@ var op = {
 	opacity: 1,
 	visible: !0
 };
-function sp(e, t) {
+function up(e, t) {
 	for (let n of e) {
 		if (n.object.id === t) return n;
-		let e = sp(n.children, t);
+		let e = up(n.children, t);
 		if (e) return e;
 	}
 }
-function cp(e) {
+function dp(e) {
 	if (!e || typeof e != "object") return !1;
 	let t = e;
 	if (t.type === "remove") return typeof t.id == "string";
 	let n = t.object;
 	return t.type === "upsert" && typeof n?.id == "string";
 }
-function lp(e, t, n = -Infinity, r = Infinity) {
+function fp(e, t, n = -Infinity, r = Infinity) {
 	let i = Number(e);
 	return Number.isFinite(i) ? Math.min(r, Math.max(n, i)) : t;
 }
 //#endregion
-export { nt as applyClipTransform, tt as canvasBlendModes, ap as compositeSceneGraph, tp as createClipPlayer, np as createManagedClipPlayer, rt as drawImageCover, Zf as resolveDisplaySize };
+export { nt as applyClipTransform, tt as canvasBlendModes, cp as compositeSceneGraph, ip as createClipPlayer, ap as createManagedClipPlayer, rt as drawImageCover, ep as resolveDisplaySize };

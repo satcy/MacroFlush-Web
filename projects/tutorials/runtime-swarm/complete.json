@@ -1,0 +1,785 @@
+{
+  "clipFormatVersion": 2,
+  "rootCompositionId": "tutorial-runtime-swarm",
+  "assets": [
+    {
+      "id": "tutorial-runtime-swarm",
+      "kind": "composition",
+      "name": "Runtime Swarm",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 240,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "controller-layer",
+            "name": "Swarm Controller",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "controller",
+                "name": "Swarm Controller",
+                "kind": "html",
+                "assetId": "controller-asset",
+                "inFrame": 0,
+                "outFrame": 240,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "spread": {
+                    "key": "spread",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "min": 0.4,
+                    "max": 1.4,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+                  "js": "clip.use(\"centi\");\nclip.defineParams({ spread: { type: \"number\", default: 1, min: 0.4, max: 1.4, interpolable: true } });\nconst master = add(\"Dot\", { x: 640, y: 360, anchorPoint: [40, 40], blendMode: \"screen\" });\nconst dots = [master];\nfor (let i = 1; i < 36; i++) {\n  dots.push(add(\"Dot\", { x: 640, y: 360, anchorPoint: [40, 40],\n    instanceOf: master, blendMode: \"screen\" }));\n}\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  const ctx = getContext(); ctx.clearRect(0, 0, 1280, 720);\n  dots.forEach((dot, i) => {\n    const phase = i / dots.length * Math.PI * 2;\n    const ring = 140 + (i % 3) * 70;\n    dot.x = 640 + Math.cos(time * 0.6 + phase) * ring * clip.spread;\n    dot.y = 360 + Math.sin(time * 0.9 + phase * 2) * ring * 0.65 * clip.spread;\n    dot.scale = 0.5 + (i % 4) * 0.16;\n    dot.opacity = 0.8;\n  });\n});"
+                },
+                "keyframeTracks": {
+                  "spread": [
+                    {
+                      "frame": 0,
+                      "value": 0.55,
+                      "easing": "sineInOut"
+                    },
+                    {
+                      "frame": 120,
+                      "value": 1.15,
+                      "easing": "sineInOut"
+                    },
+                    {
+                      "frame": 239,
+                      "value": 0.55,
+                      "easing": "sineInOut"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "backdrop-layer",
+            "name": "Background",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "backdrop",
+                "name": "Background",
+                "kind": "html",
+                "assetId": "backdrop-asset",
+                "inFrame": 0,
+                "outFrame": 240,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+                  "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(() => { bg(\"#0c0f17\"); });"
+                },
+                "keyframeTracks": {}
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "controller-asset",
+      "kind": "html-clip",
+      "name": "Swarm Controller",
+      "detail": "Workshop HTML Clip",
+      "clipId": "controller",
+      "htmlTemplate": {
+        "id": "controller",
+        "name": "Swarm Controller",
+        "kind": "html",
+        "assetId": "controller-asset",
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          },
+          "spread": {
+            "key": "spread",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "min": 0.4,
+            "max": 1.4,
+            "step": 0.01,
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+          "js": "clip.use(\"centi\");\nclip.defineParams({ spread: { type: \"number\", default: 1, min: 0.4, max: 1.4, interpolable: true } });\nconst master = add(\"Dot\", { x: 640, y: 360, anchorPoint: [40, 40], blendMode: \"screen\" });\nconst dots = [master];\nfor (let i = 1; i < 36; i++) {\n  dots.push(add(\"Dot\", { x: 640, y: 360, anchorPoint: [40, 40],\n    instanceOf: master, blendMode: \"screen\" }));\n}\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  const ctx = getContext(); ctx.clearRect(0, 0, 1280, 720);\n  dots.forEach((dot, i) => {\n    const phase = i / dots.length * Math.PI * 2;\n    const ring = 140 + (i % 3) * 70;\n    dot.x = 640 + Math.cos(time * 0.6 + phase) * ring * clip.spread;\n    dot.y = 360 + Math.sin(time * 0.9 + phase * 2) * ring * 0.65 * clip.spread;\n    dot.scale = 0.5 + (i % 4) * 0.16;\n    dot.opacity = 0.8;\n  });\n});"
+        },
+        "keyframeTracks": {
+          "spread": [
+            {
+              "frame": 0,
+              "value": 0.55,
+              "easing": "sineInOut"
+            },
+            {
+              "frame": 120,
+              "value": 1.15,
+              "easing": "sineInOut"
+            },
+            {
+              "frame": 239,
+              "value": 0.55,
+              "easing": "sineInOut"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "backdrop-asset",
+      "kind": "html-clip",
+      "name": "Background",
+      "detail": "Workshop HTML Clip",
+      "clipId": "backdrop",
+      "htmlTemplate": {
+        "id": "backdrop",
+        "name": "Background",
+        "kind": "html",
+        "assetId": "backdrop-asset",
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+          "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(() => { bg(\"#0c0f17\"); });"
+        },
+        "keyframeTracks": {}
+      }
+    },
+    {
+      "id": "dot-template-asset",
+      "kind": "html-clip",
+      "name": "Dot",
+      "detail": "Workshop HTML Clip",
+      "clipId": "dot-template",
+      "htmlTemplate": {
+        "id": "dot-template",
+        "name": "Dot",
+        "kind": "html",
+        "assetId": "dot-template-asset",
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              40,
+              40
+            ],
+            "value": [
+              40,
+              40
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              80,
+              80
+            ],
+            "value": [
+              80,
+              80
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+          "js": "clip.use(\"centi\");\nsetup(() => size(80, 80));\nonFrame(({ time }) => {\n  const ctx = getContext(); ctx.clearRect(0, 0, 80, 80);\n  const glow = ctx.createRadialGradient(40, 40, 0, 40, 40, 35);\n  glow.addColorStop(0, \"#ffffff\"); glow.addColorStop(0.24, \"#5dd4ff\");\n  glow.addColorStop(1, \"rgba(93,212,255,0)\");\n  ctx.fillStyle = glow;\n  ctx.beginPath(); ctx.arc(40, 40, 27 + Math.sin(time * 2) * 7, 0, Math.PI * 2); ctx.fill();\n});"
+        },
+        "keyframeTracks": {}
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "interactive-examples.mdn.mozilla.net",
+      "files.freemusicarchive.org"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  }
+}

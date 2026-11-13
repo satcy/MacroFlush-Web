@@ -1,6 +1,9 @@
 import { extraGroups, extraApi } from "./reference-extra.js";
 import { featureGroups, featureApi } from "./reference-features.js";
 import { threeDGroups, threeDApi, threeDLesson } from "./three-d-content.js";
+import { oscSequencerLesson } from "./osc-sequencer-content.js";
+import { p5TimelineLesson } from "./p5-tutorial-content.js";
+import { workshopLessons } from "./tutorial-workshops.js";
 export const groups = [
   { id: "lifecycle", name: "Lifecycle & time", description: "Clipの初期化と、タイムラインが管理する時間。" },
   { id: "parameters", name: "Parameters", description: "コードの値をInspectorとキーフレームにつなぐ。" },
@@ -17,6 +20,8 @@ export const api = [
   { id: "composition-time", group: "lifecycle", name: "compTime / compFrame", text: "コンポジションのPlayhead基準の秒数とフレーム番号です。ClipのIn基準のtime / frameと区別して、複数Clipを同期させます。", code: "onFrame(({ time, compTime, compFrame }) => {\n  // time は Clip のローカル時間\n  // compTime は Composition の時間\n});" },
   { id: "defineparams", group: "parameters", name: "clip.defineParams(schema)", text: "公開パラメータの型・初期値・範囲を宣言します。number、string、boolean、color、vec2、vec3、selectに対応します。", code: "clip.defineParams({\n  speed: { type: \"number\", default: 1, min: 0,\n    max: 3, step: 0.1, interpolable: true },\n  tint: { type: \"color\", default: \"#5dd4ff\",\n    space: \"srgb\", interpolable: true }\n});" },
   { id: "clip-params", group: "parameters", name: "clip.<name>", text: "宣言したパラメータを直接読み書きできます。キーフレーム区間ではキーフレームの値が優先されます。writable: falseでスクリプトからのホスト更新を無効にできます。", code: "onFrame(({ time }) => {\n  const phase = time * clip.speed;\n  col(clip.tint);\n  oval(360 + Math.sin(phase) * 100, 202, 30);\n});" },
+  { id: "clip-param-list", group: "parameters", name: "clip.paramNames / clip.listParams()", text: "Clip自身のカスタムパラメータを列挙します。clip.paramNamesは登録順のキーの凍結配列、clip.listParams()は各パラメータのschemaと現在値（key・type・default・value・label・min・max・step・options・space・interpolable・writable）を、深いコピーで凍結して返します。clip.defineParams()は宣言したキーの配列を返すようになりました。組み込みの変形キーと、まだ作成していないclip.<name>の値は含まれません。Inspectorやホスト側の宣言は、host値の適用後（setup()かonFrame()）に現れます。paramNamesとlistParamsはisNewと同じ予約名で、すでにこの名前のカスタムパラメータを持つプロジェクトは、schema登録時にエラーになります。p5の呼び出し可能なclipでも使えます。", code: "clip.defineParams({\n  speed: { type: \"number\", default: 1 },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nonFrame(() => {\n  console.log(clip.paramNames); // [\"speed\", \"tint\"]\n  for (const p of clip.listParams()) {\n    console.log(p.key, p.type, p.value);\n  }\n});" },
+  { id: "clip-isnew", group: "parameters", name: "clip.isNew.<name>", text: "カスタムパラメータが前回処理したtickから変わったかを、読み取り専用の真偽値で返します。最初のtickとClipのINフレーム（ローカルフレーム1未満）では常にtrueで、同じ値の再tickはfalseです。Inspector・OSC・setParam・キーフレームによる変化はそれぞれ1回だけ検知され、Clip自身の書き込みは検知されません。seek・step・stillのtickも履歴を更新するため、結果は処理したtickの順序に依存し、Clipの途中から始めた書き出しは最初のフレームがtrueになります。未知のキーと組み込みのキーはundefinedで、isNewはパラメータ名として宣言できません。p5でも使えます。アプリ側ではNodeテストで確認されており、実機では未実行です。", code: "clip.defineParams({\n  speed: { type: \"number\", default: 1 }\n});\nonFrame(() => {\n  if (clip.isNew.speed) {\n    console.log(\"speed changed\", clip.speed);\n  }\n});" },
   { id: "comp", group: "parameters", name: "comp.<name>", text: "コンポジションのパラメータは、同じコンポジション内のClipで共有されます。Clipを選択していないInspectorから作成します。", code: "onFrame(() => {\n  // Compositionにspeedを作成してから使用\n  clip.speed = comp.speed;\n});" },
   { id: "getparam", group: "parameters", name: "clip.getParam(placementId, key)", text: "同じコンポジション内の別Clip配置の、フレーム開始時点で補間されたパラメータを読みます。アセット名ではなく、Timeline上の配置IDを指定します。", code: "onFrame(() => {\n  const speed = clip.getParam(\"placement-id\", \"speed\");\n});" },
   { id: "centi", group: "canvas", name: "clip.use(\"centi\")", text: "CentiのCanvas2Dヘルパーを有効にします。既定ではグローバル関数として使用できます。", code: "clip.use(\"centi\");\nsetup(() => size(720, 405));\nonFrame(() => {\n  bg(0);\n  col(\"#5dd4ff\");\n  oval(360, 202, 60);\n});" },
@@ -58,5 +63,8 @@ export const lessons = [
     { title: "用途に合わせて設定する", text: "MP4は目標ビットレート（Mbps、既定8）で品質を調整します。H.264は幅と高さが2以上の偶数で、透明部分は黒に合成されます。透明背景が必要ならPNG、またはアルファを保持するProRes 4444 / 4444 XQ（アプリ版）を選びます。音声はTimelineに配置した音声Clipをミックスできます。" },
     { title: "ファイルを確認する", text: "出力したファイルの解像度、尺、音声、必要な場合はアルファを確認します。ブラウザ版では、ブラウザが許せばフォルダやファイルへ直接保存され、そうでなければMP4または連番PNGのZIPがダウンロードされます（直接保存できないときは128 MiBまで）。現行の書き出しには対象Clipの制約があります。ネストしたCompositionやWGSL、DOMのみのHTML Clipなどは対応状況をアプリのREADMEで確認してください。" }
   ] },
-  threeDLesson
+  threeDLesson,
+  oscSequencerLesson,
+  p5TimelineLesson,
+  ...workshopLessons
 ];

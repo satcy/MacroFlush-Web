@@ -1,0 +1,2286 @@
+{
+  "clipFormatVersion": 2,
+  "rootCompositionId": "tutorial-feedback-pointer",
+  "assets": [
+    {
+      "id": "tutorial-feedback-pointer",
+      "kind": "composition",
+      "name": "Pointer Study",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 480,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "pointer-clip-layer",
+            "name": "Pointer Reader",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "pointer-clip",
+                "name": "Pointer Reader",
+                "kind": "html",
+                "assetId": "pointer-clip-asset",
+                "inFrame": 0,
+                "outFrame": 480,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "takeName": {
+                    "key": "takeName",
+                    "type": "string",
+                    "default": "Hand Take",
+                    "value": "Hand Take",
+                    "interpolable": false,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+                  "js": "clip.use(\"centi\");\nclip.defineParams({ takeName: { type: \"string\", default: \"Hand Take\" } });\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  const ctx = getContext();\n  ctx.fillStyle = \"#0c0f17\"; ctx.fillRect(0, 0, 1280, 720);\n  const take = feedback(clip.takeName, { offset: 0, rate: 1, loop: false });\n  const pointer = take.sample(\"pointer\", { space: \"clip\" });\n  ctx.strokeStyle = \"#5dd4ff\"; ctx.lineWidth = 5; ctx.lineCap = \"round\";\n  ctx.beginPath();\n  let penDown = false;\n  for (let i = 0; i <= 90; i++) {\n    const p = take.at(\"pointer\", Math.max(0, time - 1.5 + i / 60), { space: \"clip\" });\n    if (p.buttons && p.inside) {\n      if (penDown) ctx.lineTo(p.x, p.y); else ctx.moveTo(p.x, p.y);\n      penDown = true;\n    } else penDown = false;\n  }\n  ctx.stroke();\n  if (pointer.inside) {\n    ctx.fillStyle = pointer.buttons ? \"#ffdc63\" : \"#ff6b9d\";\n    ctx.beginPath(); ctx.arc(pointer.x, pointer.y, 16, 0, Math.PI * 2); ctx.fill();\n  }\n  ctx.font = \"20px sans-serif\"; ctx.fillStyle = \"#a0afbf\";\n  ctx.fillText(\"POINTER / \" + clip.takeName, 50, 60);\n});"
+                },
+                "keyframeTracks": {},
+                "feedback": {
+                  "assetId": "hand-take",
+                  "space": "clip",
+                  "offset": 0,
+                  "rate": 1,
+                  "loop": false
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "pointer-clip-asset",
+      "kind": "html-clip",
+      "name": "Pointer Reader",
+      "detail": "Workshop HTML Clip",
+      "clipId": "pointer-clip",
+      "htmlTemplate": {
+        "id": "pointer-clip",
+        "name": "Pointer Reader",
+        "kind": "html",
+        "assetId": "pointer-clip-asset",
+        "inFrame": 0,
+        "outFrame": 480,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          },
+          "takeName": {
+            "key": "takeName",
+            "type": "string",
+            "default": "Hand Take",
+            "value": "Hand Take",
+            "interpolable": false,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+          "js": "clip.use(\"centi\");\nclip.defineParams({ takeName: { type: \"string\", default: \"Hand Take\" } });\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  const ctx = getContext();\n  ctx.fillStyle = \"#0c0f17\"; ctx.fillRect(0, 0, 1280, 720);\n  const take = feedback(clip.takeName, { offset: 0, rate: 1, loop: false });\n  const pointer = take.sample(\"pointer\", { space: \"clip\" });\n  ctx.strokeStyle = \"#5dd4ff\"; ctx.lineWidth = 5; ctx.lineCap = \"round\";\n  ctx.beginPath();\n  let penDown = false;\n  for (let i = 0; i <= 90; i++) {\n    const p = take.at(\"pointer\", Math.max(0, time - 1.5 + i / 60), { space: \"clip\" });\n    if (p.buttons && p.inside) {\n      if (penDown) ctx.lineTo(p.x, p.y); else ctx.moveTo(p.x, p.y);\n      penDown = true;\n    } else penDown = false;\n  }\n  ctx.stroke();\n  if (pointer.inside) {\n    ctx.fillStyle = pointer.buttons ? \"#ffdc63\" : \"#ff6b9d\";\n    ctx.beginPath(); ctx.arc(pointer.x, pointer.y, 16, 0, Math.PI * 2); ctx.fill();\n  }\n  ctx.font = \"20px sans-serif\"; ctx.fillStyle = \"#a0afbf\";\n  ctx.fillText(\"POINTER / \" + clip.takeName, 50, 60);\n});"
+        },
+        "keyframeTracks": {},
+        "feedback": {
+          "assetId": "hand-take",
+          "space": "clip",
+          "offset": 0,
+          "rate": 1,
+          "loop": false
+        }
+      }
+    },
+    {
+      "id": "hand-take",
+      "name": "Hand Take",
+      "kind": "feedback",
+      "detail": "Generated practice strokes / 8 sec",
+      "recording": {
+        "formatVersion": 1,
+        "timeUnit": "us",
+        "durationUs": 8000000,
+        "source": {
+          "width": 1280,
+          "height": 720
+        },
+        "channels": [
+          {
+            "id": "pointer",
+            "kind": "pointer",
+            "initial": {
+              "x": 160,
+              "y": 360,
+              "buttons": 0,
+              "inside": false
+            },
+            "records": [
+              {
+                "t": 0,
+                "seq": 1,
+                "x": 160,
+                "y": 360,
+                "buttons": 1,
+                "inside": true,
+                "event": "down",
+                "button": 0
+              },
+              {
+                "t": 33333,
+                "seq": 2,
+                "x": 169.14285714285714,
+                "y": 388.50489853107933,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 66667,
+                "seq": 3,
+                "x": 178.28571428571428,
+                "y": 372.2013405177988,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 100000,
+                "seq": 4,
+                "x": 187.42857142857142,
+                "y": 367.3744560992477,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 133333,
+                "seq": 5,
+                "x": 196.57142857142858,
+                "y": 404.2589217915193,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 166667,
+                "seq": 6,
+                "x": 205.71428571428572,
+                "y": 418.7092425420509,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 200000,
+                "seq": 7,
+                "x": 214.85714285714286,
+                "y": 396.9518557399239,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 233333,
+                "seq": 8,
+                "x": 224,
+                "y": 406.61407100125035,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 266667,
+                "seq": 9,
+                "x": 233.14285714285717,
+                "y": 443.97639161247156,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 300000,
+                "seq": 10,
+                "x": 242.28571428571428,
+                "y": 442.3052066864687,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 333333,
+                "seq": 11,
+                "x": 251.42857142857142,
+                "y": 422.45345858163404,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 366667,
+                "seq": 12,
+                "x": 260.57142857142856,
+                "y": 445.7200428553919,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 400000,
+                "seq": 13,
+                "x": 269.7142857142857,
+                "y": 475.3969732641117,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 433333,
+                "seq": 14,
+                "x": 278.8571428571429,
+                "y": 459.5879640096972,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 466667,
+                "seq": 15,
+                "x": 288,
+                "y": 448.3200307793449,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 500000,
+                "seq": 16,
+                "x": 297.1428571428571,
+                "y": 480.54673203830765,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 533333,
+                "seq": 17,
+                "x": 306.28571428571433,
+                "y": 496.15477215435703,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 566667,
+                "seq": 18,
+                "x": 315.42857142857144,
+                "y": 471.6358627251783,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 600000,
+                "seq": 19,
+                "x": 324.57142857142856,
+                "y": 473.11913676259513,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 633333,
+                "seq": 20,
+                "x": 333.7142857142857,
+                "y": 507.0335685036648,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 666667,
+                "seq": 21,
+                "x": 342.85714285714283,
+                "y": 505.5583472758101,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 700000,
+                "seq": 22,
+                "x": 352,
+                "y": 479.70986142612674,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 733333,
+                "seq": 23,
+                "x": 361.1428571428571,
+                "y": 494.44260649534147,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 766667,
+                "seq": 24,
+                "x": 370.2857142857143,
+                "y": 521.9785215679677,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 800000,
+                "seq": 25,
+                "x": 379.42857142857144,
+                "y": 504.5015806033478,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 833333,
+                "seq": 26,
+                "x": 388.57142857142856,
+                "y": 484.67282052887924,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 866667,
+                "seq": 27,
+                "x": 397.7142857142857,
+                "y": 509.30352008625397,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 900000,
+                "seq": 28,
+                "x": 406.85714285714283,
+                "y": 523.6625739074308,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 933333,
+                "seq": 29,
+                "x": 416,
+                "y": 495.03916573856435,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 966667,
+                "seq": 30,
+                "x": 425.14285714285717,
+                "y": 486.59466531624076,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1000000,
+                "seq": 31,
+                "x": 434.2857142857143,
+                "y": 514.769130783232,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1033333,
+                "seq": 32,
+                "x": 443.42857142857144,
+                "y": 512.174167257443,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1066667,
+                "seq": 33,
+                "x": 452.5714285714286,
+                "y": 479.7484925228904,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1100000,
+                "seq": 34,
+                "x": 461.7142857142857,
+                "y": 484.6562162004467,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1133333,
+                "seq": 35,
+                "x": 470.8571428571429,
+                "y": 508.67280132535285,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1166667,
+                "seq": 36,
+                "x": 480,
+                "y": 489.35597595576144,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1200000,
+                "seq": 37,
+                "x": 489.14285714285717,
+                "y": 461.0503894709348,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1233333,
+                "seq": 38,
+                "x": 498.28571428571433,
+                "y": 477.3812483553149,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1266667,
+                "seq": 39,
+                "x": 507.42857142857144,
+                "y": 490.2220777555394,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1300000,
+                "seq": 40,
+                "x": 516.5714285714286,
+                "y": 458.3896290741089,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1333333,
+                "seq": 41,
+                "x": 525.7142857142857,
+                "y": 440.66649336299747,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1366667,
+                "seq": 42,
+                "x": 534.8571428571429,
+                "y": 463.13513432527355,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1400000,
+                "seq": 43,
+                "x": 544,
+                "y": 460.34166609719705,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1433333,
+                "seq": 44,
+                "x": 553.1428571428571,
+                "y": 423.1230883248014,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1466667,
+                "seq": 45,
+                "x": 562.2857142857142,
+                "y": 419.349868973011,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1500000,
+                "seq": 46,
+                "x": 571.4285714285713,
+                "y": 440.75337582603333,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1533333,
+                "seq": 47,
+                "x": 580.5714285714286,
+                "y": 421.65397088377284,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1566667,
+                "seq": 48,
+                "x": 589.7142857142858,
+                "y": 387.3073400355037,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1600000,
+                "seq": 49,
+                "x": 598.8571428571429,
+                "y": 396.94896058439207,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1633333,
+                "seq": 50,
+                "x": 608,
+                "y": 410.1243562024798,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1666667,
+                "seq": 51,
+                "x": 617.1428571428571,
+                "y": 378.08961619657356,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1700000,
+                "seq": 52,
+                "x": 626.2857142857142,
+                "y": 353.92799372549507,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1733333,
+                "seq": 53,
+                "x": 635.4285714285714,
+                "y": 372.7733082622824,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1766667,
+                "seq": 54,
+                "x": 644.5714285714286,
+                "y": 372.5582110858321,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1800000,
+                "seq": 55,
+                "x": 653.7142857142857,
+                "y": 334.21283332610034,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1833333,
+                "seq": 56,
+                "x": 662.8571428571429,
+                "y": 324.7886225097336,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1866667,
+                "seq": 57,
+                "x": 672,
+                "y": 346.1469060965941,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1900000,
+                "seq": 58,
+                "x": 681.1428571428571,
+                "y": 330.8260958125318,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1933333,
+                "seq": 59,
+                "x": 690.2857142857143,
+                "y": 294.4178512462608,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 1966667,
+                "seq": 60,
+                "x": 699.4285714285714,
+                "y": 300.4339694664213,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2000000,
+                "seq": 61,
+                "x": 708.5714285714286,
+                "y": 316.9833936551222,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2033333,
+                "seq": 62,
+                "x": 717.7142857142858,
+                "y": 288.8378407165022,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2066667,
+                "seq": 63,
+                "x": 726.8571428571429,
+                "y": 262.1840393370963,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2100000,
+                "seq": 64,
+                "x": 736,
+                "y": 280.4105953974138,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2133333,
+                "seq": 65,
+                "x": 745.1428571428572,
+                "y": 286.2101087373057,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2166667,
+                "seq": 66,
+                "x": 754.2857142857143,
+                "y": 251.01929913763723,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2200000,
+                "seq": 67,
+                "x": 763.4285714285714,
+                "y": 239.5613873565806,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2233333,
+                "seq": 68,
+                "x": 772.5714285714286,
+                "y": 263.7739100192622,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2266667,
+                "seq": 69,
+                "x": 781.7142857142858,
+                "y": 255.90734350815345,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2300000,
+                "seq": 70,
+                "x": 790.8571428571429,
+                "y": 221.52929895716727,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2333333,
+                "seq": 71,
+                "x": 800,
+                "y": 226.99823442249462,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2366667,
+                "seq": 72,
+                "x": 809.1428571428572,
+                "y": 249.68699008678803,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2400000,
+                "seq": 73,
+                "x": 818.2857142857143,
+                "y": 229.1046775697393,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2433333,
+                "seq": 74,
+                "x": 827.4285714285714,
+                "y": 203.49946503904167,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2466667,
+                "seq": 75,
+                "x": 836.5714285714287,
+                "y": 223.5355356168924,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2500000,
+                "seq": 76,
+                "x": 845.7142857142858,
+                "y": 237.9346942100827,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2533333,
+                "seq": 77,
+                "x": 854.8571428571429,
+                "y": 209.26821622383818,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2566667,
+                "seq": 78,
+                "x": 864,
+                "y": 198.47687891156056,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2600000,
+                "seq": 79,
+                "x": 873.1428571428571,
+                "y": 227.29916822049026,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2633333,
+                "seq": 80,
+                "x": 882.2857142857142,
+                "y": 229.20193524966047,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2666667,
+                "seq": 81,
+                "x": 891.4285714285713,
+                "y": 199.59678527427107,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2700000,
+                "seq": 82,
+                "x": 900.5714285714286,
+                "y": 206.2002932032834,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2733333,
+                "seq": 83,
+                "x": 909.7142857142857,
+                "y": 236.1478973634431,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2766667,
+                "seq": 84,
+                "x": 918.8571428571428,
+                "y": 225.0307613649933,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2800000,
+                "seq": 85,
+                "x": 928,
+                "y": 202.29942694589244,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2833333,
+                "seq": 86,
+                "x": 937.1428571428571,
+                "y": 224.75807291912375,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2866667,
+                "seq": 87,
+                "x": 946.2857142857142,
+                "y": 248.29871523840328,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2900000,
+                "seq": 88,
+                "x": 955.4285714285714,
+                "y": 227.4597025803654,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2933333,
+                "seq": 89,
+                "x": 964.5714285714286,
+                "y": 218.03647277973036,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 2966667,
+                "seq": 90,
+                "x": 973.7142857142857,
+                "y": 251.08149369275083,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3000000,
+                "seq": 91,
+                "x": 982.8571428571428,
+                "y": 262.7624466576454,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3033333,
+                "seq": 92,
+                "x": 992,
+                "y": 238.43718469049895,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3066667,
+                "seq": 93,
+                "x": 1001.1428571428571,
+                "y": 245.669156817876,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3100000,
+                "seq": 94,
+                "x": 1010.2857142857142,
+                "y": 281.64488888890725,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3133333,
+                "seq": 95,
+                "x": 1019.4285714285714,
+                "y": 279.4775563232948,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3166667,
+                "seq": 96,
+                "x": 1028.5714285714284,
+                "y": 259.1653151898895,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3200000,
+                "seq": 97,
+                "x": 1037.7142857142858,
+                "y": 282.3876135025451,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3233333,
+                "seq": 98,
+                "x": 1046.857142857143,
+                "y": 313.1955465278582,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3266667,
+                "seq": 99,
+                "x": 1056,
+                "y": 299.11430966638517,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3300000,
+                "seq": 100,
+                "x": 1065.142857142857,
+                "y": 289.55384527105986,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3333333,
+                "seq": 101,
+                "x": 1074.2857142857142,
+                "y": 324.1934888203594,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3366667,
+                "seq": 102,
+                "x": 1083.4285714285716,
+                "y": 343.33359551674505,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3400000,
+                "seq": 103,
+                "x": 1092.5714285714284,
+                "y": 322.61252466049416,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3433333,
+                "seq": 104,
+                "x": 1101.7142857142858,
+                "y": 327.94016674652266,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3466667,
+                "seq": 105,
+                "x": 1110.857142857143,
+                "y": 366.62543561717814,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 3500000,
+                "seq": 106,
+                "x": 1120,
+                "y": 370.8057924601482,
+                "buttons": 0,
+                "inside": true,
+                "event": "up",
+                "button": 0
+              },
+              {
+                "t": 4000000,
+                "seq": 107,
+                "x": 160,
+                "y": 360,
+                "buttons": 1,
+                "inside": true,
+                "event": "down",
+                "button": 0
+              },
+              {
+                "t": 4033333,
+                "seq": 108,
+                "x": 169.14285714285714,
+                "y": 371.1616938870194,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4066667,
+                "seq": 109,
+                "x": 178.28571428571428,
+                "y": 337.577015401128,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4100000,
+                "seq": 110,
+                "x": 187.42857142857142,
+                "y": 315.5929566076431,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4133333,
+                "seq": 111,
+                "x": 196.57142857142858,
+                "y": 335.50561225402504,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4166667,
+                "seq": 112,
+                "x": 205.71428571428572,
+                "y": 333.2302419628887,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4200000,
+                "seq": 113,
+                "x": 214.85714285714286,
+                "y": 295.0531567563345,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4233333,
+                "seq": 114,
+                "x": 224,
+                "y": 288.6604445092683,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4266667,
+                "seq": 115,
+                "x": 233.14285714285717,
+                "y": 310.39008098178823,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4300000,
+                "seq": 116,
+                "x": 242.28571428571428,
+                "y": 293.56441623875594,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4333333,
+                "seq": 117,
+                "x": 251.42857142857142,
+                "y": 259.0906417431837,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4366667,
+                "seq": 118,
+                "x": 260.57142857142856,
+                "y": 268.3199961120401,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4400000,
+                "seq": 119,
+                "x": 269.7142857142857,
+                "y": 284.59474274159504,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4433333,
+                "seq": 120,
+                "x": 278.8571428571429,
+                "y": 256.06657217333975,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4466667,
+                "seq": 121,
+                "x": 288,
+                "y": 232.8080313909006,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4500000,
+                "seq": 122,
+                "x": 297.1428571428571,
+                "y": 253.81560212257907,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4533333,
+                "seq": 123,
+                "x": 306.28571428571433,
+                "y": 259.016150311672,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4566667,
+                "seq": 124,
+                "x": 315.42857142857144,
+                "y": 224.9386436758498,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4600000,
+                "seq": 125,
+                "x": 324.57142857142856,
+                "y": 217.74643252414108,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4633333,
+                "seq": 126,
+                "x": 333.7142857142857,
+                "y": 243.89954707898406,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4666667,
+                "seq": 127,
+                "x": 342.85714285714283,
+                "y": 235.6049601689909,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4700000,
+                "seq": 128,
+                "x": 352,
+                "y": 203.90347170053224,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4733333,
+                "seq": 129,
+                "x": 361.1428571428571,
+                "y": 213.77052944464822,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4766667,
+                "seq": 130,
+                "x": 370.2857142857143,
+                "y": 237.44549038365764,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4800000,
+                "seq": 131,
+                "x": 379.42857142857144,
+                "y": 217.12614969064677,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4833333,
+                "seq": 132,
+                "x": 388.57142857142856,
+                "y": 195.483719346337,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4866667,
+                "seq": 133,
+                "x": 397.7142857142857,
+                "y": 219.3359705612747,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4900000,
+                "seq": 134,
+                "x": 406.85714285714283,
+                "y": 233.95458461044947,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4933333,
+                "seq": 135,
+                "x": 416,
+                "y": 206.62781608176502,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 4966667,
+                "seq": 136,
+                "x": 425.14285714285717,
+                "y": 200.51239307841956,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5000000,
+                "seq": 137,
+                "x": 434.2857142857143,
+                "y": 232.04003625050308,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5033333,
+                "seq": 138,
+                "x": 443.42857142857144,
+                "y": 233.8103472100051,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5066667,
+                "seq": 139,
+                "x": 452.5714285714286,
+                "y": 206.7464171912285,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5100000,
+                "seq": 140,
+                "x": 461.7142857142857,
+                "y": 217.99316216052597,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5133333,
+                "seq": 141,
+                "x": 470.8571428571429,
+                "y": 249.3033531021152,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5166667,
+                "seq": 142,
+                "x": 480,
+                "y": 238.20860885827418,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5200000,
+                "seq": 143,
+                "x": 489.14285714285717,
+                "y": 219.02414589175703,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5233333,
+                "seq": 144,
+                "x": 498.28571428571433,
+                "y": 245.34251943206507,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5266667,
+                "seq": 145,
+                "x": 507.42857142857144,
+                "y": 269.001501915482,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5300000,
+                "seq": 146,
+                "x": 516.5714285714286,
+                "y": 248.7791185641653,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5333333,
+                "seq": 147,
+                "x": 525.7142857142857,
+                "y": 243.4163994094308,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5366667,
+                "seq": 148,
+                "x": 534.8571428571429,
+                "y": 278.9515610710416,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5400000,
+                "seq": 149,
+                "x": 544,
+                "y": 289.8839429323798,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5433333,
+                "seq": 150,
+                "x": 553.1428571428571,
+                "y": 267.0014096585036,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5466667,
+                "seq": 151,
+                "x": 562.2857142857142,
+                "y": 278.12310989574434,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5500000,
+                "seq": 152,
+                "x": 571.4285714285713,
+                "y": 314.92709148194143,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5533333,
+                "seq": 153,
+                "x": 580.5714285714286,
+                "y": 311.67858671442366,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5566667,
+                "seq": 154,
+                "x": 589.7142857142858,
+                "y": 293.5765393737103,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5600000,
+                "seq": 155,
+                "x": 598.8571428571429,
+                "y": 319.7982753700562,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5633333,
+                "seq": 156,
+                "x": 608,
+                "y": 349.82996586532965,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5666667,
+                "seq": 157,
+                "x": 617.1428571428571,
+                "y": 334.8673590054828,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5700000,
+                "seq": 158,
+                "x": 626.2857142857142,
+                "y": 327.9325941434993,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5733333,
+                "seq": 159,
+                "x": 635.4285714285714,
+                "y": 364.0978230731569,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5766667,
+                "seq": 160,
+                "x": 644.5714285714286,
+                "y": 381.2336962749575,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5800000,
+                "seq": 161,
+                "x": 653.7142857142857,
+                "y": 360.20823290809597,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5833333,
+                "seq": 162,
+                "x": 662.8571428571429,
+                "y": 368.01087970082426,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5866667,
+                "seq": 163,
+                "x": 672,
+                "y": 406.4412964337441,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5900000,
+                "seq": 164,
+                "x": 681.1428571428571,
+                "y": 407.97678102686746,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5933333,
+                "seq": 165,
+                "x": 690.2857142857143,
+                "y": 388.14865190805426,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 5966667,
+                "seq": 166,
+                "x": 699.4285714285714,
+                "y": 410.40935363577034,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6000000,
+                "seq": 167,
+                "x": 708.5714285714286,
+                "y": 442.80967799921405,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6033333,
+                "seq": 168,
+                "x": 717.7142857142858,
+                "y": 430.06459979376876,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6066667,
+                "seq": 169,
+                "x": 726.8571428571429,
+                "y": 418.305718003394,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6100000,
+                "seq": 170,
+                "x": 736,
+                "y": 450.8683185622309,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6133333,
+                "seq": 171,
+                "x": 745.1428571428572,
+                "y": 470.39368199153756,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6166667,
+                "seq": 172,
+                "x": 754.2857142857143,
+                "y": 448.2693930912039,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6200000,
+                "seq": 173,
+                "x": 763.4285714285714,
+                "y": 449.1718978665241,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6233333,
+                "seq": 174,
+                "x": 772.5714285714286,
+                "y": 484.9944858593194,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6266667,
+                "seq": 175,
+                "x": 781.7142857142858,
+                "y": 487.94607243140337,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6300000,
+                "seq": 176,
+                "x": 790.8571428571429,
+                "y": 463.555542536345,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6333333,
+                "seq": 177,
+                "x": 800,
+                "y": 478.14560151998177,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6366667,
+                "seq": 178,
+                "x": 809.1428571428572,
+                "y": 509.0564383100257,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6400000,
+                "seq": 179,
+                "x": 818.2857142857143,
+                "y": 495.76773160965996,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6433333,
+                "seq": 180,
+                "x": 827.4285714285714,
+                "y": 476.50154037070354,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6466667,
+                "seq": 181,
+                "x": 836.5714285714287,
+                "y": 501.8993556643302,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6500000,
+                "seq": 182,
+                "x": 845.7142857142858,
+                "y": 520.6637887428116,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6533333,
+                "seq": 183,
+                "x": 854.8571428571429,
+                "y": 495.3504884616594,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6566667,
+                "seq": 184,
+                "x": 864,
+                "y": 486.88822856835986,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6600000,
+                "seq": 185,
+                "x": 873.1428571428571,
+                "y": 517.0071575174715,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6633333,
+                "seq": 186,
+                "x": 882.2857142857142,
+                "y": 519.1694847746397,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6666667,
+                "seq": 187,
+                "x": 891.4285714285713,
+                "y": 488.7858864568134,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6700000,
+                "seq": 188,
+                "x": 900.5714285714286,
+                "y": 493.57572411598454,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6733333,
+                "seq": 189,
+                "x": 909.7142857142857,
+                "y": 520.6809285477532,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6766667,
+                "seq": 190,
+                "x": 918.8571428571428,
+                "y": 505.70283841568664,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6800000,
+                "seq": 191,
+                "x": 928,
+                "y": 478.105816671487,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6833333,
+                "seq": 192,
+                "x": 937.1428571428571,
+                "y": 494.7114600259431,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6866667,
+                "seq": 193,
+                "x": 946.2857142857142,
+                "y": 511.43273666308403,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6900000,
+                "seq": 194,
+                "x": 955.4285714285714,
+                "y": 482.83240681881944,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6933333,
+                "seq": 195,
+                "x": 964.5714285714286,
+                "y": 464.73369182905896,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 6966667,
+                "seq": 196,
+                "x": 973.7142857142857,
+                "y": 488.2201155354358,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7000000,
+                "seq": 197,
+                "x": 982.8571428571428,
+                "y": 489.49357657337407,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7033333,
+                "seq": 198,
+                "x": 992,
+                "y": 453.9491840789433,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7066667,
+                "seq": 199,
+                "x": 1001.1428571428571,
+                "y": 449.1905486542334,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7100000,
+                "seq": 200,
+                "x": 1010.2857142857142,
+                "y": 472.447119411424,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7133333,
+                "seq": 201,
+                "x": 1019.4285714285714,
+                "y": 456.87760306664654,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7166667,
+                "seq": 202,
+                "x": 1028.5714285714284,
+                "y": 422.52813202833977,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7200000,
+                "seq": 203,
+                "x": 1037.7142857142858,
+                "y": 431.12840395025796,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7233333,
+                "seq": 204,
+                "x": 1046.857142857143,
+                "y": 446.7818571585415,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7266667,
+                "seq": 205,
+                "x": 1056,
+                "y": 417.0679361583671,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7300000,
+                "seq": 206,
+                "x": 1065.142857142857,
+                "y": 391.4525442546493,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7333333,
+                "seq": 207,
+                "x": 1074.2857142857142,
+                "y": 409.6724893995219,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7366667,
+                "seq": 208,
+                "x": 1083.4285714285716,
+                "y": 412.0869050542392,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7400000,
+                "seq": 209,
+                "x": 1092.5714285714284,
+                "y": 374.3940241520989,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7433333,
+                "seq": 210,
+                "x": 1101.7142857142858,
+                "y": 362.5644918631938,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7466667,
+                "seq": 211,
+                "x": 1110.857142857143,
+                "y": 383.96864026123797,
+                "buttons": 1,
+                "inside": true,
+                "event": "move"
+              },
+              {
+                "t": 7500000,
+                "seq": 212,
+                "x": 1120,
+                "y": 370.8057924601483,
+                "buttons": 0,
+                "inside": true,
+                "event": "up",
+                "button": 0
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "interactive-examples.mdn.mozilla.net",
+      "files.freemusicarchive.org"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  }
+}

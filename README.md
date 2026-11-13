@@ -28,7 +28,7 @@ npm run preview  # ビルド済みdist/を確認
 | `/about/` | About / 概念とワークスペース |
 | `/reference/` | Reference / Centiの41項目・p5.jsの12項目を含む検索可能なAPIリファレンス |
 | `/examples/` | Examples / 7実プロジェクト・カテゴリ絞り込み・ソース閲覧・JSONダウンロード |
-| `/tutorials/` | Tutorials / 5本の制作手順（3Dの実Editor画像付き） |
+| `/tutorials/` | Tutorials / 基礎・3D・OSC・p5.jsの制作手順（実Editor画像付き） |
 | `/online-editor/` | OnlineEditor / ブラウザで動作する実MacroFlushエディタ |
 
 各チュートリアルにも固有のURLがあります。ページ本文はビルド時にHTML化され、JavaScriptが無効でも読むことができます。作例カードは最初の約15フレームで静止し、ホバーまたはキーボードフォーカス中だけ再生します。クリックすると操作できるプレビューが開きます。reduced-motion設定にも対応しています。
@@ -54,6 +54,7 @@ Topに対応環境の案内、Aboutに機能比較表、Referenceに項目ごと
 - `src/timeline-model.js`: キーの移動・RGB成分・Undoのデータ操作
 - `src/reference-extra.js`: Centiとp5.jsの詳細リファレンス
 - `src/reference-guides.js`: 導入手順・単位・Centiとp5の比較
+- `src/osc-sequencer-content.js`: 06「OSCシーケンサー」（日英）。教材は `projects/tutorials/osc-sequencer/`（完成JSONとMaxパッチ）、画像は `assets/tutorials/osc-sequencer/`
 - `src/content-en.js`: 共通IDに対応するReference・Tutorialsの英語本文
 - `src/ui-en.js` / `src/locale.js`: 画面文言・コードコメント・操作メッセージの英訳と切り替え
 - `src/project-player.js`: MacroFlush Playerのロード・再生・破棄
@@ -66,7 +67,7 @@ Topに対応環境の案内、Aboutに機能比較表、Referenceに項目ごと
 - `scripts/`: ビルド、ローカルHTTPサーバー、検証
 - `scripts/sync-editor.mjs`: MacroFlushのブラウザ版エディタの配布ファイルをそのまま取り込み
 
-本文はローカルMacroFlush 0.3.18のREADMEとランタイム型定義を参照して作成。アプリの更新時はAPIと出力制約を再確認してください。TopとExamplesは `MacroFlush/dist/player` の実Playerを使い、`projects/` のMacroFlush V2プロジェクトJSONを読み込んで再生します。サイト側に代用の描画実装はありません。
+本文はローカルMacroFlush 0.3.19のREADMEとランタイム型定義を参照して作成。アプリの更新時はAPIと出力制約を再確認してください。TopとExamplesは `MacroFlush/dist/player` の実Playerを使い、`projects/` のMacroFlush V2プロジェクトJSONを読み込んで再生します。サイト側に代用の描画実装はありません。
 
 Showcaseはアプリ同梱の `src/sample/sampleProject.json` を元に、リンクメディアを埋め込んだポータブルなプロジェクトです。個別作例は同梱Clipから構成しています。Triadはサイト向けの編集版（`sourcePolicy: "site-edited"`）で、ほかの4作例は元のClipソースを保持します。p5 Orbitsはサイト独自の作例（`sourcePolicy: "site-authored"`）で、`clip.use("p5")`とTimeline同期の`millis()`を使い、p5.js 1.11.1をライセンスとともに埋め込んでいます。Triadとp5 Orbitsの検証では元ソースとの一致ではなく、JavaScriptの構文を確認します。同期時はTriadの編集内容を保持してください。独立した作例の配置を中央へ調整し、Autecは元のcolorキーフレームを保持します。
 
@@ -101,3 +102,7 @@ BASE_PATH=/MacroFlush-Web/ PORT=4174 npm run preview
 `http://127.0.0.1:4174/MacroFlush-Web/` を開いて確認します。通常のルート配信に戻すには `npm run build` を実行します。既存の公開設定が `main` の `/docs` になっている場合は、SourceをGitHub Actionsへ切り替えてください。
 
 TopのTimelineは読み込んだAutecの配置とパラメータのキーを表示します。キーを選択しても再生位置は変えず、シークは再生バーとルーラーから操作します。Timelineではキーの時刻、Curveでは時刻と成分値を編集できます。矢印キー、Shift+矢印、数値入力、追加・削除・Undo・Resetにも対応し、Save JSONで編集したV2プロジェクトを保存できます。変更はブラウザ内のデモに反映されます。
+
+`/tutorials/p5-timeline/` はp5.jsの読み込みからTimeline同期、公開パラメータ、キー編集までを体験する日英9ステップの記事です。開始用・完成JSONは `projects/tutorials/p5-timeline/`、実Editorの4枚の画像は `assets/tutorials/p5-timeline/`、本文とコードは `src/p5-tutorial-content.js` にあります。記事内の完成プレビューは実Playerで再生し、両JSONをEditorで直接開けます。
+
+Tutorialsには08〜16のWorkshop（Curve、Feedback記録、Feedback Editor、Shader色収差、音反応、文字、共有配色、3Dカメラ、add()の群れ）を追加しています。各記事は日英本文、開始用・完成JSON、実Playerプレビュー、Editorで開くリンク付きです。教材の生成・来歴は `projects/tutorials/WORKSHOPS.md`、本文は `src/tutorial-workshops.js` を参照してください。

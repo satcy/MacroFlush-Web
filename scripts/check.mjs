@@ -164,3 +164,5 @@ await import("./check-timeline.mjs");
 execFileSync(process.execPath, ["--experimental-vm-modules", "scripts/check-previews.mjs"], {
   stdio: "inherit", env: { ...process.env, NODE_NO_WARNINGS: "1" }
 });
+
+await import("./check-tutorial-workshops.mjs");

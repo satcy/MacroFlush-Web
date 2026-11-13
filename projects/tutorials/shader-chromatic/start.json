@@ -1,0 +1,387 @@
+{
+  "clipFormatVersion": 2,
+  "rootCompositionId": "tutorial-shader-chromatic",
+  "assets": [
+    {
+      "id": "tutorial-shader-chromatic",
+      "kind": "composition",
+      "name": "Chromatic Study",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 240,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "effect",
+            "name": "RGB Effect",
+            "kind": "effect",
+            "visible": true,
+            "effectInputMode": "selected",
+            "effectMembers": [
+              "input-layer"
+            ],
+            "clips": [
+              {
+                "id": "chromatic",
+                "name": "Chromatic",
+                "kind": "shader",
+                "assetId": "chromatic-asset",
+                "inFrame": 0,
+                "outFrame": 240,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "amount": {
+                    "key": "amount",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "min": 0,
+                    "max": 24,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "fragmentShader": "precision mediump float;\nvarying vec2 vUv;\nuniform sampler2D inputTexture;\nvoid main() { gl_FragColor = texture2D(inputTexture, vUv); }"
+                },
+                "keyframeTracks": {}
+              }
+            ]
+          },
+          {
+            "id": "input-layer",
+            "name": "Source",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "input",
+                "name": "Source",
+                "kind": "html",
+                "assetId": "input-asset",
+                "inFrame": 0,
+                "outFrame": 240,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+                  "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  const ctx = getContext();\n  ctx.fillStyle = \"#11151e\"; ctx.fillRect(0, 0, 1280, 720);\n  ctx.strokeStyle = \"#f4f7ff\"; ctx.lineWidth = 7;\n  for (let i = 0; i < 12; i++) {\n    const x = 90 + i * 100 + Math.sin(time + i * 0.3) * 24;\n    ctx.beginPath(); ctx.moveTo(x, 90); ctx.lineTo(x, 630); ctx.stroke();\n  }\n  ctx.font = \"bold 120px sans-serif\"; ctx.textAlign = \"center\";\n  ctx.fillStyle = \"#f4f7ff\"; ctx.fillText(\"SPECTRUM\", 640, 405);\n});"
+                },
+                "keyframeTracks": {}
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "input-asset",
+      "kind": "html-clip",
+      "name": "Source",
+      "detail": "Workshop HTML Clip",
+      "clipId": "input",
+      "htmlTemplate": {
+        "id": "input",
+        "name": "Source",
+        "kind": "html",
+        "assetId": "input-asset",
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+          "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  const ctx = getContext();\n  ctx.fillStyle = \"#11151e\"; ctx.fillRect(0, 0, 1280, 720);\n  ctx.strokeStyle = \"#f4f7ff\"; ctx.lineWidth = 7;\n  for (let i = 0; i < 12; i++) {\n    const x = 90 + i * 100 + Math.sin(time + i * 0.3) * 24;\n    ctx.beginPath(); ctx.moveTo(x, 90); ctx.lineTo(x, 630); ctx.stroke();\n  }\n  ctx.font = \"bold 120px sans-serif\"; ctx.textAlign = \"center\";\n  ctx.fillStyle = \"#f4f7ff\"; ctx.fillText(\"SPECTRUM\", 640, 405);\n});"
+        },
+        "keyframeTracks": {}
+      }
+    },
+    {
+      "id": "chromatic-asset",
+      "name": "Chromatic",
+      "kind": "shader-clip",
+      "detail": "GLSL chromatic aberration",
+      "shaderTemplate": {
+        "id": "chromatic",
+        "name": "Chromatic",
+        "kind": "shader",
+        "assetId": "chromatic-asset",
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "amount": {
+            "key": "amount",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "min": 0,
+            "max": 24,
+            "step": 0.01,
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          }
+        },
+        "source": {
+          "fragmentShader": "precision mediump float;\nvarying vec2 vUv;\nuniform sampler2D inputTexture;\nvoid main() { gl_FragColor = texture2D(inputTexture, vUv); }"
+        },
+        "keyframeTracks": {}
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "interactive-examples.mdn.mozilla.net",
+      "files.freemusicarchive.org"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  }
+}

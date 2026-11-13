@@ -95,7 +95,7 @@ async function setup({ reduced = false, sourcePath = "src/client.js" } = {}) {
     modules.set(path, module); return module;
   }
   synthetic("locale.js", { translate: text => text });
-  synthetic("examples.js", { examples: cards.map(({ canvas }) => ({ id: canvas.dataset.project, title: canvas.dataset.project, projectUrl: `https://example.test/projects/${canvas.dataset.project}/project.json` })) });
+  synthetic("examples.js", { editorProjects: cards.map(({ canvas }) => ({ id: canvas.dataset.project, title: canvas.dataset.project, projectUrl: `https://example.test/projects/${canvas.dataset.project}/project.json` })) });
   synthetic("project-player.js", { ProjectPreview: Preview, loadProject: async () => ({ assets: [] }), getComposition: () => composition });
   const timeline = new SourceTextModule(await readFile("src/timeline-model.js", "utf8"), { context });
   modules.set("timeline-model.js", timeline);

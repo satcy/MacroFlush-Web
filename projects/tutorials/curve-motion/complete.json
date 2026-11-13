@@ -1,0 +1,1245 @@
+{
+  "clipFormatVersion": 2,
+  "rootCompositionId": "tutorial-curve-motion",
+  "assets": [
+    {
+      "id": "tutorial-curve-motion",
+      "kind": "composition",
+      "name": "Curve Motion",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 240,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "ball-0-layer",
+            "name": "LINEAR",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "ball-0",
+                "name": "LINEAR",
+                "kind": "html",
+                "assetId": "ball-0-asset",
+                "inFrame": 0,
+                "outFrame": 240,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "x": {
+                    "key": "x",
+                    "type": "number",
+                    "default": 230,
+                    "value": 230,
+                    "min": 100,
+                    "max": 1180,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  },
+                  "row": {
+                    "key": "row",
+                    "type": "number",
+                    "default": 180,
+                    "value": 180,
+                    "min": 0,
+                    "max": 720,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  },
+                  "label": {
+                    "key": "label",
+                    "type": "string",
+                    "default": "LINEAR",
+                    "value": "LINEAR",
+                    "interpolable": false,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  },
+                  "tint": {
+                    "key": "tint",
+                    "type": "color",
+                    "default": "#5dd4ff",
+                    "value": "#5dd4ff",
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+                  "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  const ctx = getContext();\n  ctx.clearRect(0, 0, 1280, 720);\n  ctx.strokeStyle = \"#303a49\";\n  ctx.beginPath(); ctx.moveTo(230, clip.row); ctx.lineTo(1080, clip.row); ctx.stroke();\n  ctx.font = \"18px sans-serif\"; ctx.fillStyle = \"#a0afbf\";\n  ctx.fillText(clip.label, 70, clip.row - 50);\n  ctx.fillStyle = clip.tint;\n  ctx.beginPath(); ctx.arc(clip.x, clip.row, 26, 0, Math.PI * 2); ctx.fill();\n});"
+                },
+                "keyframeTracks": {
+                  "x": [
+                    {
+                      "frame": 0,
+                      "value": 230,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 119,
+                      "value": 1080,
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 239,
+                      "value": 230,
+                      "easing": "linear"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "ball-1-layer",
+            "name": "SINE IN OUT",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "ball-1",
+                "name": "SINE IN OUT",
+                "kind": "html",
+                "assetId": "ball-1-asset",
+                "inFrame": 0,
+                "outFrame": 240,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "x": {
+                    "key": "x",
+                    "type": "number",
+                    "default": 230,
+                    "value": 230,
+                    "min": 100,
+                    "max": 1180,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  },
+                  "row": {
+                    "key": "row",
+                    "type": "number",
+                    "default": 360,
+                    "value": 360,
+                    "min": 0,
+                    "max": 720,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  },
+                  "label": {
+                    "key": "label",
+                    "type": "string",
+                    "default": "SINE IN OUT",
+                    "value": "SINE IN OUT",
+                    "interpolable": false,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  },
+                  "tint": {
+                    "key": "tint",
+                    "type": "color",
+                    "default": "#ff6b9d",
+                    "value": "#ff6b9d",
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+                  "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  const ctx = getContext();\n  ctx.clearRect(0, 0, 1280, 720);\n  ctx.strokeStyle = \"#303a49\";\n  ctx.beginPath(); ctx.moveTo(230, clip.row); ctx.lineTo(1080, clip.row); ctx.stroke();\n  ctx.font = \"18px sans-serif\"; ctx.fillStyle = \"#a0afbf\";\n  ctx.fillText(clip.label, 70, clip.row - 50);\n  ctx.fillStyle = clip.tint;\n  ctx.beginPath(); ctx.arc(clip.x, clip.row, 26, 0, Math.PI * 2); ctx.fill();\n});"
+                },
+                "keyframeTracks": {
+                  "x": [
+                    {
+                      "frame": 0,
+                      "value": 230,
+                      "easing": "sineInOut"
+                    },
+                    {
+                      "frame": 119,
+                      "value": 1080,
+                      "easing": "sineInOut"
+                    },
+                    {
+                      "frame": 239,
+                      "value": 230,
+                      "easing": "sineInOut"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "ball-2-layer",
+            "name": "BACK OUT",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "ball-2",
+                "name": "BACK OUT",
+                "kind": "html",
+                "assetId": "ball-2-asset",
+                "inFrame": 0,
+                "outFrame": 240,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "x": {
+                    "key": "x",
+                    "type": "number",
+                    "default": 230,
+                    "value": 230,
+                    "min": 100,
+                    "max": 1180,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  },
+                  "row": {
+                    "key": "row",
+                    "type": "number",
+                    "default": 540,
+                    "value": 540,
+                    "min": 0,
+                    "max": 720,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  },
+                  "label": {
+                    "key": "label",
+                    "type": "string",
+                    "default": "BACK OUT",
+                    "value": "BACK OUT",
+                    "interpolable": false,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  },
+                  "tint": {
+                    "key": "tint",
+                    "type": "color",
+                    "default": "#ffdc63",
+                    "value": "#ffdc63",
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+                  "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  const ctx = getContext();\n  ctx.clearRect(0, 0, 1280, 720);\n  ctx.strokeStyle = \"#303a49\";\n  ctx.beginPath(); ctx.moveTo(230, clip.row); ctx.lineTo(1080, clip.row); ctx.stroke();\n  ctx.font = \"18px sans-serif\"; ctx.fillStyle = \"#a0afbf\";\n  ctx.fillText(clip.label, 70, clip.row - 50);\n  ctx.fillStyle = clip.tint;\n  ctx.beginPath(); ctx.arc(clip.x, clip.row, 26, 0, Math.PI * 2); ctx.fill();\n});"
+                },
+                "keyframeTracks": {
+                  "x": [
+                    {
+                      "frame": 0,
+                      "value": 230,
+                      "easing": "backOut"
+                    },
+                    {
+                      "frame": 119,
+                      "value": 1080,
+                      "easing": "backOut"
+                    },
+                    {
+                      "frame": 239,
+                      "value": 230,
+                      "easing": "backOut"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ball-0-asset",
+      "kind": "html-clip",
+      "name": "LINEAR",
+      "detail": "Workshop HTML Clip",
+      "clipId": "ball-0",
+      "htmlTemplate": {
+        "id": "ball-0",
+        "name": "LINEAR",
+        "kind": "html",
+        "assetId": "ball-0-asset",
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          },
+          "x": {
+            "key": "x",
+            "type": "number",
+            "default": 230,
+            "value": 230,
+            "min": 100,
+            "max": 1180,
+            "step": 0.01,
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          },
+          "row": {
+            "key": "row",
+            "type": "number",
+            "default": 180,
+            "value": 180,
+            "min": 0,
+            "max": 720,
+            "step": 0.01,
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          },
+          "label": {
+            "key": "label",
+            "type": "string",
+            "default": "LINEAR",
+            "value": "LINEAR",
+            "interpolable": false,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          },
+          "tint": {
+            "key": "tint",
+            "type": "color",
+            "default": "#5dd4ff",
+            "value": "#5dd4ff",
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+          "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  const ctx = getContext();\n  ctx.clearRect(0, 0, 1280, 720);\n  ctx.strokeStyle = \"#303a49\";\n  ctx.beginPath(); ctx.moveTo(230, clip.row); ctx.lineTo(1080, clip.row); ctx.stroke();\n  ctx.font = \"18px sans-serif\"; ctx.fillStyle = \"#a0afbf\";\n  ctx.fillText(clip.label, 70, clip.row - 50);\n  ctx.fillStyle = clip.tint;\n  ctx.beginPath(); ctx.arc(clip.x, clip.row, 26, 0, Math.PI * 2); ctx.fill();\n});"
+        },
+        "keyframeTracks": {
+          "x": [
+            {
+              "frame": 0,
+              "value": 230,
+              "easing": "linear"
+            },
+            {
+              "frame": 119,
+              "value": 1080,
+              "easing": "linear"
+            },
+            {
+              "frame": 239,
+              "value": 230,
+              "easing": "linear"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ball-1-asset",
+      "kind": "html-clip",
+      "name": "SINE IN OUT",
+      "detail": "Workshop HTML Clip",
+      "clipId": "ball-1",
+      "htmlTemplate": {
+        "id": "ball-1",
+        "name": "SINE IN OUT",
+        "kind": "html",
+        "assetId": "ball-1-asset",
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          },
+          "x": {
+            "key": "x",
+            "type": "number",
+            "default": 230,
+            "value": 230,
+            "min": 100,
+            "max": 1180,
+            "step": 0.01,
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          },
+          "row": {
+            "key": "row",
+            "type": "number",
+            "default": 360,
+            "value": 360,
+            "min": 0,
+            "max": 720,
+            "step": 0.01,
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          },
+          "label": {
+            "key": "label",
+            "type": "string",
+            "default": "SINE IN OUT",
+            "value": "SINE IN OUT",
+            "interpolable": false,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          },
+          "tint": {
+            "key": "tint",
+            "type": "color",
+            "default": "#ff6b9d",
+            "value": "#ff6b9d",
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+          "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  const ctx = getContext();\n  ctx.clearRect(0, 0, 1280, 720);\n  ctx.strokeStyle = \"#303a49\";\n  ctx.beginPath(); ctx.moveTo(230, clip.row); ctx.lineTo(1080, clip.row); ctx.stroke();\n  ctx.font = \"18px sans-serif\"; ctx.fillStyle = \"#a0afbf\";\n  ctx.fillText(clip.label, 70, clip.row - 50);\n  ctx.fillStyle = clip.tint;\n  ctx.beginPath(); ctx.arc(clip.x, clip.row, 26, 0, Math.PI * 2); ctx.fill();\n});"
+        },
+        "keyframeTracks": {
+          "x": [
+            {
+              "frame": 0,
+              "value": 230,
+              "easing": "sineInOut"
+            },
+            {
+              "frame": 119,
+              "value": 1080,
+              "easing": "sineInOut"
+            },
+            {
+              "frame": 239,
+              "value": 230,
+              "easing": "sineInOut"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ball-2-asset",
+      "kind": "html-clip",
+      "name": "BACK OUT",
+      "detail": "Workshop HTML Clip",
+      "clipId": "ball-2",
+      "htmlTemplate": {
+        "id": "ball-2",
+        "name": "BACK OUT",
+        "kind": "html",
+        "assetId": "ball-2-asset",
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          },
+          "x": {
+            "key": "x",
+            "type": "number",
+            "default": 230,
+            "value": 230,
+            "min": 100,
+            "max": 1180,
+            "step": 0.01,
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          },
+          "row": {
+            "key": "row",
+            "type": "number",
+            "default": 540,
+            "value": 540,
+            "min": 0,
+            "max": 720,
+            "step": 0.01,
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          },
+          "label": {
+            "key": "label",
+            "type": "string",
+            "default": "BACK OUT",
+            "value": "BACK OUT",
+            "interpolable": false,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          },
+          "tint": {
+            "key": "tint",
+            "type": "color",
+            "default": "#ffdc63",
+            "value": "#ffdc63",
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
+          "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  const ctx = getContext();\n  ctx.clearRect(0, 0, 1280, 720);\n  ctx.strokeStyle = \"#303a49\";\n  ctx.beginPath(); ctx.moveTo(230, clip.row); ctx.lineTo(1080, clip.row); ctx.stroke();\n  ctx.font = \"18px sans-serif\"; ctx.fillStyle = \"#a0afbf\";\n  ctx.fillText(clip.label, 70, clip.row - 50);\n  ctx.fillStyle = clip.tint;\n  ctx.beginPath(); ctx.arc(clip.x, clip.row, 26, 0, Math.PI * 2); ctx.fill();\n});"
+        },
+        "keyframeTracks": {
+          "x": [
+            {
+              "frame": 0,
+              "value": 230,
+              "easing": "backOut"
+            },
+            {
+              "frame": 119,
+              "value": 1080,
+              "easing": "backOut"
+            },
+            {
+              "frame": 239,
+              "value": 230,
+              "easing": "backOut"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "interactive-examples.mdn.mozilla.net",
+      "files.freemusicarchive.org"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  }
+}

@@ -134,6 +134,19 @@ body[data-page=online-editor] main{width:100vw;height:100dvh;overflow-x:auto;ove
 
 /* Illustrated tutorials use captures of the real Editor. */
 .tutorial-project-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:0 0 30px}
+.tutorial-preview{padding:0 0 32px;max-width:620px}
+.tutorial-preview>.eyebrow{margin-bottom:12px}
+.tutorial-checks{padding-left:22px;margin-top:18px;color:#a0afbf;font-size:13px;line-height:2}
+.tutorial-checks li+li{margin-top:8px}
+.tutorial-checks li::marker{color:var(--cyan)}
+.tutorial-table{overflow-x:auto;margin-top:22px;border:1px solid var(--line)}
+.tutorial-table table{border-collapse:collapse;width:100%;font-size:12px;line-height:1.9}
+.tutorial-table th,.tutorial-table td{text-align:left;vertical-align:top;padding:12px 15px;border-bottom:1px solid var(--line);min-width:120px}
+.tutorial-table th{color:#d3e5f1;background:#17222a;font-weight:500}
+.tutorial-table td{color:#a0afbf}.tutorial-table tr:last-child td{border-bottom:0}
+.tutorial-nav-toggle{display:none}
+@media(max-width:760px){.tutorial-nav-toggle[data-ready=true]{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 12px;margin:12px 0 18px;font-size:12px}.tutorial-nav-toggle[data-ready=true][aria-expanded=false]+nav{display:none}.tutorial-nav-toggle[aria-expanded=true] span{transform:rotate(180deg)}}
+@media(min-width:761px){.tutorial-layout .docs-sidebar{max-height:calc(100dvh - 130px);overflow-y:auto;padding-right:8px}}
 .tutorial-content>.availability{margin:0 0 20px}
 .tutorial-figure{margin-top:24px;border:1px solid var(--line);background:#14191f}
 .tutorial-figure a{display:block;cursor:zoom-in}
