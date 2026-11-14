@@ -17780,49 +17780,91 @@ function Vf(e, t, n) {
 		visible: c
 	};
 }
+var Hf = 250, Uf = .1, Wf = 1e-6;
+function Gf(e, t) {
+	let n = e ? Math.max(0, t.now - e.observedAt) / 1e3 : 0, r = e ? t.target - e.target : 0, i = e && (r < -1e-6 || r > n * Math.max(0, e.rate) + Uf), a = !t.playing || !e || !e.playing || t.rate !== e.rate || i, o = Math.abs(t.currentTime - t.target), s = t.target - t.currentTime, c = a ? void 0 : e?.baselineOffset, l = a ? t.now : e.settleStartedAt, u = a ? t.currentTime : e.settleOriginTime, d = a ? t.now : e.windowStartedAt, f = a ? t.currentTime : e.windowMediaTime, p = a ? 0 : e.stableDurationMs, m = !!(e && t.currentTime > e.lastMediaTime + Wf), h = a || m ? t.now : e.lastProgressAt, g = Math.max(Hf, 125 / Math.max(.0625, t.rate));
+	if (!a && c !== void 0 && (t.seeking || t.now - h >= g) && (c = void 0, l = t.now, u = t.currentTime, d = t.now, f = t.currentTime, p = 0), !a && c === void 0) {
+		let e = t.now - d;
+		if (t.seeking) d = t.now, f = t.currentTime, p = 0;
+		else if (e >= 250) {
+			let n = e / 1e3 * Math.max(0, t.rate), r = t.currentTime - f;
+			p = Math.abs(r - n) <= Math.max(.1, n * .2) + Wf ? p + e : 0, p >= 1250 && t.currentTime - u >= .249999 && (c = s), d = t.now, f = t.currentTime;
+		}
+	}
+	let _ = c === void 0 && t.now - l >= 4e3, v = !a && m && !t.seeking && c !== void 0 && Math.abs(s - c) >= t.driftTolerance - Wf, y = !!(a ? o > Wf : v || _ && o > t.driftTolerance);
+	return y && (c = void 0, l = t.now, u = t.target, d = t.now, f = t.target, p = 0), {
+		seek: y,
+		state: {
+			target: t.target,
+			playing: t.playing,
+			rate: t.rate,
+			observedAt: t.now,
+			baselineOffset: c,
+			settleStartedAt: l,
+			settleOriginTime: u,
+			windowStartedAt: d,
+			windowMediaTime: f,
+			stableDurationMs: p,
+			lastMediaTime: y ? t.target : t.currentTime,
+			lastProgressAt: y ? t.now : h
+		}
+	};
+}
 //#endregion
 //#region src/core/mediaTransport.ts
-var Hf = { mode: "realtime" }, Uf = { mode: "paused-sample" }, Wf = { mode: "prepared" }, Gf = (e) => e ? Hf : Uf, Kf = /* @__PURE__ */ new WeakMap();
-function qf(e, t) {
+var Kf = { mode: "realtime" }, qf = { mode: "paused-sample" }, Jf = { mode: "prepared" }, Yf = (e) => e ? Kf : qf, Xf = /* @__PURE__ */ new WeakMap();
+function Zf(e, t) {
 	!t.active || t.context.mode !== "paused-sample" || e.readyState === 0 || t.appliedTarget === t.target || (Math.abs(e.currentTime - t.target) > 1e-6 && (e.currentTime = t.target), t.appliedTarget = t.target);
 }
-function Jf(e) {
-	let t = Kf.get(e);
-	t && (t.active = !1), e.pause();
+function Qf(e) {
+	let t = Xf.get(e);
+	t && (t.active = !1, t.seekState = void 0), e.pause();
 }
-function Yf(e) {
-	for (let t of e.values()) t instanceof HTMLMediaElement && Jf(t);
+function $f(e) {
+	for (let t of e.values()) t instanceof HTMLMediaElement && Qf(t);
 }
-function Xf(e, t, n, r, i, a = 0, o = .15) {
+function ep(e, t, n, r, i, a = 0, o = .15) {
 	if (i.mode === "prepared") return;
 	if (!t) {
-		Jf(e);
+		Qf(e);
 		return;
 	}
-	let s = Kf.get(e);
+	let s = Xf.get(e);
 	if (s || (s = {
 		active: t,
 		target: 0,
 		context: i
-	}, Kf.set(e, s), e.addEventListener("loadedmetadata", () => {
-		let t = Kf.get(e);
-		t && (t.appliedTarget = void 0, qf(e, t));
+	}, Xf.set(e, s), e.addEventListener("loadedmetadata", () => {
+		let t = Xf.get(e);
+		t && (t.appliedTarget = void 0, Zf(e, t));
 	})), s.active = !0, s.target = Math.max(0, (n - a) / r), s.context = i, i.mode === "paused-sample") {
-		e.pause(), qf(e, s);
+		s.seekState = void 0, e.pause(), Zf(e, s);
 		return;
 	}
-	s.appliedTarget = void 0, Math.abs(e.currentTime - s.target) > o && (e.currentTime = s.target), e.play().catch(() => void 0);
+	if (s.appliedTarget = void 0, e.tagName === "AUDIO") {
+		let t = Gf(s.seekState, {
+			target: s.target,
+			currentTime: e.currentTime,
+			playing: !0,
+			rate: e.playbackRate,
+			now: performance.now(),
+			seeking: e.seeking,
+			driftTolerance: o
+		});
+		s.seekState = t.state, t.seek && (e.currentTime = s.target);
+	} else Math.abs(e.currentTime - s.target) > o && (e.currentTime = s.target);
+	e.play().catch(() => void 0);
 }
 //#endregion
 //#region src/player/createClipPlayer.ts
-function Zf(e) {
+function tp(e) {
 	if (!e || ![
 		1,
 		2,
 		3
 	].includes(e.clipFormatVersion) || "angleUnit" in e || "managedAngleCodecVersion" in e) throw Error("The public Player requires a legacy radian project file.");
 }
-function Qf(e, t, n = !0) {
+function np(e, t, n = !0) {
 	if (Ki(e), !t) throw Error("Managed Player remote asset policy is required.");
 	return {
 		...n ? structuredClone(e.composition) : e.composition,
@@ -17830,27 +17872,27 @@ function Qf(e, t, n = !0) {
 		remoteAssetPolicy: t
 	};
 }
-var $f = /* @__PURE__ */ new WeakMap();
-function ep(e, t, n = [0, 0]) {
+var rp = /* @__PURE__ */ new WeakMap();
+function ip(e, t, n = [0, 0]) {
 	let [r, i] = t?.dimensions ?? [0, 0];
 	return [typeof e.width == "number" && e.width > 0 ? e.width : r > 0 ? r : n[0], typeof e.height == "number" && e.height > 0 ? e.height : i > 0 ? i : n[1]];
 }
-function tp(e) {
+function ap(e) {
 	return e instanceof HTMLImageElement ? [e.naturalWidth, e.naturalHeight] : e instanceof HTMLVideoElement ? [e.videoWidth, e.videoHeight] : typeof ImageBitmap < "u" && e instanceof ImageBitmap || e instanceof HTMLCanvasElement || e instanceof OffscreenCanvas ? [e.width, e.height] : [0, 0];
 }
-function np(e, t) {
+function op(e, t) {
 	if (!Array.isArray(e) || e.length < 2) return t;
 	let n = Number(e[0]), r = Number(e[1]);
 	return [Number.isFinite(n) ? n : t[0], Number.isFinite(r) ? r : t[1]];
 }
-function rp(e, t, n) {
+function sp(e, t, n) {
 	let r = e.params[t];
 	r && (r.value = n);
 }
-function ip(e) {
+function cp(e) {
 	let t = Qd(e.angleUnit);
-	Zf(e.project);
-	let n = Ef(e.project), { angleUnit: r, project: i, ...a } = e, o = op(a, {
+	tp(e.project);
+	let n = Ef(e.project), { angleUnit: r, project: i, ...a } = e, o = up(a, {
 		kind: "public",
 		project: e.project,
 		...n
@@ -17860,25 +17902,25 @@ function ip(e) {
 		legacyInput: !0
 	}));
 }
-function ap(e) {
+function lp(e) {
 	if ("angleUnit" in e) throw Error("Internal managed Player controls use degrees; angleUnit is a public API option.");
 	Ki(e.workspace);
-	let t = op(e, {
+	let t = up(e, {
 		kind: "managed",
 		workspace: e.workspace,
 		remoteAssetPolicy: e.remoteAssetPolicy
 	});
 	return Object.assign(t.player, { setWorkspace: t.setWorkspace });
 }
-function op(e, t) {
+function up(e, t) {
 	let n = e.editorNativeAssetSources === !0, r = e.canvas ?? document.createElement("canvas"), i = e.iframeHost ?? document.createElement("div"), a = !e.iframeHost, o = Math.max(1, e.frameTransferFps ?? 30), s = e.dirtyOnly ?? !0, c = e.runtimeDepth ?? 0, l = /* @__PURE__ */ new Map(), u = {
 		framesReceived: 0,
 		framesComposited: 0,
 		replacedFrames: 0,
 		lastCompositeMs: 0
-	}, d = null, f = null, p = null, m = null, h = Md("player"), g = Nd(), _ = Nd(), v = "root", y, b = 0, x, S = t.kind === "public" ? t.document : null, C = t.workspace, w = t.kind === "managed" || t.project.clipFormatVersion !== 1, T = Qf(C, t.remoteAssetPolicy, t.kind === "managed"), E = fi(T.assets, n), D = [], O = /* @__PURE__ */ new Map(), ee = [], te = /* @__PURE__ */ new Map(), ne = St(), re = Dt(), ie = null, ae = null, oe = 0, se = null, ce = /* @__PURE__ */ new Map(), le = new Map(T.assets.map((e) => [e.id, e])), ue = /* @__PURE__ */ new Map(), de = /* @__PURE__ */ new Set(), pe = /* @__PURE__ */ new Map(), me = /* @__PURE__ */ new Map(), he = null, ge = null, k = !1, _e = e.mediaPlaying ?? !0, ve = _f(), A, ye, j = 0, be = Promise.resolve(), xe = [], Se = t.kind === "public" && t.project.clipFormatVersion === 3, Ce = (e, t, n) => {
+	}, d = null, f = null, p = null, m = null, h = Md("player"), g = Nd(), _ = Nd(), v = "root", y, b = 0, x, S = t.kind === "public" ? t.document : null, C = t.workspace, w = t.kind === "managed" || t.project.clipFormatVersion !== 1, T = np(C, t.remoteAssetPolicy, t.kind === "managed"), E = fi(T.assets, n), D = [], O = /* @__PURE__ */ new Map(), ee = [], te = /* @__PURE__ */ new Map(), ne = St(), re = Dt(), ie = null, ae = null, oe = 0, se = null, ce = /* @__PURE__ */ new Map(), le = new Map(T.assets.map((e) => [e.id, e])), ue = /* @__PURE__ */ new Map(), de = /* @__PURE__ */ new Set(), pe = /* @__PURE__ */ new Map(), me = /* @__PURE__ */ new Map(), he = null, ge = null, k = !1, _e = e.mediaPlaying ?? !0, ve = _f(), A, ye, j = 0, be = Promise.resolve(), xe = [], Se = t.kind === "public" && t.project.clipFormatVersion === 3, Ce = (e, t, n) => {
 		let { assets: r, remoteAssetPolicy: i, ...a } = e;
-		return ap({
+		return lp({
 			...n,
 			workspace: {
 				managedAngleCodecVersion: 1,
@@ -17939,10 +17981,10 @@ function op(e, t) {
 		else if (e.kind === "image") e.image.onload = null, e.image.onerror = null, e.image.src = "";
 		else {
 			let t = e.kind === "video" ? e.video : e.audio;
-			Jf(t), t.removeAttribute("src"), t.load(), t.remove();
+			Qf(t), t.removeAttribute("src"), t.load(), t.remove();
 		}
 		D = [], De(), pe.clear();
-		for (let e of me.values()) e instanceof HTMLMediaElement && (Jf(e), e.removeAttribute("src"), e.load(), e.remove());
+		for (let e of me.values()) e instanceof HTMLMediaElement && (Qf(e), e.removeAttribute("src"), e.load(), e.remove());
 		me.clear(), he &&= (he.width = 0, he.height = 0, null), ge &&= (ge.width = 0, ge.height = 0, null);
 	}, ke = () => {
 		Oe(), xe = [];
@@ -18140,9 +18182,9 @@ function op(e, t) {
 		let e = new Set(D.flatMap((e) => e.kind === "html" ? [...e.sceneGraph.values()].map((e) => e.assetId) : []));
 		for (let [t, n] of me) e.has(t) || (n instanceof HTMLMediaElement && (n.pause(), n.removeAttribute("src"), n.load(), n.remove()), me.delete(t));
 	}, je = (e, t, n) => {
-		let r = t.kind === "composition" ? [t.composition.width, t.composition.height] : np(e.params.size?.value, [T.width, T.height]);
-		rp(e, "position", [n.x, n.y]), rp(e, "scale", [n.scale, n.scale]), rp(e, "rotation", n.rotation), rp(e, "opacity", n.opacity), rp(e, "size", r), rp(e, "anchorPoint", n.anchorPoint ?? [r[0] / 2, r[1] / 2]), rp(e, "blendMode", n.blendMode ?? "normal");
-		for (let [t, r] of Object.entries(n.clip ?? {})) rp(e, t, r);
+		let r = t.kind === "composition" ? [t.composition.width, t.composition.height] : op(e.params.size?.value, [T.width, T.height]);
+		sp(e, "position", [n.x, n.y]), sp(e, "scale", [n.scale, n.scale]), sp(e, "rotation", n.rotation), sp(e, "opacity", n.opacity), sp(e, "size", r), sp(e, "anchorPoint", n.anchorPoint ?? [r[0] / 2, r[1] / 2]), sp(e, "blendMode", n.blendMode ?? "normal");
+		for (let [t, r] of Object.entries(n.clip ?? {})) sp(e, t, r);
 	}, Me = () => {
 		let t = /* @__PURE__ */ new Map();
 		for (let e of D) {
@@ -18336,7 +18378,7 @@ function op(e, t) {
 				return;
 			}
 			if (r.type === "macroflush:scene") {
-				let t = Array.isArray(r.operations) ? r.operations.filter(dp) : dp(r.operation) ? [r.operation] : [];
+				let t = Array.isArray(r.operations) ? r.operations.filter(hp) : hp(r.operation) ? [r.operation] : [];
 				if (t.length === 0) return;
 				let n = i.sceneGraph;
 				for (let e of t) n = qa(n, e);
@@ -18372,10 +18414,10 @@ function op(e, t) {
 			if (!o || o.kind !== "html" || i < o.clip.inFrame || i >= o.clip.outFrame) return !1;
 			Pe(o);
 			let s = nt(e, r, T, n.params, [o.frameCanvas.width, o.frameCanvas.height], a);
-			return o.hasFrame && e.drawImage(o.frameCanvas, 0, 0, s[0], s[1]), cp(e, o.sceneGraph, E, me, o.matteCache, i, T.fps, Gf(_e), ze()), e.restore(), o.hasFrame || o.sceneGraph.size > 0;
+			return o.hasFrame && e.drawImage(o.frameCanvas, 0, 0, s[0], s[1]), fp(e, o.sceneGraph, E, me, o.matteCache, i, T.fps, Yf(_e), ze()), e.restore(), o.hasFrame || o.sceneGraph.size > 0;
 		}
-		if (t.kind === "image") return t.ready ? (sp(e, T, n.params, t.image, [t.image.naturalWidth, t.image.naturalHeight], a), !0) : !1;
-		if (t.kind === "video") return !t.ready || t.video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA ? !1 : (sp(e, T, n.params, t.video, [t.video.videoWidth, t.video.videoHeight], a), !0);
+		if (t.kind === "image") return t.ready ? (dp(e, T, n.params, t.image, [t.image.naturalWidth, t.image.naturalHeight], a), !0) : !1;
+		if (t.kind === "video") return !t.ready || t.video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA ? !1 : (dp(e, T, n.params, t.video, [t.video.videoWidth, t.video.videoHeight], a), !0);
 		if (t.kind === "audio") return !1;
 		if (t.kind === "composition-ref" || t.kind === "runtime") {
 			if (t.kind === "runtime" && !Re(t)) return Ie(e, t, t.player.canvas, i, a);
@@ -18384,7 +18426,7 @@ function op(e, t) {
 		}
 		Pe(t);
 		let o = nt(e, r, T, n.params, [t.frameCanvas.width, t.frameCanvas.height], a);
-		return t.hasFrame && e.drawImage(t.frameCanvas, 0, 0, o[0], o[1]), cp(e, t.sceneGraph, E, me, t.matteCache, i, T.fps, Gf(_e), ze()), e.restore(), t.hasFrame || t.sceneGraph.size > 0;
+		return t.hasFrame && e.drawImage(t.frameCanvas, 0, 0, o[0], o[1]), fp(e, t.sceneGraph, E, me, t.matteCache, i, T.fps, Yf(_e), ze()), e.restore(), t.hasFrame || t.sceneGraph.size > 0;
 	}, Ie = (e, t, n, i, a) => {
 		let o = t.parentClipId ? O.get(t.parentClipId) : void 0, s = o?.kind === "html" ? o.sceneGraph.get(t.objectId) : void 0;
 		if (!o || o.kind !== "html" || !s) return !1;
@@ -18393,9 +18435,9 @@ function op(e, t) {
 			fps: T.fps,
 			playing: !0,
 			speed: 1
-		}, T), l = Vf(o.sceneGraph, s.id, (e) => ep(e, E.get(e.assetId)));
+		}, T), l = Vf(o.sceneGraph, s.id, (e) => ip(e, E.get(e.assetId)));
 		if (!c || !l?.visible) return !1;
-		let u = ep(s, E.get(s.assetId), [n.width, n.height]);
+		let u = ip(s, E.get(s.assetId), [n.width, n.height]);
 		return nt(e, r, T, {
 			...c.params,
 			opacity: 1,
@@ -18490,7 +18532,7 @@ function op(e, t) {
 			feedbackInputIntent: n.inputDelivery
 		} : t;
 	}, Ge = (e) => {
-		e.kind === "html" && e.documentToken && g.deactivate(e.documentToken), (e.kind === "composition-ref" || e.kind === "runtime") && (e.player.setMediaPlaying(!1), g.deactivate(`child:${e.clip.id}`), $f.get(e.player)?.deactivate());
+		e.kind === "html" && e.documentToken && g.deactivate(e.documentToken), (e.kind === "composition-ref" || e.kind === "runtime") && (e.player.setMediaPlaying(!1), g.deactivate(`child:${e.clip.id}`), rp.get(e.player)?.deactivate());
 	}, Ke = () => {
 		let t = se, n = ae;
 		if (!(!t || !n)) for (let r of n.readyIds) {
@@ -18593,7 +18635,7 @@ function op(e, t) {
 			playing: _e,
 			speed: 1
 		};
-		_e || Yf(me);
+		_e || $f(me);
 		let u = T.cues && Object.keys(T.cues).length ? l : {
 			...l,
 			frame: t * T.fps
@@ -18612,7 +18654,7 @@ function op(e, t) {
 		let ee = /* @__PURE__ */ new Map();
 		for (let e of D) {
 			if (e.layerRef.visible === !1 && !de.has(e.clip.id)) {
-				Ge(e), e.kind === "html" ? (e.hasEntered = !1, e.replayRequest = (e.replayRequest ?? 0) + 1, e.replay?.cancelPending()) : e.kind === "runtime" && Re(e) ? e.player.tickTime(e.clip.outFrame / T.fps) : (e.kind === "video" || e.kind === "audio") && Xf(e.kind === "video" ? e.video : e.audio, !1, o, T.fps, Gf(_e), e.clip.inFrame);
+				Ge(e), e.kind === "html" ? (e.hasEntered = !1, e.replayRequest = (e.replayRequest ?? 0) + 1, e.replay?.cancelPending()) : e.kind === "runtime" && Re(e) ? e.player.tickTime(e.clip.outFrame / T.fps) : (e.kind === "video" || e.kind === "audio") && ep(e.kind === "video" ? e.video : e.audio, !1, o, T.fps, Yf(_e), e.clip.inFrame);
 				continue;
 			}
 			let t = Xe(e.clip, e.kind === "html" && e.replayDirty !== void 0 ? u : l, T, d);
@@ -18673,7 +18715,7 @@ function op(e, t) {
 							} : null;
 						}
 					});
-					u && $f.get(e.player)?.tick(Object.freeze({
+					u && rp.get(e.player)?.tick(Object.freeze({
 						time: c,
 						inputDelivery: s.inputDelivery,
 						delivery: u
@@ -18685,13 +18727,13 @@ function op(e, t) {
 					n ? e.player.tickTime(n.time) : (e.player.setMediaPlaying(!1), e.player.tickTime(e.clip.outFrame / T.fps));
 				} else if (t) {
 					let n = Ue(`child:${e.clip.id}`, e.clip.assetId ?? e.clip.id, e.clip, s);
-					n && $f.get(e.player)?.tick(Object.freeze({
+					n && rp.get(e.player)?.tick(Object.freeze({
 						time: t.time,
 						inputDelivery: s.inputDelivery,
 						delivery: n
 					}));
 				} else Ge(e);
-			} else (e.kind === "video" || e.kind === "audio") && Xf(e.kind === "video" ? e.video : e.audio, !!t, o, T.fps, Gf(_e), e.clip.inFrame);
+			} else (e.kind === "video" || e.kind === "audio") && ep(e.kind === "video" ? e.video : e.audio, !!t, o, T.fps, Yf(_e), e.clip.inFrame);
 		}
 		se = {
 			frame: o,
@@ -18706,8 +18748,8 @@ function op(e, t) {
 		m !== null && Ye(m, {}, void 0, !0);
 	}, rt = (e) => {
 		if (!(k || _e === e)) {
-			_e = e, e || Yf(me);
-			for (let t of D) !e && (t.kind === "video" || t.kind === "audio") ? Jf(t.kind === "video" ? t.video : t.audio) : (t.kind === "composition-ref" || t.kind === "runtime") && t.player.setMediaPlaying(e);
+			_e = e, e || $f(me);
+			for (let t of D) !e && (t.kind === "video" || t.kind === "audio") ? Qf(t.kind === "video" ? t.video : t.audio) : (t.kind === "composition-ref" || t.kind === "runtime") && t.player.setMediaPlaying(e);
 		}
 	}, it = (t) => {
 		ye?.abort();
@@ -18732,7 +18774,7 @@ function op(e, t) {
 			Se = !1;
 			try {
 				if (!S) throw Error("Public source resolution requires a normalized document owner.");
-				S = Df(S, e.project.assets), C = Cf(S, i), T = Qf(C, S.document.remoteAssetPolicy), E = fi(T.assets, n), Ee(), M(T.width, T.height), ke();
+				S = Df(S, e.project.assets), C = Cf(S, i), T = np(C, S.document.remoteAssetPolicy), E = fi(T.assets, n), Ee(), M(T.width, T.height), ke();
 			} catch (t) {
 				throw Oe(), e.release(), t;
 			}
@@ -18744,13 +18786,13 @@ function op(e, t) {
 	}, at = (e) => {
 		if (k) throw Error("Cannot change a project after the Player is destroyed.");
 		if (t.kind !== "public") throw Error("A managed Player requires setWorkspace(), not a raw project replacement.");
-		Zf(e);
-		let r = Ef(e), i = r.workspace, a = Qf(i, r.remoteAssetPolicy, !1);
+		tp(e);
+		let r = Ef(e), i = r.workspace, a = np(i, r.remoteAssetPolicy, !1);
 		S = r.document, C = i, w = e.clipFormatVersion !== 1, T = a, d = null, f = null, p = null, h.reset(), _.reset(), g.reset(), y = void 0, E = fi(T.assets, n), Ee(), M(T.width, T.height), e.clipFormatVersion === 3 ? Oe() : ke(), A?.release(), A = void 0, it(e);
 	}, ot = (e, r) => {
 		if (k) throw Error("Cannot change a workspace after the Player is destroyed.");
 		if (t.kind !== "managed") throw Error("A public Player cannot install an internal workspace.");
-		let i = Qf(e, r);
+		let i = np(e, r);
 		C = e, T = i, d = null, f = null, p = null, h.reset(), _.reset(), g.reset(), y = void 0, E = fi(T.assets, n), Ee(), M(T.width, T.height), ke(), be = Promise.all(xe).then(() => void 0), be.catch(() => void 0);
 	}, st = (e) => {
 		if (k) throw Error("Cannot open a composition after the Player is destroyed.");
@@ -18760,7 +18802,7 @@ function op(e, t) {
 			...C,
 			compositionId: t.id,
 			composition: t.composition
-		}, T = Qf(C, T.remoteAssetPolicy), d = null, f = null, p = null, m = null, h.reset(), _.reset(), g.reset(), y = void 0, l.clear(), E = fi(T.assets, n), Ee(), M(T.width, T.height), Se || (ke(), be = Promise.all(xe).then(() => void 0), be.catch(() => void 0)), Ze(0), {
+		}, T = np(C, T.remoteAssetPolicy), d = null, f = null, p = null, m = null, h.reset(), _.reset(), g.reset(), y = void 0, l.clear(), E = fi(T.assets, n), Ee(), M(T.width, T.height), Se || (ke(), be = Promise.all(xe).then(() => void 0), be.catch(() => void 0)), Ze(0), {
 			compositionId: t.id,
 			width: T.width,
 			height: T.height,
@@ -18853,10 +18895,10 @@ function op(e, t) {
 		emit: vt,
 		getStats: () => ({ ...u }),
 		destroy() {
-			k || (k = !0, $f.delete(yt), h.dispose(), _.dispose(), g.dispose(), window.removeEventListener("message", Ne), Oe(), ye?.abort(), A?.release(), ve.dispose(), a && i.remove());
+			k || (k = !0, rp.delete(yt), h.dispose(), _.dispose(), g.dispose(), window.removeEventListener("message", Ne), Oe(), ye?.abort(), A?.release(), ve.dispose(), a && i.remove());
 		}
 	};
-	return $f.set(yt, {
+	return rp.set(yt, {
 		tick: (e) => Ye(e.time, { inputDelivery: e.inputDelivery }, e),
 		deactivate: () => {
 			_.deactivate("clock"), g.reset();
@@ -18871,13 +18913,13 @@ function op(e, t) {
 		})
 	};
 }
-function sp(e, t, n, r, i, a) {
+function dp(e, t, n, r, i, a) {
 	let o = [Math.max(1, i[0]), Math.max(1, i[1])];
 	rt(e, r, o, nt(e, e.canvas, t, n, o, a)), e.restore();
 }
-function cp(e, t, n, r, i, a, o, s = Hf, c = /* @__PURE__ */ new Map()) {
-	let l = typeof s == "boolean" ? s ? Wf : Hf : s, u = l.mode === "prepared";
-	l.mode === "paused-sample" && Yf(r);
+function fp(e, t, n, r, i, a, o, s = Kf, c = /* @__PURE__ */ new Map()) {
+	let l = typeof s == "boolean" ? s ? Jf : Kf : s, u = l.mode === "prepared";
+	l.mode === "paused-sample" && $f(r);
 	let d = new Map([...t].filter(([, e]) => {
 		let t = n.get(e.assetId)?.kind;
 		return t === "image" || t === "video" || t === "audio" || (t === "html-clip" || t === "composition") && (u || c.has(e.id));
@@ -18915,10 +18957,10 @@ function cp(e, t, n, r, i, a, o, s = Hf, c = /* @__PURE__ */ new Map()) {
 	}
 	let v = m.map((e) => ({
 		node: e,
-		parent: lp
+		parent: pp
 	}));
 	for (; v.length;) {
-		let { node: e, parent: t } = v.pop(), r = e.object, i = n.get(r.assetId), a = ep(r, i, tp(c.get(r.id) ?? _(i))), o = r.anchorPoint ?? [a[0] / 2, a[1] / 2], s = {
+		let { node: e, parent: t } = v.pop(), r = e.object, i = n.get(r.assetId), a = ip(r, i, ap(c.get(r.id) ?? _(i))), o = r.anchorPoint ?? [a[0] / 2, a[1] / 2], s = {
 			transform: Bf(t.transform, zf(r, o)),
 			opacity: t.opacity * r.opacity,
 			visible: t.visible && r.visible
@@ -18932,17 +18974,17 @@ function cp(e, t, n, r, i, a, o, s = Hf, c = /* @__PURE__ */ new Map()) {
 	let y = (e, t, r, i = {}) => {
 		let s = n.get(t.object.assetId), d = c.get(t.object.id) ?? _(s);
 		if (!s || !d || !i.ignoreVisibility && !r.visible) return;
-		let [f, p] = ep(t.object, s, tp(d));
+		let [f, p] = ip(t.object, s, ap(d));
 		if (d instanceof HTMLAudioElement) {
 			if (u) return;
-			d.volume = fp(t.object.volume, 1, 0, 1), Xf(d, !!(i.ignoreVisibility || r.visible), a, o, l);
+			d.volume = gp(t.object.volume, 1, 0, 1), ep(d, !!(i.ignoreVisibility || r.visible), a, o, l);
 			return;
 		}
-		d instanceof HTMLVideoElement && !u && Xf(d, !!(i.ignoreVisibility || r.visible), a, o, l), !(f <= 0 || p <= 0 || d instanceof HTMLImageElement && !d.complete || d instanceof HTMLVideoElement && d.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) && (e.save(), e.setTransform(h.a, h.b, h.c, h.d, h.e, h.f), e.transform(...r.transform), e.globalAlpha = fp(r.opacity, 1, 0, 1), e.globalCompositeOperation = i.composite ?? tt[t.object.blendMode ?? "normal"] ?? "source-over", e.drawImage(d, 0, 0, f, p), e.restore());
+		d instanceof HTMLVideoElement && !u && ep(d, !!(i.ignoreVisibility || r.visible), a, o, l), !(f <= 0 || p <= 0 || d instanceof HTMLImageElement && !d.complete || d instanceof HTMLVideoElement && d.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) && (e.save(), e.setTransform(h.a, h.b, h.c, h.d, h.e, h.f), e.transform(...r.transform), e.globalAlpha = gp(r.opacity, 1, 0, 1), e.globalCompositeOperation = i.composite ?? tt[t.object.blendMode ?? "normal"] ?? "source-over", e.drawImage(d, 0, 0, f, p), e.restore());
 	}, b = (e, t, n) => {
 		let r = g.get(t.object.id);
 		if (!r || !r.visible) return;
-		let a = t.object.maskId && p.has(t.object.id) ? up(m, t.object.maskId) : void 0, o = a ? g.get(a.object.id) : void 0;
+		let a = t.object.maskId && p.has(t.object.id) ? mp(m, t.object.maskId) : void 0, o = a ? g.get(a.object.id) : void 0;
 		if (t.object.id !== n && a && o) {
 			let n = i.get(t.object.id);
 			n || (n = document.createElement("canvas"), i.set(t.object.id, n)), (n.width !== e.canvas.width || n.height !== e.canvas.height) && (n.width = e.canvas.width, n.height = e.canvas.height);
@@ -18959,7 +19001,7 @@ function cp(e, t, n, r, i, a, o, s = Hf, c = /* @__PURE__ */ new Map()) {
 	};
 	for (let t of m) b(e, t);
 }
-var lp = {
+var pp = {
 	transform: [
 		1,
 		0,
@@ -18971,23 +19013,23 @@ var lp = {
 	opacity: 1,
 	visible: !0
 };
-function up(e, t) {
+function mp(e, t) {
 	for (let n of e) {
 		if (n.object.id === t) return n;
-		let e = up(n.children, t);
+		let e = mp(n.children, t);
 		if (e) return e;
 	}
 }
-function dp(e) {
+function hp(e) {
 	if (!e || typeof e != "object") return !1;
 	let t = e;
 	if (t.type === "remove") return typeof t.id == "string";
 	let n = t.object;
 	return t.type === "upsert" && typeof n?.id == "string";
 }
-function fp(e, t, n = -Infinity, r = Infinity) {
+function gp(e, t, n = -Infinity, r = Infinity) {
 	let i = Number(e);
 	return Number.isFinite(i) ? Math.min(r, Math.max(n, i)) : t;
 }
 //#endregion
-export { nt as applyClipTransform, tt as canvasBlendModes, cp as compositeSceneGraph, ip as createClipPlayer, ap as createManagedClipPlayer, rt as drawImageCover, ep as resolveDisplaySize };
+export { nt as applyClipTransform, tt as canvasBlendModes, fp as compositeSceneGraph, cp as createClipPlayer, lp as createManagedClipPlayer, rt as drawImageCover, ip as resolveDisplaySize };
