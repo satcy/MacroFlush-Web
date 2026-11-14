@@ -25,7 +25,7 @@ for (const [id, name] of [["first-clip", "First Clip"], ["parameters", "Paramete
       const c = structuredClone(template);
       for (const field of ["libraries", "capabilities", "p5Playback", "p5ReplayLimits", "feedback"]) delete c[field];
       Object.assign(c, { id: clipId, name: clipName, assetId: `${clipId}-asset`, inFrame: 0, outFrame: 360,
-        source: { html: "", css: "", js }, keyframeTracks: {} });
+        source: { html: '<canvas id="stage"></canvas>', css: "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}", js }, keyframeTracks: {} });
       c.params.size.default = c.params.size.value = [720, 405];
       c.params.anchorPoint.default = c.params.anchorPoint.value = [360, 202.5];
       return c;

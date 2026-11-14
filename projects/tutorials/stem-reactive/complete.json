@@ -159,8 +159,8 @@
                   }
                 },
                 "source": {
-                  "html": "",
-                  "css": "",
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
                   "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(() => {\n  bg(\"#0c1019\"); const ctx = getContext();\n  const stems = [\"drums\", \"bass\", \"other\", \"vocals\"];\n  const colors = [\"#5dd4ff\", \"#ff6c9a\", \"#ffdc63\", \"#b39cff\"];\n  stems.forEach((stem, i) => {\n    const energy = Math.min(1, audioStem(\"Ensemble\", stem) * clip.gain);\n    const x = 190 + i * 300;\n    ctx.fillStyle = colors[i];\n    ctx.beginPath(); ctx.arc(x, 350, 28 + energy * 80, 0, Math.PI * 2); ctx.fill();\n    ctx.fillRect(x - 75, 540 - energy * 100, 150, energy * 100 + 2);\n    ctx.font = \"22px monospace\"; ctx.textAlign = \"center\"; ctx.fillText(stem.toUpperCase(), x, 610);\n  });\n});"
                 },
                 "keyframeTracks": {}
@@ -345,8 +345,8 @@
           }
         },
         "source": {
-          "html": "",
-          "css": "",
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
           "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(() => {\n  bg(\"#0c1019\"); const ctx = getContext();\n  const stems = [\"drums\", \"bass\", \"other\", \"vocals\"];\n  const colors = [\"#5dd4ff\", \"#ff6c9a\", \"#ffdc63\", \"#b39cff\"];\n  stems.forEach((stem, i) => {\n    const energy = Math.min(1, audioStem(\"Ensemble\", stem) * clip.gain);\n    const x = 190 + i * 300;\n    ctx.fillStyle = colors[i];\n    ctx.beginPath(); ctx.arc(x, 350, 28 + energy * 80, 0, Math.PI * 2); ctx.fill();\n    ctx.fillRect(x - 75, 540 - energy * 100, 150, energy * 100 + 2);\n    ctx.font = \"22px monospace\"; ctx.textAlign = \"center\"; ctx.fillText(stem.toUpperCase(), x, 610);\n  });\n});"
         },
         "keyframeTracks": {}

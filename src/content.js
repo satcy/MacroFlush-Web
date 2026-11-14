@@ -46,7 +46,7 @@ export const api = [
 ];
 const sourceLessons = [
   { id: "first-clip", environments: ["browser-editor", "app"], number: "01", title: "最初のClipをつくる", level: "Getting started", summary: "Canvasに円を描いて、タイムラインで動かす。", steps: [
-    { title: "HTML Clipを用意する", text: "上の開始用プロジェクトを開くと、720 × 405、60 fps、360フレームのCompositionと、静止した円を描くCircle Clipが用意されています。TimelineのCircleを選び、JavaScriptタブを開きます。ゼロから始める場合はProjectでHTML Clipを作り、Timelineへ配置してください。HTMLとCSSは空のままで構いません。完成版では次のコードで円が左右に動きます。" },
+    { title: "HTML Clipを用意する", text: "上の開始用プロジェクトを開くと、720 × 405、60 fps、360フレームのCompositionと、静止した円を描くCircle Clipが用意されています。TimelineのCircleを選び、JavaScriptタブを開きます。ゼロから始める場合はProjectでHTML Clipを作り、Timelineへ配置してください。HTMLとCSSは新しいClipの初期値（<canvas id=\"stage\"></canvas>とそれを全面に表示するCSS）のままで構いません。完成版では次のコードで円が左右に動きます。" },
     { title: "JavaScriptを書く", text: "JavaScriptタブの内容を以下のコードへ置き換えます。入力を止めると約300msでプレビューへ反映されます。CentiがCanvasを用意し、setup()がサイズを設定します。File > Save Asでプロジェクトを保存できます。", code: "clip.use(\"centi\");\n\nsetup(() => size(720, 405));\n\nonFrame(({ time }) => {\n  bg(0);\n  col(\"#5dd4ff\");\n  oval(360 + Math.sin(time) * 120, 202, 30);\n});" },
     { title: "再生して、時間を動かす", text: "Timelineの再生ボタンで円が左右に動きます。Playheadをドラッグすると、指定した時刻の形を確認できます。描画はtimeから計算しているので、前のフレームの状態に依存しません。Clip内ではrequestAnimationFrame()ではなくonFrame()を使います。" },
     { title: "作例を変えてみる", text: "半径の30を60に、横移動の120を200に変えてみましょう。次のチュートリアルでは、こうした値をInspectorから操作できるパラメータにします。" }

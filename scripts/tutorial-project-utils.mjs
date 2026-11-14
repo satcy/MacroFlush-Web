@@ -10,7 +10,7 @@ export const root = p => p.assets.find(a => a.id === p.rootCompositionId).compos
 export function html(p, id, name, js, custom = {}, target = root(p)) {
   const c = structuredClone(base);
   for (const field of ["libraries", "capabilities", "p5Playback", "p5ReplayLimits", "feedback"]) delete c[field];
-  Object.assign(c, { id, name, assetId: `${id}-asset`, inFrame: 0, outFrame: target.durationFrames, source: { html: "", css: "", js }, keyframeTracks: {} });
+  Object.assign(c, { id, name, assetId: `${id}-asset`, inFrame: 0, outFrame: target.durationFrames, source: { html: '<canvas id="stage"></canvas>', css: "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}", js }, keyframeTracks: {} });
   for (const [key, param] of Object.entries(c.params)) if (param.group === "custom") delete c.params[key];
   Object.assign(c.params, custom);
   for (const key of ["size", "anchorPoint"]) c.params[key].default = c.params[key].value = key === "size" ? [target.width, target.height] : [target.width / 2, target.height / 2];
