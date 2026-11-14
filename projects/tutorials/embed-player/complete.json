@@ -161,7 +161,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  bg(\"#0c1019\");\n  for (let i = 0; i < 18; i++) {\n    const a = time + i / 18 * PI * 2;\n    col(\"hsl(\" + (clip.hue + i * 8) + \",80%,65%)\"); lineWidth(5);\n    stroke(); oval(640 + cos(a) * 145, 360 + sin(a) * 145, 45);\n  }\n});"
+                  "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  bg(\"#0c1019\");\n  for (let i = 0; i < 18; i++) {\n    const a = time + i / 18 * PI * 2;\n    col(\"hsl(\" + (clip.hue + i * 8) + \",80%,65%)\");\n    lineWidth(5);\n    stroke();\n    oval(640 + cos(a) * 145, 360 + sin(a) * 145, 45);\n  }\n});"
                 },
                 "keyframeTracks": {
                   "hue": [
@@ -334,7 +334,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-          "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  bg(\"#0c1019\");\n  for (let i = 0; i < 18; i++) {\n    const a = time + i / 18 * PI * 2;\n    col(\"hsl(\" + (clip.hue + i * 8) + \",80%,65%)\"); lineWidth(5);\n    stroke(); oval(640 + cos(a) * 145, 360 + sin(a) * 145, 45);\n  }\n});"
+          "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  bg(\"#0c1019\");\n  for (let i = 0; i < 18; i++) {\n    const a = time + i / 18 * PI * 2;\n    col(\"hsl(\" + (clip.hue + i * 8) + \",80%,65%)\");\n    lineWidth(5);\n    stroke();\n    oval(640 + cos(a) * 145, 360 + sin(a) * 145, 45);\n  }\n});"
         },
         "keyframeTracks": {
           "hue": [

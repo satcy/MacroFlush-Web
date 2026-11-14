@@ -217,7 +217,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-                  "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  col(\"#11151e\"); fill(); rect(0, 0, 1280, 720);\n  col(\"#f4f7ff\"); lineWidth(7);\n  for (let i = 0; i < 12; i++) {\n    const x = 90 + i * 100 + sin(time + i * 0.3) * 24;\n    line(x, 90, x, 630);\n  }\n  font(\"sans-serif\", 120, true); getContext().textAlign = \"center\";\n  col(\"#f4f7ff\"); fill(); text(\"SPECTRUM\", 640, 405);\n});"
+                  "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  col(\"#11151e\");\n  fill();\n  rect(0, 0, 1280, 720);\n  col(\"#f4f7ff\");\n  lineWidth(7);\n  for (let i = 0; i < 12; i++) {\n    const x = 90 + i * 100 + sin(time + i * 0.3) * 24;\n    line(x, 90, x, 630);\n  }\n  font(\"sans-serif\", 120, true);\n  getContext().textAlign = \"center\";\n  col(\"#f4f7ff\");\n  fill();\n  text(\"SPECTRUM\", 640, 405);\n});"
                 },
                 "keyframeTracks": {}
               }
@@ -358,7 +358,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-          "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  col(\"#11151e\"); fill(); rect(0, 0, 1280, 720);\n  col(\"#f4f7ff\"); lineWidth(7);\n  for (let i = 0; i < 12; i++) {\n    const x = 90 + i * 100 + sin(time + i * 0.3) * 24;\n    line(x, 90, x, 630);\n  }\n  font(\"sans-serif\", 120, true); getContext().textAlign = \"center\";\n  col(\"#f4f7ff\"); fill(); text(\"SPECTRUM\", 640, 405);\n});"
+          "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  col(\"#11151e\");\n  fill();\n  rect(0, 0, 1280, 720);\n  col(\"#f4f7ff\");\n  lineWidth(7);\n  for (let i = 0; i < 12; i++) {\n    const x = 90 + i * 100 + sin(time + i * 0.3) * 24;\n    line(x, 90, x, 630);\n  }\n  font(\"sans-serif\", 120, true);\n  getContext().textAlign = \"center\";\n  col(\"#f4f7ff\");\n  fill();\n  text(\"SPECTRUM\", 640, 405);\n});"
         },
         "keyframeTracks": {}
       }

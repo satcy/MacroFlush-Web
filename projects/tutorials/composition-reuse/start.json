@@ -279,7 +279,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(() => { bg(\"#0c1019\"); });"
+                  "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(() => {\n  bg(\"#0c1019\");\n});"
                 },
                 "keyframeTracks": {}
               }
@@ -455,7 +455,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "clip.use(\"centi\");\nsetup(() => { size(560, 300); bg(0, 0); });\nonFrame(({ time }) => {\n  clear();\n  col(\"#172632\"); fill(); rect(0, 0, 560, 300);\n  col(clip.tint); lineWidth(3); stroke(); rect(2, 2, 556, 296);\n  col(clip.tint); font(\"sans-serif\", 48, true);\n  fill(); text(clip.title, 36, 90);\n  font(\"monospace\", 18); fill(); text(\"ONE SHARED COMPOSITION\", 36, 132);\n  fill(); oval(90 + sin(time * 2) * 35, 220, 24);\n});"
+                  "js": "clip.use(\"centi\");\nsetup(() => {\n  size(560, 300);\n  bg(0, 0);\n});\nonFrame(({ time }) => {\n  clear();\n  col(\"#172632\");\n  fill();\n  rect(0, 0, 560, 300);\n  col(clip.tint);\n  lineWidth(3);\n  stroke();\n  rect(2, 2, 556, 296);\n  col(clip.tint);\n  font(\"sans-serif\", 48, true);\n  fill();\n  text(clip.title, 36, 90);\n  font(\"monospace\", 18);\n  fill();\n  text(\"ONE SHARED COMPOSITION\", 36, 132);\n  fill();\n  oval(90 + sin(time * 2) * 35, 220, 24);\n});"
                 },
                 "keyframeTracks": {}
               }
@@ -616,7 +616,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-          "js": "clip.use(\"centi\");\nsetup(() => { size(560, 300); bg(0, 0); });\nonFrame(({ time }) => {\n  clear();\n  col(\"#172632\"); fill(); rect(0, 0, 560, 300);\n  col(clip.tint); lineWidth(3); stroke(); rect(2, 2, 556, 296);\n  col(clip.tint); font(\"sans-serif\", 48, true);\n  fill(); text(clip.title, 36, 90);\n  font(\"monospace\", 18); fill(); text(\"ONE SHARED COMPOSITION\", 36, 132);\n  fill(); oval(90 + sin(time * 2) * 35, 220, 24);\n});"
+          "js": "clip.use(\"centi\");\nsetup(() => {\n  size(560, 300);\n  bg(0, 0);\n});\nonFrame(({ time }) => {\n  clear();\n  col(\"#172632\");\n  fill();\n  rect(0, 0, 560, 300);\n  col(clip.tint);\n  lineWidth(3);\n  stroke();\n  rect(2, 2, 556, 296);\n  col(clip.tint);\n  font(\"sans-serif\", 48, true);\n  fill();\n  text(clip.title, 36, 90);\n  font(\"monospace\", 18);\n  fill();\n  text(\"ONE SHARED COMPOSITION\", 36, 132);\n  fill();\n  oval(90 + sin(time * 2) * 35, 220, 24);\n});"
         },
         "keyframeTracks": {}
       }
@@ -753,7 +753,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-          "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(() => { bg(\"#0c1019\"); });"
+          "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(() => {\n  bg(\"#0c1019\");\n});"
         },
         "keyframeTracks": {}
       }

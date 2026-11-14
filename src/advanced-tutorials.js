@@ -98,7 +98,8 @@ const alpha = lesson("alpha-logo", "透明なオリジナルマークを作り�
 const embedSnippet = `import { createClipPlayer } from "./player/macroflush-player.js";
 const url = new URL("./complete.json", location.href);
 const project = await fetch(url).then(response => {
-  if (!response.ok) throw new Error("Project download failed");
+  if (!response.ok)
+    throw new Error("Project download failed");
   return response.json();
 });
 const player = createClipPlayer({ project, canvas: document.querySelector("canvas"),

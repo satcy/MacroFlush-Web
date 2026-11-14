@@ -194,7 +194,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-                  "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18); col(\"#a0afbf\");\n  fill(); text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill(); oval(clip.x, clip.row, 26);\n});"
+                  "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18);\n  col(\"#a0afbf\");\n  fill();\n  text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill();\n  oval(clip.x, clip.row, 26);\n});"
                 },
                 "keyframeTracks": {
                   "x": [
@@ -396,7 +396,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-                  "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18); col(\"#a0afbf\");\n  fill(); text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill(); oval(clip.x, clip.row, 26);\n});"
+                  "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18);\n  col(\"#a0afbf\");\n  fill();\n  text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill();\n  oval(clip.x, clip.row, 26);\n});"
                 },
                 "keyframeTracks": {
                   "x": [
@@ -598,7 +598,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-                  "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18); col(\"#a0afbf\");\n  fill(); text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill(); oval(clip.x, clip.row, 26);\n});"
+                  "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18);\n  col(\"#a0afbf\");\n  fill();\n  text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill();\n  oval(clip.x, clip.row, 26);\n});"
                 },
                 "keyframeTracks": {
                   "x": [
@@ -803,7 +803,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-          "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18); col(\"#a0afbf\");\n  fill(); text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill(); oval(clip.x, clip.row, 26);\n});"
+          "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18);\n  col(\"#a0afbf\");\n  fill();\n  text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill();\n  oval(clip.x, clip.row, 26);\n});"
         },
         "keyframeTracks": {
           "x": [
@@ -1004,7 +1004,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-          "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18); col(\"#a0afbf\");\n  fill(); text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill(); oval(clip.x, clip.row, 26);\n});"
+          "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18);\n  col(\"#a0afbf\");\n  fill();\n  text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill();\n  oval(clip.x, clip.row, 26);\n});"
         },
         "keyframeTracks": {
           "x": [
@@ -1205,7 +1205,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-          "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18); col(\"#a0afbf\");\n  fill(); text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill(); oval(clip.x, clip.row, 26);\n});"
+          "js": "clip.use(\"centi\");\nclip.defineParams({\n  x: { type: \"number\", default: 230, min: 100, max: 1180, interpolable: true },\n  row: { type: \"number\", default: 180 },\n  label: { type: \"string\", default: \"LINEAR\" },\n  tint: { type: \"color\", default: \"#5dd4ff\" }\n});\nsetup(() => size(1280, 720));\nonFrame(() => {\n  clear();\n  col(\"#303a49\");\n  line(230, clip.row, 1080, clip.row);\n  font(\"sans-serif\", 18);\n  col(\"#a0afbf\");\n  fill();\n  text(clip.label, 70, clip.row - 50);\n  col(clip.tint);\n  fill();\n  oval(clip.x, clip.row, 26);\n});"
         },
         "keyframeTracks": {
           "x": [

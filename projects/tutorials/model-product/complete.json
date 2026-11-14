@@ -153,7 +153,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "clip.use(\"centi\");\nsetup(() => { size(1280, 720); bg(0, 0); });\nonFrame(() => {\n  clear(); col(\"#eaf4ff\");\n  font(\"sans-serif\", 32, true); fill(); text(\"FORM / 01\", 65, 80);\n  font(\"monospace\", 14); col(\"#5dd4ff\");\n  fill(); text(\"ORIGINAL GLB · PRODUCT STUDY\", 65, 110);\n  col(\"#a5b2c6\"); fill(); text(\"SHAPE / LIGHT / MOTION\", 65, 665);\n});"
+                  "js": "clip.use(\"centi\");\nsetup(() => {\n  size(1280, 720);\n  bg(0, 0);\n});\nonFrame(() => {\n  clear();\n  col(\"#eaf4ff\");\n  font(\"sans-serif\", 32, true);\n  fill();\n  text(\"FORM / 01\", 65, 80);\n  font(\"monospace\", 14);\n  col(\"#5dd4ff\");\n  fill();\n  text(\"ORIGINAL GLB · PRODUCT STUDY\", 65, 110);\n  col(\"#a5b2c6\");\n  fill();\n  text(\"SHAPE / LIGHT / MOTION\", 65, 665);\n});"
                 },
                 "keyframeTracks": {}
               }
@@ -731,7 +731,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "const { scene, T } = clip.use(\"centi3d\");\nsetup(() => {\n  size(1280, 720); scene.background = new T.Color(\"#101622\");\n  scene.add(new T.HemisphereLight(0xb8ddff, 0x182034, 2));\n  const ground = new T.Mesh(new T.CylinderGeometry(135, 150, 24, 64),\n    new T.MeshStandardMaterial({ color: \"#263447\", roughness: 0.55 }));\n  ground.position.y = -110; scene.add(ground);\n});"
+                  "js": "const { scene, T } = clip.use(\"centi3d\");\nsetup(() => {\n  size(1280, 720);\n  scene.background = new T.Color(\"#101622\");\n  scene.add(new T.HemisphereLight(0xb8ddff, 0x182034, 2));\n  const ground = new T.Mesh(new T.CylinderGeometry(135, 150, 24, 64), new T.MeshStandardMaterial({ color: \"#263447\", roughness: 0.55 }));\n  ground.position.y = -110;\n  scene.add(ground);\n});"
                 }
               }
             ]
@@ -1004,7 +1004,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-          "js": "const { scene, T } = clip.use(\"centi3d\");\nsetup(() => {\n  size(1280, 720); scene.background = new T.Color(\"#101622\");\n  scene.add(new T.HemisphereLight(0xb8ddff, 0x182034, 2));\n  const ground = new T.Mesh(new T.CylinderGeometry(135, 150, 24, 64),\n    new T.MeshStandardMaterial({ color: \"#263447\", roughness: 0.55 }));\n  ground.position.y = -110; scene.add(ground);\n});"
+          "js": "const { scene, T } = clip.use(\"centi3d\");\nsetup(() => {\n  size(1280, 720);\n  scene.background = new T.Color(\"#101622\");\n  scene.add(new T.HemisphereLight(0xb8ddff, 0x182034, 2));\n  const ground = new T.Mesh(new T.CylinderGeometry(135, 150, 24, 64), new T.MeshStandardMaterial({ color: \"#263447\", roughness: 0.55 }));\n  ground.position.y = -110;\n  scene.add(ground);\n});"
         }
       }
     },
@@ -1172,7 +1172,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-          "js": "clip.use(\"centi\");\nsetup(() => { size(1280, 720); bg(0, 0); });\nonFrame(() => {\n  clear(); col(\"#eaf4ff\");\n  font(\"sans-serif\", 32, true); fill(); text(\"FORM / 01\", 65, 80);\n  font(\"monospace\", 14); col(\"#5dd4ff\");\n  fill(); text(\"ORIGINAL GLB · PRODUCT STUDY\", 65, 110);\n  col(\"#a5b2c6\"); fill(); text(\"SHAPE / LIGHT / MOTION\", 65, 665);\n});"
+          "js": "clip.use(\"centi\");\nsetup(() => {\n  size(1280, 720);\n  bg(0, 0);\n});\nonFrame(() => {\n  clear();\n  col(\"#eaf4ff\");\n  font(\"sans-serif\", 32, true);\n  fill();\n  text(\"FORM / 01\", 65, 80);\n  font(\"monospace\", 14);\n  col(\"#5dd4ff\");\n  fill();\n  text(\"ORIGINAL GLB · PRODUCT STUDY\", 65, 110);\n  col(\"#a5b2c6\");\n  fill();\n  text(\"SHAPE / LIGHT / MOTION\", 65, 665);\n});"
         },
         "keyframeTracks": {}
       }
