@@ -30,7 +30,7 @@ for (const [id, name] of [["first-clip", "First Clip"], ["parameters", "Paramete
       c.params.anchorPoint.default = c.params.anchorPoint.value = [360, 202.5];
       return c;
     }
-    const circle = clip("circle", "Circle", id === "first-clip" && !done ? firstCode.replace("360 + Math.sin(time) * 120", "360") : firstCode);
+    const circle = clip("circle", "Circle", id === "first-clip" && !done ? firstCode.replace("360 + sin(time) * 120", "360") : firstCode);
     if (id === "parameters" && done) {
       circle.source.js = parameterCode;
       circle.params.speed = { key: "speed", type: "number", default: 1, value: 1, min: 0, max: 3, step: 0.01, interpolable: true, group: "custom", writable: false, version: 1 };

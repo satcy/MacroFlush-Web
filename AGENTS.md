@@ -74,6 +74,8 @@ Timeline / Curveは読み込んだCompositionのレイヤー・配置・パラ�
 
 ## Referenceと画面確認
 
+Centiを使う教材・コード例は、描画を `col()` / `rect()` / `oval()` / `text()` / `grad()` などのCenti関数で記述し、数学関数と定数は `sin()` / `min()` / `PI` のように `Math.` を省きます。`getContext()` は対応ヘルパーのない文字計測・揃えの設定に限り、直接描画には使いません。Playerのホストコード・Node生成処理・p5 instance modeにはCentiのグローバルがないため、それぞれのAPIを使用してください。
+
 APIの説明・コード例・制約は参照元アプリの実装・型定義・ドキュメントで確認してください。一般的なライブラリの挙動をMacroFlush固有の挙動として記載しないでください。特にCentiの色・単位・補間、p5.jsのライブラリ読み込み、global mode、時間、入力、Isolated replayの条件に注意してください。
 
 対応環境の案内・比較表は `src/edition-markup.js`、Shader / Feedback / アプリ専用機能は `src/reference-features.js` にあります。Referenceの `environments` は `browser-editor` / `app` / `player` で、指定なしのClip APIは3環境、PlayerグループはホストAPIとしてPlayerに対応します。作成・設定の操作はEditorの2環境、MCP・UDP OSC・LLMアシスタント・ステム分離・ProRes書き出しはアプリ版だけにしてください（分離済みWAVのAttach Stemsと `audioStem()` の解析はEditor・Playerでも使えます。H.264動画とPNG連番の書き出しはブラウザ版Editorとアプリ版で、Playerに書き出しはありません）。Feedbackは入力データの記録・再生で、Pointer記録とFeedback Editorは両Editor（ブラウザ版の編集はアプリ側で未検証）、OSC記録はアプリ版、記録済みデータの再生はPlayerにも対応します。Shader ClipはWebGL2を必要とし、Pipelineは同一フレーム内の処理です。OSCの受信アドレスは `/<layer>/<clip>/<param>`・`/comp/<param>`・`/cue/<name>` に加えて `/transport/*`・`/composition/open <name>`・`/layers/<name>/visible`（0.3.19）があり、いずれもアプリ版専用で、アプリ側ではNodeテストでの確認です。`clip.paramNames` / `clip.listParams()` / `clip.isNew.<name>` は3環境のClip APIです。参照元は `../MacroFlush/README.md` のEffect layers / Recorded data: Feedback / OSC reference / Local AI assistantと `src/core/feedbackContracts.ts` です。機能差を変更するときはアプリの実装とサイトに同梱した配布版の両方を確認してください。

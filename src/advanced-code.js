@@ -1,13 +1,13 @@
 export const cardCode = `clip.use("centi");
 setup(() => { size(560, 300); bg(0, 0); });
 onFrame(({ time }) => {
-  clear(); const ctx = getContext();
-  ctx.fillStyle = "#172632"; ctx.fillRect(0, 0, 560, 300);
-  ctx.strokeStyle = clip.tint; ctx.lineWidth = 3; ctx.strokeRect(2, 2, 556, 296);
-  ctx.fillStyle = clip.tint; ctx.font = "bold 48px sans-serif";
-  ctx.fillText(clip.title, 36, 90);
-  ctx.font = "18px monospace"; ctx.fillText("ONE SHARED COMPOSITION", 36, 132);
-  ctx.beginPath(); ctx.arc(90 + Math.sin(time * 2) * 35, 220, 24, 0, Math.PI * 2); ctx.fill();
+  clear();
+  col("#172632"); fill(); rect(0, 0, 560, 300);
+  col(clip.tint); lineWidth(3); stroke(); rect(2, 2, 556, 296);
+  col(clip.tint); font("sans-serif", 48, true);
+  fill(); text(clip.title, 36, 90);
+  font("monospace", 18); fill(); text("ONE SHARED COMPOSITION", 36, 132);
+  fill(); oval(90 + sin(time * 2) * 35, 220, 24);
 });`;
 
 export const backdropCode = `clip.use("centi");
@@ -17,45 +17,43 @@ onFrame(() => { bg("#0c1019"); });`;
 export const prismCode = `clip.use("centi");
 setup(() => size(1280, 720));
 onFrame(({ time }) => {
-  const ctx = getContext();
-  const g = ctx.createLinearGradient(0, 0, 1280, 720);
-  g.addColorStop(0, "#5dd4ff"); g.addColorStop(0.5, "#793c93"); g.addColorStop(1, "#ff6c9a");
-  ctx.fillStyle = g; ctx.fillRect(0, 0, 1280, 720);
-  ctx.strokeStyle = "#ffdc63"; ctx.lineWidth = 14;
+  grad(0, 0, 1280, 720);
+  gradColor(0, "#5dd4ff"); gradColor(0.5, "#793c93"); gradColor(1, "#ff6c9a");
+  rect(0, 0, 1280, 720);
+  col("#ffdc63"); lineWidth(14);
   for (let i = -6; i < 18; i++) {
-    const x = i * 100 + Math.sin(time) * 80;
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 300, 720); ctx.stroke();
+    const x = i * 100 + sin(time) * 80;
+    line(x, 0, x + 300, 720);
   }
 });`;
 
 export const matteCode = `clip.use("centi");
 setup(() => { size(1280, 720); bg(0, 0); });
 onFrame(() => {
-  clear(); const ctx = getContext();
-  ctx.fillStyle = "white";
-  ctx.font = "bold 220px sans-serif"; ctx.textAlign = "center";
-  ctx.fillText("FLOW", 640, 380);
-  ctx.beginPath(); ctx.arc(640, 530, clip.radius, 0, Math.PI * 2); ctx.fill();
+  clear();
+  col("white");
+  font("sans-serif", 220, true); getContext().textAlign = "center";
+  fill(); text("FLOW", 640, 380);
+  fill(); oval(640, 530, clip.radius);
 });`;
 
 export const cueCode = `clip.use("centi");
 setup(() => size(1280, 720));
 onCue(({ cueName }) => { console.log("Cue:", cueName); });
 onFrame(({ compFrame }) => {
-  bg("#0c1019"); const ctx = getContext();
+  bg("#0c1019");
   const section = compFrame < 120 ? 0 : compFrame < 360 ? 1 : 2;
   const local = compFrame - [0, 120, 360][section];
   const u = local / [120, 240, 120][section];
   const colors = ["#5dd4ff", "#ff6c9a", "#ffdc63"];
-  const fade = section === 0 ? Math.min(1, u * 3) : section === 2 ? Math.max(0, 1 - u) : 1;
-  ctx.fillStyle = colors[section]; ctx.globalAlpha = fade;
-  ctx.font = "bold 110px sans-serif"; ctx.textAlign = "center";
-  ctx.fillText(["INTRO", "LOOP", "OUTRO"][section], 640, 350);
+  const fade = section === 0 ? min(1, u * 3) : section === 2 ? max(0, 1 - u) : 1;
+  hcol(hexToInt(colors[section]), fade * 255);
+  font("sans-serif", 110, true); getContext().textAlign = "center";
+  fill(); text(["INTRO", "LOOP", "OUTRO"][section], 640, 350);
   for (let i = 0; i < 16; i++) {
-    const phase = u * Math.PI * 2 + i / 16 * Math.PI * 2;
-    ctx.beginPath(); ctx.arc(640 + Math.cos(phase) * 330, 360 + Math.sin(phase) * 210, 6, 0, Math.PI * 2); ctx.fill();
+    const phase = u * PI * 2 + i / 16 * PI * 2;
+    fill(); oval(640 + cos(phase) * 330, 360 + sin(phase) * 210, 6);
   }
-  ctx.globalAlpha = 1;
 });`;
 export const performanceCues = `cue("Intro", 0, { mode: "none", endFrame: 120 });
 cue("Loop", 120, { mode: "loop", endFrame: 360 });
@@ -64,30 +62,30 @@ cue("Outro", 360, { mode: "stop", endFrame: 480 });`;
 export const stemsCode = `clip.use("centi");
 setup(() => size(1280, 720));
 onFrame(() => {
-  bg("#0c1019"); const ctx = getContext();
+  bg("#0c1019");
   const stems = ["drums", "bass", "other", "vocals"];
   const colors = ["#5dd4ff", "#ff6c9a", "#ffdc63", "#b39cff"];
   stems.forEach((stem, i) => {
-    const energy = Math.min(1, audioStem("Ensemble", stem) * clip.gain);
+    const energy = min(1, audioStem("Ensemble", stem) * clip.gain);
     const x = 190 + i * 300;
-    ctx.fillStyle = colors[i];
-    ctx.beginPath(); ctx.arc(x, 350, 28 + energy * 80, 0, Math.PI * 2); ctx.fill();
-    ctx.fillRect(x - 75, 540 - energy * 100, 150, energy * 100 + 2);
-    ctx.font = "22px monospace"; ctx.textAlign = "center"; ctx.fillText(stem.toUpperCase(), x, 610);
+    col(colors[i]);
+    fill(); oval(x, 350, 28 + energy * 80);
+    fill(); rect(x - 75, 540 - energy * 100, 150, energy * 100 + 2);
+    font("monospace", 22); getContext().textAlign = "center"; fill(); text(stem.toUpperCase(), x, 610);
   });
 });`;
 
 export const loopCode = `clip.use("centi");
 setup(() => size(1280, 720));
 onFrame(({ time }) => {
-  bg("#0c1019"); const ctx = getContext();
-  const phase = time / 4 * Math.PI * 2;
+  bg("#0c1019");
+  const phase = time / 4 * PI * 2;
   for (let i = 0; i < 24; i++) {
-    const offset = i / 24 * Math.PI * 2;
+    const offset = i / 24 * PI * 2;
     const angle = phase + offset;
-    const radius = 170 + 50 * Math.sin(phase * 2 + offset);
-    ctx.fillStyle = ["#5dd4ff", "#ff6c9a", "#ffdc63"][i % 3];
-    ctx.beginPath(); ctx.arc(640 + Math.cos(angle) * radius, 360 + Math.sin(angle) * radius, 9, 0, Math.PI * 2); ctx.fill();
+    const radius = 170 + 50 * sin(phase * 2 + offset);
+    col(["#5dd4ff", "#ff6c9a", "#ffdc63"][i % 3]);
+    fill(); oval(640 + cos(angle) * radius, 360 + sin(angle) * radius, 9);
   }
 });`;
 
@@ -126,52 +124,51 @@ setup(() => {
 export const productTitleCode = `clip.use("centi");
 setup(() => { size(1280, 720); bg(0, 0); });
 onFrame(() => {
-  clear(); const ctx = getContext(); ctx.fillStyle = "#eaf4ff";
-  ctx.font = "bold 32px sans-serif"; ctx.fillText("FORM / 01", 65, 80);
-  ctx.font = "14px monospace"; ctx.fillStyle = "#5dd4ff";
-  ctx.fillText("ORIGINAL GLB · PRODUCT STUDY", 65, 110);
-  ctx.fillStyle = "#a5b2c6"; ctx.fillText("SHAPE / LIGHT / MOTION", 65, 665);
+  clear(); col("#eaf4ff");
+  font("sans-serif", 32, true); fill(); text("FORM / 01", 65, 80);
+  font("monospace", 14); col("#5dd4ff");
+  fill(); text("ORIGINAL GLB · PRODUCT STUDY", 65, 110);
+  col("#a5b2c6"); fill(); text("SHAPE / LIGHT / MOTION", 65, 665);
 });`;
 
 export const seededCode = `clip.use("centi");
 clip.defineParams({ seed: { type: "number", default: 42, min: 0, max: 9999, step: 1 } });
 function randomAt(seed, index) {
-  let n = (Math.floor(seed) ^ Math.imul(index + 1, 374761393)) >>> 0;
-  n = Math.imul(n ^ (n >>> 13), 1274126177);
+  let n = (floor(seed) ^ imul(index + 1, 374761393)) >>> 0;
+  n = imul(n ^ (n >>> 13), 1274126177);
   return ((n ^ (n >>> 16)) >>> 0) / 4294967296;
 }
 setup(() => size(1280, 720));
 onFrame(({ time }) => {
-  bg("#0c1019"); const ctx = getContext();
+  bg("#0c1019");
   for (let i = 0; i < 100; i++) {
     const x = randomAt(clip.seed, i * 4) * 1280;
     const y = randomAt(clip.seed, i * 4 + 1) * 720;
-    const phase = randomAt(clip.seed, i * 4 + 2) * Math.PI * 2;
+    const phase = randomAt(clip.seed, i * 4 + 2) * PI * 2;
     const radius = 3 + randomAt(clip.seed, i * 4 + 3) * 9;
-    ctx.fillStyle = ["#5dd4ff", "#ff6c9a", "#ffdc63"][i % 3];
-    ctx.beginPath(); ctx.arc(x + Math.cos(time + phase) * 24, y + Math.sin(time + phase) * 24, radius, 0, Math.PI * 2); ctx.fill();
+    col(["#5dd4ff", "#ff6c9a", "#ffdc63"][i % 3]);
+    fill(); oval(x + cos(time + phase) * 24, y + sin(time + phase) * 24, radius);
   }
 });`;
 
 export const logoCode = `clip.use("centi");
 setup(() => { size(1280, 720); bg(0, 0); });
 onFrame(() => {
-  clear(); const ctx = getContext(); const u = clip.reveal;
-  ctx.save(); ctx.translate(640, 360); ctx.scale(0.65 + u * 0.35, 0.65 + u * 0.35);
-  ctx.globalAlpha = u; ctx.lineWidth = 28; ctx.lineCap = "round";
+  clear(); const u = clip.reveal;
+  push(); translate(640, 360); scale(0.65 + u * 0.35, 0.65 + u * 0.35);
+  lineWidth(28); lineCap(1);
   ["#5dd4ff", "#ff6c9a", "#ffdc63"].forEach((color, i) => {
-    ctx.strokeStyle = color; ctx.beginPath();
-    ctx.arc(0, 0, 75 + i * 40, -Math.PI / 2, -Math.PI / 2 + u * Math.PI * 1.65); ctx.stroke();
+    hcol(hexToInt(color), u * 255); stroke(); arc(0, 0, 75 + i * 40, -PI / 2, -PI / 2 + u * PI * 1.65);
   });
-  ctx.restore();
+  pop();
 });`;
 export const webArtworkCode = `clip.use("centi");
 setup(() => size(1280, 720));
 onFrame(({ time }) => {
-  bg("#0c1019"); const ctx = getContext();
+  bg("#0c1019");
   for (let i = 0; i < 18; i++) {
-    const a = time + i / 18 * Math.PI * 2;
-    ctx.strokeStyle = "hsl(" + (clip.hue + i * 8) + ",80%,65%)"; ctx.lineWidth = 5;
-    ctx.beginPath(); ctx.arc(640 + Math.cos(a) * 145, 360 + Math.sin(a) * 145, 45, 0, Math.PI * 2); ctx.stroke();
+    const a = time + i / 18 * PI * 2;
+    col("hsl(" + (clip.hue + i * 8) + ",80%,65%)"); lineWidth(5);
+    stroke(); oval(640 + cos(a) * 145, 360 + sin(a) * 145, 45);
   }
 });`;

@@ -79,7 +79,7 @@ for (const [id, title] of advancedCatalog.filter(([id]) => !requested.length || 
       root(p).layers.unshift({id:"product-layer",name:"Bottle",kind:"chromium",visible:true,clips:[model]},{id:"product-rig",name:"Turntable",kind:"chromium",visible:true,clips:[rig]});
       if(done){const rim=structuredClone(light);rim.id="rim";rim.name="Rim";rim.params.position.value=[-250,120,-220];rim.params.color.value="#ff6c9a";rim.params.intensity.value=2;layer(p,rim);const titleClip=html(p,"title","Title",code.productTitleCode);root(p).layers.unshift({id:"title-layer",name:"Title",kind:"chromium",visible:true,clips:[titleClip]});}
     } else if (id === "seeded-motion") {
-      const js=done?code.seededCode:code.seededCode.replaceAll("randomAt(clip.seed,", "unstableRandom(clip.seed,")+"\nfunction unstableRandom() { return Math.random(); }";
+      const js=done?code.seededCode:code.seededCode.replaceAll("randomAt(clip.seed,", "unstableRandom(clip.seed,")+"\nfunction unstableRandom() { return random(); }";
       layer(p,html(p,"particles","Particles",js,{seed:number("seed",42,0,9999,1)}));
     } else if (id === "alpha-logo") {
       const c=html(p,"mark","Mark",done?code.logoCode:code.logoCode.replace("bg(0, 0)",'bg("#0c1019")'),{reveal:number("reveal",1)});

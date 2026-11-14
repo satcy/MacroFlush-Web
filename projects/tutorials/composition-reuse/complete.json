@@ -586,7 +586,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "clip.use(\"centi\");\nsetup(() => { size(560, 300); bg(0, 0); });\nonFrame(({ time }) => {\n  clear(); const ctx = getContext();\n  ctx.fillStyle = \"#172632\"; ctx.fillRect(0, 0, 560, 300);\n  ctx.strokeStyle = clip.tint; ctx.lineWidth = 3; ctx.strokeRect(2, 2, 556, 296);\n  ctx.fillStyle = clip.tint; ctx.font = \"bold 48px sans-serif\";\n  ctx.fillText(clip.title, 36, 90);\n  ctx.font = \"18px monospace\"; ctx.fillText(\"ONE SHARED COMPOSITION\", 36, 132);\n  ctx.beginPath(); ctx.arc(90 + Math.sin(time * 2) * 35, 220, 24, 0, Math.PI * 2); ctx.fill();\n});"
+                  "js": "clip.use(\"centi\");\nsetup(() => { size(560, 300); bg(0, 0); });\nonFrame(({ time }) => {\n  clear();\n  col(\"#172632\"); fill(); rect(0, 0, 560, 300);\n  col(clip.tint); lineWidth(3); stroke(); rect(2, 2, 556, 296);\n  col(clip.tint); font(\"sans-serif\", 48, true);\n  fill(); text(clip.title, 36, 90);\n  font(\"monospace\", 18); fill(); text(\"ONE SHARED COMPOSITION\", 36, 132);\n  fill(); oval(90 + sin(time * 2) * 35, 220, 24);\n});"
                 },
                 "keyframeTracks": {}
               }
@@ -747,7 +747,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-          "js": "clip.use(\"centi\");\nsetup(() => { size(560, 300); bg(0, 0); });\nonFrame(({ time }) => {\n  clear(); const ctx = getContext();\n  ctx.fillStyle = \"#172632\"; ctx.fillRect(0, 0, 560, 300);\n  ctx.strokeStyle = clip.tint; ctx.lineWidth = 3; ctx.strokeRect(2, 2, 556, 296);\n  ctx.fillStyle = clip.tint; ctx.font = \"bold 48px sans-serif\";\n  ctx.fillText(clip.title, 36, 90);\n  ctx.font = \"18px monospace\"; ctx.fillText(\"ONE SHARED COMPOSITION\", 36, 132);\n  ctx.beginPath(); ctx.arc(90 + Math.sin(time * 2) * 35, 220, 24, 0, Math.PI * 2); ctx.fill();\n});"
+          "js": "clip.use(\"centi\");\nsetup(() => { size(560, 300); bg(0, 0); });\nonFrame(({ time }) => {\n  clear();\n  col(\"#172632\"); fill(); rect(0, 0, 560, 300);\n  col(clip.tint); lineWidth(3); stroke(); rect(2, 2, 556, 296);\n  col(clip.tint); font(\"sans-serif\", 48, true);\n  fill(); text(clip.title, 36, 90);\n  font(\"monospace\", 18); fill(); text(\"ONE SHARED COMPOSITION\", 36, 132);\n  fill(); oval(90 + sin(time * 2) * 35, 220, 24);\n});"
         },
         "keyframeTracks": {}
       }

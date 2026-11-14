@@ -148,7 +148,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "clip.use(\"centi\");\nsetup(() => {\n  size(720, 405);\n  bg(0);\n});\n// CentiのClipで透明にクリアする\nonFrame(({ time }) => {\n  clear();\n  col(\"#ff6c9a\");\n  oval(360, 202, 40 + Math.sin(time) * 20);\n});"
+                  "js": "clip.use(\"centi\");\nsetup(() => {\n  size(720, 405);\n  bg(0);\n});\n// CentiのClipで透明にクリアする\nonFrame(({ time }) => {\n  clear();\n  col(\"#ff6c9a\");\n  oval(360, 202, 40 + sin(time) * 20);\n});"
                 },
                 "keyframeTracks": {}
               }
@@ -286,7 +286,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "clip.use(\"centi\");\n\nsetup(() => size(720, 405));\n\nonFrame(({ time }) => {\n  bg(0);\n  col(\"#5dd4ff\");\n  oval(360 + Math.sin(time) * 120, 202, 30);\n});"
+                  "js": "clip.use(\"centi\");\n\nsetup(() => size(720, 405));\n\nonFrame(({ time }) => {\n  bg(0);\n  col(\"#5dd4ff\");\n  oval(360 + sin(time) * 120, 202, 30);\n});"
                 },
                 "keyframeTracks": {}
               }
@@ -427,7 +427,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-          "js": "clip.use(\"centi\");\nsetup(() => {\n  size(720, 405);\n  bg(0);\n});\n// CentiのClipで透明にクリアする\nonFrame(({ time }) => {\n  clear();\n  col(\"#ff6c9a\");\n  oval(360, 202, 40 + Math.sin(time) * 20);\n});"
+          "js": "clip.use(\"centi\");\nsetup(() => {\n  size(720, 405);\n  bg(0);\n});\n// CentiのClipで透明にクリアする\nonFrame(({ time }) => {\n  clear();\n  col(\"#ff6c9a\");\n  oval(360, 202, 40 + sin(time) * 20);\n});"
         },
         "keyframeTracks": {}
       }
@@ -564,7 +564,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-          "js": "clip.use(\"centi\");\n\nsetup(() => size(720, 405));\n\nonFrame(({ time }) => {\n  bg(0);\n  col(\"#5dd4ff\");\n  oval(360 + Math.sin(time) * 120, 202, 30);\n});"
+          "js": "clip.use(\"centi\");\n\nsetup(() => size(720, 405));\n\nonFrame(({ time }) => {\n  bg(0);\n  col(\"#5dd4ff\");\n  oval(360 + sin(time) * 120, 202, 30);\n});"
         },
         "keyframeTracks": {}
       }

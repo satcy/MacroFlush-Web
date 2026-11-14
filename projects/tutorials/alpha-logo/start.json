@@ -161,7 +161,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "clip.use(\"centi\");\nsetup(() => { size(1280, 720); bg(\"#0c1019\"); });\nonFrame(() => {\n  clear(); const ctx = getContext(); const u = clip.reveal;\n  ctx.save(); ctx.translate(640, 360); ctx.scale(0.65 + u * 0.35, 0.65 + u * 0.35);\n  ctx.globalAlpha = u; ctx.lineWidth = 28; ctx.lineCap = \"round\";\n  [\"#5dd4ff\", \"#ff6c9a\", \"#ffdc63\"].forEach((color, i) => {\n    ctx.strokeStyle = color; ctx.beginPath();\n    ctx.arc(0, 0, 75 + i * 40, -Math.PI / 2, -Math.PI / 2 + u * Math.PI * 1.65); ctx.stroke();\n  });\n  ctx.restore();\n});"
+                  "js": "clip.use(\"centi\");\nsetup(() => { size(1280, 720); bg(\"#0c1019\"); });\nonFrame(() => {\n  clear(); const u = clip.reveal;\n  push(); translate(640, 360); scale(0.65 + u * 0.35, 0.65 + u * 0.35);\n  lineWidth(28); lineCap(1);\n  [\"#5dd4ff\", \"#ff6c9a\", \"#ffdc63\"].forEach((color, i) => {\n    hcol(hexToInt(color), u * 255); stroke(); arc(0, 0, 75 + i * 40, -PI / 2, -PI / 2 + u * PI * 1.65);\n  });\n  pop();\n});"
                 },
                 "keyframeTracks": {}
               }
@@ -316,7 +316,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-          "js": "clip.use(\"centi\");\nsetup(() => { size(1280, 720); bg(\"#0c1019\"); });\nonFrame(() => {\n  clear(); const ctx = getContext(); const u = clip.reveal;\n  ctx.save(); ctx.translate(640, 360); ctx.scale(0.65 + u * 0.35, 0.65 + u * 0.35);\n  ctx.globalAlpha = u; ctx.lineWidth = 28; ctx.lineCap = \"round\";\n  [\"#5dd4ff\", \"#ff6c9a\", \"#ffdc63\"].forEach((color, i) => {\n    ctx.strokeStyle = color; ctx.beginPath();\n    ctx.arc(0, 0, 75 + i * 40, -Math.PI / 2, -Math.PI / 2 + u * Math.PI * 1.65); ctx.stroke();\n  });\n  ctx.restore();\n});"
+          "js": "clip.use(\"centi\");\nsetup(() => { size(1280, 720); bg(\"#0c1019\"); });\nonFrame(() => {\n  clear(); const u = clip.reveal;\n  push(); translate(640, 360); scale(0.65 + u * 0.35, 0.65 + u * 0.35);\n  lineWidth(28); lineCap(1);\n  [\"#5dd4ff\", \"#ff6c9a\", \"#ffdc63\"].forEach((color, i) => {\n    hcol(hexToInt(color), u * 255); stroke(); arc(0, 0, 75 + i * 40, -PI / 2, -PI / 2 + u * PI * 1.65);\n  });\n  pop();\n});"
         },
         "keyframeTracks": {}
       }
