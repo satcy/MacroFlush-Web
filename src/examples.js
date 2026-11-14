@@ -1,4 +1,5 @@
 import { workshopProjects } from "./workshop-projects.js";
+import { foundationProjects } from "./foundation-projects.js";
 // Real V2 documents: bundled application projects and standalone site examples.
 export const examples = [
   { id: "showcase", title: "MacroFlush Showcase", category: "Composition", number: "01", projectUrl: new URL("../projects/showcase/project.json", import.meta.url).href, description: "アプリ同梱のコンポジション。レイヤー、キーフレーム、Shaderを含むプロジェクトをそのまま再生します。" },
@@ -14,6 +15,7 @@ export const examples = [
 // Additional editor-only projects used by the illustrated tutorial.
 export const editorProjects = [
   ...examples,
+  ...foundationProjects,
   { id: "tutorial-3d-start", projectUrl: new URL("../projects/tutorials/timeline-3d/start.json", import.meta.url).href },
   { id: "tutorial-3d-complete", projectUrl: new URL("../projects/tutorials/timeline-3d/complete.json", import.meta.url).href },
   { id: "tutorial-p5-start", projectUrl: new URL("../projects/tutorials/p5-timeline/start.json", import.meta.url).href },

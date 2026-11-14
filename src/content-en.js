@@ -103,8 +103,8 @@ export const lessonTranslations = {
   "first-clip": {
     title: "Create your first Clip", summary: "Draw a circle on a canvas and animate it with the timeline.",
     steps: [
-      { title: "Prepare an HTML Clip", text: "Open MacroFlush and create an HTML Clip in the Project panel. Place it on the Composition Timeline and select it. Edit its source in the HTML / CSS / JavaScript tabs. For this example, leave HTML and CSS empty." },
-      { title: "Write the JavaScript", text: "Paste the following code into the JavaScript tab and save. Centi prepares the canvas, and setup() sets its dimensions." },
+      { title: "Prepare an HTML Clip", text: "Open the starter above for a 720 × 405 Composition at 60 fps, 360 frames, with a stationary Circle Clip. Select Circle on the Timeline and open JavaScript. To start from scratch, create an HTML Clip in Project and place it on the Timeline. HTML and CSS can stay empty. The completed version uses the following code to move the circle left and right." },
+      { title: "Write the JavaScript", text: "Replace all JavaScript with the following code. After you stop typing, the preview updates in about 300 ms. Centi prepares the canvas and setup() sets its dimensions. Use File > Save As to save the project." },
       { title: "Play and explore time", text: "Press Play on the Timeline to move the circle left and right. Drag the playhead to inspect any time. Because drawing is calculated from time, it does not depend on the previous frame. Use onFrame() rather than requestAnimationFrame() inside the Clip." },
       { title: "Change the example", text: "Try changing the radius from 30 to 60 and the horizontal movement from 120 to 200. In the next tutorial, you will expose these kinds of values as parameters controlled from the Inspector." }
     ]
@@ -112,16 +112,16 @@ export const lessonTranslations = {
   parameters: {
     title: "Expose parameters", summary: "Make values in your code editable in the Inspector.",
     steps: [
-      { title: "Declare speed and color", text: "Replace your first Clip's JavaScript with this code. clip.defineParams() declares parameter types, defaults and editable ranges together." },
-      { title: "Edit values in the Inspector", text: "Save the code and select the Clip. speed and tint appear in the Inspector. Set speed to 0 to stop movement, or to 2 to move faster. Change tint to recolor the circle." },
-      { title: "Add keyframes", text: "Move the playhead to the first frame, then add a keyframe using the Inspector's Key control for speed. Move to another frame, change the value and add another key. The timeline interpolates between them. Adjust the interpolation in Curve view." }
+      { title: "Declare speed and color", text: "The starter contains the same Circle Clip as the completed first lesson. Replace its JavaScript with this code. clip.defineParams() declares types, defaults and editable ranges. The completed project already has speed, tint and the keys described below." },
+      { title: "Edit values in the Inspector", text: "Wait for the code update, select Circle and click Create Parameters in the Inspector to add speed and tint under Custom. Before adding keys, try speed 0 to stop movement and 2 to move faster. Change tint to recolor the circle." },
+      { title: "Add keyframes", text: "Use Frames display. At frame 0 set speed to 1 and press Key; add 180:2 and 359:1 too. The completed project interpolates these three keys with Linear easing. Adjust interpolation in Curve. Keys take precedence over manual values within keyed intervals, so check their times and values first." }
     ]
   },
   composition: {
     title: "Compose layered Clips", summary: "Build a scene with layers, transforms and Cues.",
     steps: [
-      { title: "Place two Clips", text: "Copy another example's code and create a second HTML Clip. Place it on a different Timeline layer and overlap the playback ranges. Each Clip runs as an independent web document." },
-      { title: "Use a transparent background", text: "In the upper Clip, set a transparent background with bg(0, 0) and redraw each frame with clear(). Also remove any fillRect() that paints an opaque background so the lower layer shows through. Adjust position, scale, rotation and opacity in the Inspector." },
+      { title: "Place two Clips", text: "The starter has the moving blue Circle from lesson 01 and a central pink Overlay on separate layers, both at In 0 / Out 360. Overlay initially paints black, hiding Circle below. The completed project makes that background transparent and adds Intro and Loop Cues. Each Clip runs as an independent web document." },
+      { title: "Use a transparent background", text: "Select Overlay on the Timeline and change bg(0) to bg(0, 0) in setup() to set a transparent background. Redraw each frame with clear(). Also remove any fillRect() that paints an opaque background so the lower layer shows through. Adjust position, scale, rotation and opacity in the Inspector." },
       { title: "Define sections with Cues", text: "Write Cue definitions in the code editor's Cues tab. These belong to the entire Composition, rather than an ordinary Clip's JavaScript. Check the Cue ranges and modes shown on the Timeline." }
     ]
   },

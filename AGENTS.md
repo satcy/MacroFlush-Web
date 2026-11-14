@@ -27,6 +27,7 @@ npm run preview  # 生成済み dist/ を配信
 | --- | --- |
 | `src/pages.js` | 共通レイアウト・ページ本文・ダイアログ |
 | `src/content.js` | APIの共通項目・チュートリアル |
+| `src/tutorial-categories.js` | Tutorialのカテゴリと学習順（記事は必ずいずれか1つに所属し、番号は順序から自動採番） |
 | `src/reference-extra.js` | Centi / p5.jsの詳細リファレンス |
 | `src/reference-guides.js` | 導入手順・単位・比較表 |
 | `src/examples.js` | 実プロジェクトの掲載カタログ |
@@ -85,4 +86,8 @@ p5 Timeline Tutorial（`src/p5-tutorial-content.js`）は日英の9ステップ�
 
 08〜16のWorkshopは `src/tutorial-workshops.js`（日英本文）、`src/workshop-code.js`（描画・GLSL）、`src/workshop-projects.js`（教材カタログ）で管理します。Feedbackは記録とEditor編集の2記事です。18個の開始用・完成V2は `projects/tutorials/` の各記事フォルダにあり、`node scripts/generate-tutorial-workshops.mjs` でこの教材だけを再生成します。元作例や隣接アプリは変更しません。生成Pointerは実際に手で録ったデータと表記せず、WAVはオリジナルの合成音源です。来歴・教材差分は `projects/tutorials/WORKSHOPS.md` に記載。`npm run check` は `scripts/check-tutorial-workshops.mjs` も実行します。GLSLコンパイルや実描画はブラウザで別に確認してください。Camera Workshopは2つのCameraアセットを8つの静止した配置で交互に使い、開始用はCut、完成版は先頭以外Transform / Duration 60です。CameraのキーやRig回転へ置き換えず、低空・バンクを含むコースと補間を維持します。`cameraFlightShots`の度を生成時にラジアンへ変換し、Aim Mode Rotationで姿勢を保ちます。特定教材だけの再生成は`node scripts/generate-tutorial-workshops.mjs camera-work`です。Feedback EditorのAdd / Replace・局所UndoとプロジェクトUndo・メモリ上だけの未適用下書きの違いを維持します。
 
+Tutorialを追加するときは、記事を `src/content.js` に定義したうえで `src/tutorial-categories.js` のいずれかのカテゴリへ `id` を追加してください（未登録だとビルドが失敗します）。日英のカテゴリ名・説明も同じファイルにあります。全記事に `environments` を明示してください。制作手順は原則 `["browser-editor", "app"]`、OSC教材は `["app"]` です。一覧と記事本文は共通の対応環境バッヂを表示し、`npm run check` は日英の両方で表示漏れ・余計な環境表示を検証します。入門ラベルは基礎・動きをつくるのカテゴリ、アプリ版専用バッヂは `environments` が `["app"]` の項目に付きます。
+
 UI変更の確認では、デスクトップと狭い画面、キーボード操作、フォーカス、reduced-motion、ダイアログのCloseボタンを対象にします。Player関連では実プロジェクトの初期描画、再生・停止・シーク、progress、Timeline / Curve切替、キー編集、JSON保存、閉じた後の破棄を変更箇所に応じて確認してください。
+
+基礎Tutorial 01〜03の教材は `projects/tutorials/first-clip/`・`parameters/`・`composition/` にある開始用・完成V2です。リンクとEditor登録は `src/foundation-projects.js`、再生成は `node scripts/generate-foundation-projects.mjs`（この6ファイルだけ）。本文のコードを生成元にし、01は静止円→時間で動く円、02はパラメータなし→speed / tintとspeedキー0:1・180:2・359:1、03は不透明Overlay→透明合成とIntro / LoopのCueです。来歴は `projects/tutorials/FOUNDATIONS.md`。

@@ -3,10 +3,12 @@ import { readFile } from "node:fs/promises";
 import { relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { workshopProjects } from "../src/workshop-projects.js";
+import { foundationProjects } from "../src/foundation-projects.js";
 import { workshopLessons, workshopTranslations } from "../src/tutorial-workshops.js";
 
-assert.equal(new Set(workshopProjects.map(p => p.id)).size, workshopProjects.length);
-for (const entry of workshopProjects) {
+const materials = [...workshopProjects, ...foundationProjects];
+assert.equal(new Set(materials.map(p => p.id)).size, materials.length);
+for (const entry of materials) {
   const path = fileURLToPath(entry.projectUrl);
   const bytes = await readFile(path);
   const deployed = new URL(`../dist/${relative(process.cwd(), path)}`, import.meta.url);
@@ -76,4 +78,4 @@ for (const lesson of workshopLessons) {
     if (step.table) assert.equal(english.steps[i].table?.rows.length, step.table.rows.length);
   }
 }
-console.log(`Verified ${workshopLessons.length} bilingual workshops and ${workshopProjects.length} portable projects, keys, references, Feedback rows, WAV headers and snippets.`);
+console.log(`Verified ${workshopLessons.length} bilingual workshops and ${materials.length} portable tutorial projects, keys, references, Feedback rows, WAV headers and snippets.`);

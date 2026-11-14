@@ -2,8 +2,10 @@ import { extraGroups, extraApi } from "./reference-extra.js";
 import { featureGroups, featureApi } from "./reference-features.js";
 import { threeDGroups, threeDApi, threeDLesson } from "./three-d-content.js";
 import { oscSequencerLesson } from "./osc-sequencer-content.js";
+import { tutorialCategories } from "./tutorial-categories.js";
 import { p5TimelineLesson } from "./p5-tutorial-content.js";
 import { workshopLessons } from "./tutorial-workshops.js";
+import { foundationMaterials } from "./foundation-projects.js";
 export const groups = [
   { id: "lifecycle", name: "Lifecycle & time", description: "Clipの初期化と、タイムラインが管理する時間。" },
   { id: "parameters", name: "Parameters", description: "コードの値をInspectorとキーフレームにつなぐ。" },
@@ -40,24 +42,24 @@ export const api = [
   { id: "player-angle-unit", group: "player", name: "player.setClipParam() / getClipParam() / angleUnit", text: "管理された3D配置のXYZ rotationとLight angleは、Playerの数値制御（setClipParam / getClipParam / set / get）では既定でラジアンです。createClipPlayer()にangleUnit: \"degrees\"を渡すと、ネストしたCompositionのアドレスを含め、これらを度で読み書きできます。プロジェクトファイル、ScriptのThree.js、fov、2D transform、独自パラメータの単位は変わりません。", code: "const player = createClipPlayer({ project, canvas, angleUnit: \"degrees\" });\nawait player.ready;\nplayer.setClipParam(\"Layer 1\", \"Mesh1\", \"rotation\", 0, 90, 0);\nplayer.set(\"/Layer 1/Light1/angle\", 45);" },
   { id: "destroy", group: "player", name: "player.destroy()", text: "埋め込み先のビューを破棄するときにPlayerのリソースを解放します。ホスト側のアニメーションループも停止してください。", code: "player.destroy();" }
 ];
-export const lessons = [
-  { id: "first-clip", number: "01", title: "最初のClipをつくる", level: "Getting started", summary: "Canvasに円を描いて、タイムラインで動かす。", steps: [
-    { title: "HTML Clipを用意する", text: "MacroFlushを開き、ProjectパネルでHTML Clipを作成します。コンポジションのTimelineへ配置して、そのClipを選択します。HTML / CSS / JavaScriptタブからソースを編集できます。今回の作例ではHTMLとCSSは空のままで構いません。" },
-    { title: "JavaScriptを書く", text: "JavaScriptタブに以下のコードを入れて保存します。CentiがCanvasを用意し、setup()がサイズを設定します。", code: "clip.use(\"centi\");\n\nsetup(() => size(720, 405));\n\nonFrame(({ time }) => {\n  bg(0);\n  col(\"#5dd4ff\");\n  oval(360 + Math.sin(time) * 120, 202, 30);\n});" },
+const sourceLessons = [
+  { id: "first-clip", environments: ["browser-editor", "app"], number: "01", title: "最初のClipをつくる", level: "Getting started", summary: "Canvasに円を描いて、タイムラインで動かす。", steps: [
+    { title: "HTML Clipを用意する", text: "上の開始用プロジェクトを開くと、720 × 405、60 fps、360フレームのCompositionと、静止した円を描くCircle Clipが用意されています。TimelineのCircleを選び、JavaScriptタブを開きます。ゼロから始める場合はProjectでHTML Clipを作り、Timelineへ配置してください。HTMLとCSSは空のままで構いません。完成版では次のコードで円が左右に動きます。" },
+    { title: "JavaScriptを書く", text: "JavaScriptタブの内容を以下のコードへ置き換えます。入力を止めると約300msでプレビューへ反映されます。CentiがCanvasを用意し、setup()がサイズを設定します。File > Save Asでプロジェクトを保存できます。", code: "clip.use(\"centi\");\n\nsetup(() => size(720, 405));\n\nonFrame(({ time }) => {\n  bg(0);\n  col(\"#5dd4ff\");\n  oval(360 + Math.sin(time) * 120, 202, 30);\n});" },
     { title: "再生して、時間を動かす", text: "Timelineの再生ボタンで円が左右に動きます。Playheadをドラッグすると、指定した時刻の形を確認できます。描画はtimeから計算しているので、前のフレームの状態に依存しません。Clip内ではrequestAnimationFrame()ではなくonFrame()を使います。" },
     { title: "作例を変えてみる", text: "半径の30を60に、横移動の120を200に変えてみましょう。次のチュートリアルでは、こうした値をInspectorから操作できるパラメータにします。" }
   ] },
-  { id: "parameters", number: "02", title: "パラメータを公開する", level: "Parameters", summary: "コードの値をInspectorから操作できるようにする。", steps: [
-    { title: "速度と色を宣言する", text: "最初のClipのJavaScriptを以下のコードに置き換えます。clip.defineParams()で型・初期値・編集範囲をまとめて宣言します。", code: "clip.use(\"centi\");\nclip.defineParams({\n  speed: { type: \"number\", default: 1, min: 0,\n    max: 3, step: 0.1, interpolable: true },\n  tint: { type: \"color\", default: \"#5dd4ff\",\n    space: \"srgb\", interpolable: true }\n});\nsetup(() => size(720, 405));\nonFrame(({ time }) => {\n  bg(0);\n  col(clip.tint);\n  oval(360 + Math.sin(time * clip.speed) * 120, 202, 30);\n});" },
-    { title: "Inspectorで値を編集する", text: "コードを保存してClipを選択すると、Inspectorにspeedとtintが表示されます。speedを0にすると静止し、2にすると移動が速くなります。tintで円の色を変えてみましょう。" },
-    { title: "キーフレームを付ける", text: "Playheadを最初のフレームへ移動し、InspectorのspeedのKey操作でキーフレームを追加します。別のフレームへ移動し、値を変えてキーを追加すると、タイムラインが値を補間します。Curve表示で補間の形を調整できます。" }
+  { id: "parameters", environments: ["browser-editor", "app"], number: "02", title: "パラメータを公開する", level: "Parameters", summary: "コードの値をInspectorから操作できるようにする。", steps: [
+    { title: "速度と色を宣言する", text: "開始用プロジェクトには01の完成版と同じCircle Clipがあります。JavaScriptを以下のコードに置き換えます。clip.defineParams()で型・初期値・編集範囲をまとめて宣言します。完成版にはspeed・tintと、次の手順のキーが設定済みです。", code: "clip.use(\"centi\");\nclip.defineParams({\n  speed: { type: \"number\", default: 1, min: 0,\n    max: 3, step: 0.1, interpolable: true },\n  tint: { type: \"color\", default: \"#5dd4ff\",\n    space: \"srgb\", interpolable: true }\n});\nsetup(() => size(720, 405));\nonFrame(({ time }) => {\n  bg(0);\n  col(clip.tint);\n  oval(360 + Math.sin(time * clip.speed) * 120, 202, 30);\n});" },
+    { title: "Inspectorで値を編集する", text: "コードの反映を待ち、Circleを選択したInspectorのCreate Parametersを押すと、Customにspeedとtintが追加されます。キーを付ける前に、speedを0にすると静止し、2にすると移動が速くなることを確認します。tintで円の色も変えてみましょう。" },
+    { title: "キーフレームを付ける", text: "Frames表示にしてPlayheadを0へ移動し、speedを1にしてKeyを押します。180で2、359で1のキーも追加します。完成版はこの3キーをLinearで補間しています。Curve表示で補間の形を調整できます。キーがある区間では手動の値よりキーが優先されるため、まずキーの時刻と値を確認してください。" }
   ] },
-  { id: "composition", number: "03", title: "Clipを重ねて合成する", level: "Composition", summary: "レイヤー、変形、Cueでひとつのシーンを組み立てる。", steps: [
-    { title: "ふたつのClipを配置する", text: "Examplesから別のコードをコピーして、2つ目のHTML Clipを作成します。Timelineの別レイヤーへ配置し、再生区間を重ねます。各Clipは独立したWebドキュメントとして動作します。" },
-    { title: "透明な背景にする", text: "上に重ねるClipではbg(0, 0)で背景色を透明に設定し、毎フレームclear()で描き直します。背景を不透明に塗るfillRect()も外すと、下のレイヤーが見えるようになります。Inspectorでposition、scale、rotation、opacityを調整して配置を整えます。", code: "// CentiのClipで透明にクリアする\nonFrame(({ time }) => {\n  clear();\n  col(\"#ff6c9a\");\n  oval(360, 202, 40 + Math.sin(time) * 20);\n});" },
+  { id: "composition", environments: ["browser-editor", "app"], number: "03", title: "Clipを重ねて合成する", level: "Composition", summary: "レイヤー、変形、Cueでひとつのシーンを組み立てる。", steps: [
+    { title: "ふたつのClipを配置する", text: "開始用には01の動く青いCircleと、中央のピンクのOverlayが別レイヤーに配置されています。両方のIn / Outは0〜360です。上のOverlayが黒い背景を描いているため、最初は下のCircleが見えません。完成版では背景を透明にし、2つの円を合成して、IntroとLoopのCueを追加しています。各Clipは独立したWebドキュメントとして動作します。" },
+    { title: "透明な背景にする", text: "TimelineのOverlayを選び、setup()内のbg(0)をbg(0, 0)へ変えます。これで背景色を透明に設定し、毎フレームclear()で描き直します。背景を不透明に塗るfillRect()も外すと、下のレイヤーが見えるようになります。Inspectorでposition、scale、rotation、opacityを調整して配置を整えます。", code: "// CentiのClipで透明にクリアする\nonFrame(({ time }) => {\n  clear();\n  col(\"#ff6c9a\");\n  oval(360, 202, 40 + Math.sin(time) * 20);\n});" },
     { title: "Cueで区間を決める", text: "コードエディタのCuesタブにCueを記述します。通常のClipのJavaScriptではなく、コンポジション全体に属する定義です。Timelineへ反映されたCueの区間とmodeを確認してください。", code: "cue(\"Intro\", 0, { mode: \"none\", endFrame: 180 });\ncue(\"Loop\", 180, { mode: \"loop\", endFrame: 360 });" }
   ] },
-  { id: "export", number: "04", title: "映像を書き出す", level: "Export", summary: "ブラウザ版EditorとアプリでPNG連番・H.264を、アプリでProResを出力する。", steps: [
+  { id: "export", environments: ["browser-editor", "app"], number: "04", title: "映像を書き出す", level: "Export", summary: "ブラウザ版EditorとアプリでPNG連番・H.264を、アプリでProResを出力する。", steps: [
     { title: "出力するコンポジションを確認する", text: "ブラウザ版Editor（OnlineEditor）またはアプリ版MacroFlushでプロジェクトを開き、出力するコンポジションを選択します。ProResを使う場合はアプリ版が必要です。プレビューで先頭・中間・最後のフレームを確認します。このチュートリアルではCentiのCanvasを使ったHTML Clipを対象にします。" },
     { title: "Export Mediaを開く", text: "File > Export Mediaから形式を選びます。PNG Sequenceは連番画像、H.264 MP4は動画です。Apple ProRes MOVは編集向けの動画形式で、アプリ版だけで書き出せます。フレーム範囲と出力解像度を設定して書き出します。" },
     { title: "用途に合わせて設定する", text: "MP4は目標ビットレート（Mbps、既定8）で品質を調整します。H.264は幅と高さが2以上の偶数で、透明部分は黒に合成されます。透明背景が必要ならPNG、またはアルファを保持するProRes 4444 / 4444 XQ（アプリ版）を選びます。音声はTimelineに配置した音声Clipをミックスできます。" },
@@ -68,3 +70,9 @@ export const lessons = [
   p5TimelineLesson,
   ...workshopLessons
 ];
+
+// Order lessons by category and number them from that order.
+const categoryOf = new Map(tutorialCategories.flatMap(category => category.lessons.map(id => [id, category.id])));
+const orderedIds = tutorialCategories.flatMap(category => category.lessons);
+if (orderedIds.length !== sourceLessons.length || sourceLessons.some(lesson => !categoryOf.has(lesson.id))) throw new Error("Every tutorial must belong to exactly one category.");
+export const lessons = orderedIds.map((id, index) => ({ ...sourceLessons.find(lesson => lesson.id === id), ...foundationMaterials[id], number: String(index + 1).padStart(2, "0"), category: categoryOf.get(id) }));

@@ -1,0 +1,597 @@
+{
+  "clipFormatVersion": 2,
+  "rootCompositionId": "tutorial-composition",
+  "assets": [
+    {
+      "id": "tutorial-composition",
+      "kind": "composition",
+      "name": "Composition",
+      "detail": "720 x 405, 60 fps",
+      "composition": {
+        "width": 720,
+        "height": 405,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 360,
+        "cues": {
+          "Intro": {
+            "frame": 0,
+            "mode": "none",
+            "endFrame": 180
+          },
+          "Loop": {
+            "frame": 180,
+            "mode": "loop",
+            "endFrame": 360
+          }
+        },
+        "cueScript": "cue(\"Intro\", 0, { mode: \"none\", endFrame: 180 });\ncue(\"Loop\", 180, { mode: \"loop\", endFrame: 360 });",
+        "layers": [
+          {
+            "id": "overlay-layer",
+            "name": "Overlay",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "overlay",
+                "name": "Overlay",
+                "kind": "html",
+                "assetId": "overlay-asset",
+                "inFrame": 0,
+                "outFrame": 360,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      360,
+                      202.5
+                    ],
+                    "value": [
+                      360,
+                      202.5
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      720,
+                      405
+                    ],
+                    "value": [
+                      720,
+                      405
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "",
+                  "css": "",
+                  "js": "clip.use(\"centi\");\nsetup(() => {\n  size(720, 405);\n  bg(0, 0);\n});\n// CentiのClipで透明にクリアする\nonFrame(({ time }) => {\n  clear();\n  col(\"#ff6c9a\");\n  oval(360, 202, 40 + Math.sin(time) * 20);\n});"
+                },
+                "keyframeTracks": {}
+              }
+            ]
+          },
+          {
+            "id": "circle-layer",
+            "name": "Circle",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "circle",
+                "name": "Circle",
+                "kind": "html",
+                "assetId": "circle-asset",
+                "inFrame": 0,
+                "outFrame": 360,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      360,
+                      202.5
+                    ],
+                    "value": [
+                      360,
+                      202.5
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      720,
+                      405
+                    ],
+                    "value": [
+                      720,
+                      405
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "",
+                  "css": "",
+                  "js": "clip.use(\"centi\");\n\nsetup(() => size(720, 405));\n\nonFrame(({ time }) => {\n  bg(0);\n  col(\"#5dd4ff\");\n  oval(360 + Math.sin(time) * 120, 202, 30);\n});"
+                },
+                "keyframeTracks": {}
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "overlay-asset",
+      "kind": "html-clip",
+      "name": "Overlay",
+      "detail": "Foundation tutorial HTML Clip",
+      "clipId": "overlay",
+      "htmlTemplate": {
+        "id": "overlay",
+        "name": "Overlay",
+        "kind": "html",
+        "assetId": "overlay-asset",
+        "inFrame": 0,
+        "outFrame": 360,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              360,
+              202.5
+            ],
+            "value": [
+              360,
+              202.5
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              720,
+              405
+            ],
+            "value": [
+              720,
+              405
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "",
+          "css": "",
+          "js": "clip.use(\"centi\");\nsetup(() => {\n  size(720, 405);\n  bg(0, 0);\n});\n// CentiのClipで透明にクリアする\nonFrame(({ time }) => {\n  clear();\n  col(\"#ff6c9a\");\n  oval(360, 202, 40 + Math.sin(time) * 20);\n});"
+        },
+        "keyframeTracks": {}
+      }
+    },
+    {
+      "id": "circle-asset",
+      "kind": "html-clip",
+      "name": "Circle",
+      "detail": "Foundation tutorial HTML Clip",
+      "clipId": "circle",
+      "htmlTemplate": {
+        "id": "circle",
+        "name": "Circle",
+        "kind": "html",
+        "assetId": "circle-asset",
+        "inFrame": 0,
+        "outFrame": 360,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              360,
+              202.5
+            ],
+            "value": [
+              360,
+              202.5
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              720,
+              405
+            ],
+            "value": [
+              720,
+              405
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "",
+          "css": "",
+          "js": "clip.use(\"centi\");\n\nsetup(() => size(720, 405));\n\nonFrame(({ time }) => {\n  bg(0);\n  col(\"#5dd4ff\");\n  oval(360 + Math.sin(time) * 120, 202, 30);\n});"
+        },
+        "keyframeTracks": {}
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "interactive-examples.mdn.mozilla.net",
+      "files.freemusicarchive.org"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  }
+}

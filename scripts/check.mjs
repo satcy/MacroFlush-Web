@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { build } from "./build.mjs";
-import { examples } from "../src/examples.js";
+import { examples, editorProjects } from "../src/examples.js";
 import { api, groups, lessons } from "../src/content.js";
 import { getBasePath } from "./site-path.mjs";
 import { apiDescriptions, groupDescriptions, lessonTranslations } from "../src/content-en.js";
@@ -28,6 +28,9 @@ assert.equal(htmlFiles.length, 2 * (6 + lessons.length) + 1, "Missing localized 
 assert.equal(new Set(api.map(entry => entry.id)).size, api.length);
 for (const group of groups) assert(groupDescriptions[group.id], `Missing English group: ${group.id}`);
 for (const lesson of lessons) {
+  assert(lesson.environments?.length, `Missing tutorial availability: ${lesson.id}`);
+  assert.equal(new Set(lesson.environments).size, lesson.environments.length);
+  assert(lesson.environments.every(id => ["browser-editor", "app", "player"].includes(id)), `Invalid tutorial environment: ${lesson.id}`);
   const english = lessonTranslations[lesson.id];
   assert(english?.title && english.summary, `Missing English tutorial: ${lesson.id}`);
   assert.equal(english.steps.length, lesson.steps.length);
@@ -97,6 +100,30 @@ for (const [, url] of editorHtml.matchAll(/(?:href|src)="([^"]+)"/g)) {
   assert(await stat(resolve(root, deployed.pathname.slice(basePath.length))));
 }
 for (const language of ["", "en/"]) {
+  const tutorialList = await readFile(resolve(root, language, "tutorials/index.html"), "utf8");
+  const rows = [...tutorialList.matchAll(/<a class="lesson-row"[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/gs)];
+  assert.equal(rows.length, lessons.length);
+  for (const lesson of lessons) {
+    const row = rows.find(([, href]) => href === `${basePath}${language}tutorials/${lesson.id}/`);
+    const article = await readFile(resolve(root, language, "tutorials", lesson.id, "index.html"), "utf8");
+    const availability = article.match(/<div class="availability"[^>]*>(.*?)<\/div>/s)?.[1];
+    assert(availability && row, `Missing tutorial badges: ${language}${lesson.id}`);
+    if (lesson.startProject) {
+      for (const key of ["startProject", "completedProject"]) {
+        const url = new URL(lesson[key], "https://site.test");
+        assert(editorProjects.some(project => project.id === url.searchParams.get("example")), `Unregistered tutorial project: ${lesson.id}`);
+        assert(article.includes(`href="${basePath}${language}${lesson[key].slice(1)}"`), `Missing tutorial action ${key}: ${lesson.id}`);
+      }
+      for (const key of ["startDownload", "download", "referenceUrl"]) if (lesson[key]) {
+        const prefix = key === "referenceUrl" ? language : "";
+        assert(article.includes(`href="${basePath}${prefix}${lesson[key].slice(1)}"`), `Missing tutorial resource ${key}: ${lesson.id}`);
+      }
+    }
+    for (const html of [row[2], availability]) {
+      const shown = [...html.matchAll(/class="availability-badge availability-([a-z-]+)"/g)].map(([, id]) => id);
+      assert.deepEqual(shown, lesson.environments, `Incorrect tutorial badges: ${language}${lesson.id}`);
+    }
+  }
   const html = await readFile(resolve(root, language, "online-editor/index.html"), "utf8");
   assert(html.includes(`src="${basePath}editor/launcher.html"`), "Invalid embedded Editor URL");
   const top = await readFile(resolve(root, language, "index.html"), "utf8");

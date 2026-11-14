@@ -1,4 +1,6 @@
-# Tutorial workshops 08–16
+# Tutorial workshops
+
+Lesson numbers and order come from `src/tutorial-categories.js` (Foundations, Motion, Visuals, 3D, Input & connection). The numbers in `src/workshop-projects.js` are catalog placeholders; the article overrides them when it shows the live preview.
 
 These projects are authored for this site, separate from application samples and user-edited Examples. Each folder contains a portable V2 `start.json` and `complete.json`, linked through `src/workshop-projects.js`. They open in both Editors; saved content plays in the Player. Recording and editing Feedback require an Editor.
 

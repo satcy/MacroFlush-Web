@@ -14,6 +14,7 @@ export const englishUI = {
   "ブラウザ版では、p5ライブラリを埋め込んだプロジェクトを開いてから、以下の設定と再生を行えます。URLからのライブラリ取り込みはアプリ版で行います。": "In the browser Editor, open a project with an embedded p5 library, then configure and play it as described below. Importing a library from a URL is an app operation.",
   "ブラウザEditor": "Browser Editor",
   "アプリ版": "App",
+  "アプリ版専用": "App only",
   "対応環境": "Availability",
   "ブラウザで制作・再生。アプリ版で、さらに広がる。": "Create and play in your browser. Go further with the app.",
   "OnlineEditorはブラウザで編集と、動画（H.264）・PNG連番の書き出し、Playerはプロジェクトの再生に使えます。ProRes書き出し・MCP・OSC・LLMアシスタント・ステム分離はアプリ版で利用できます。": "Use OnlineEditor to edit, export movies (H.264) and PNG sequences in your browser, and Player to play projects. ProRes export, MCP, OSC, the LLM assistant and stem separation are available in the app.",

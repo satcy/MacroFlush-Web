@@ -49,6 +49,7 @@ Topに対応環境の案内、Aboutに機能比較表、Referenceに項目ごと
 
 - `src/pages.js`: 共通レイアウトとページ本文
 - `src/content.js`: APIとチュートリアル
+- `src/tutorial-categories.js`: チュートリアルのカテゴリ（基礎・動きをつくる・描画を広げる・3D・入力と連携）と学習順。記事の番号はこの順で自動採番し、URLは記事IDのまま
 - `src/examples.js`: 実プロジェクトの掲載カタログ
 - `src/hero-editor.js`: TopのライブTimeline / Curve・キー編集・JSON保存
 - `src/timeline-model.js`: キーの移動・RGB成分・Undoのデータ操作

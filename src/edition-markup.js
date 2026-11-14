@@ -4,8 +4,10 @@ export function entryEnvironments(entry) {
   return entry.environments || (entry.group === "player" ? ["player"] : ["browser-editor", "app", "player"]);
 }
 
-export function availabilityBadges(entry) {
-  return `<div class="availability" aria-label="対応環境">${entryEnvironments(entry).map(id => `<span class="availability-badge availability-${id}">${environmentNames[id]}</span>`).join("")}</div>`;
+export function availabilityBadges(entry, { inline = false } = {}) {
+  const tag = inline ? "span" : "div";
+  const environments = entryEnvironments(entry);
+  return `<${tag} class="availability"${inline ? "" : ' aria-label="対応環境"'}>${environments.map(id => `<span class="availability-badge availability-${id}">${id === "app" && environments.length === 1 ? "アプリ版専用" : environmentNames[id]}</span>`).join("")}</${tag}>`;
 }
 
 export function editionNote() {
