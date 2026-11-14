@@ -1,0 +1,1181 @@
+{
+  "remoteAssetPolicy": {
+    "trustedDomains": [],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  },
+  "clipFormatVersion": 2,
+  "rootCompositionId": "tutorial-3d",
+  "assets": [
+    {
+      "id": "tutorial-3d",
+      "kind": "composition",
+      "name": "Product Studio",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 360,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "title-layer",
+            "name": "Title",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "title",
+                "name": "Title",
+                "kind": "html",
+                "assetId": "title-asset",
+                "inFrame": 0,
+                "outFrame": 360,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "",
+                  "css": "",
+                  "js": "clip.use(\"centi\");\nsetup(() => { size(1280, 720); bg(0, 0); });\nonFrame(() => {\n  clear(); const ctx = getContext(); ctx.fillStyle = \"#eaf4ff\";\n  ctx.font = \"bold 32px sans-serif\"; ctx.fillText(\"FORM / 01\", 65, 80);\n  ctx.font = \"14px monospace\"; ctx.fillStyle = \"#5dd4ff\";\n  ctx.fillText(\"ORIGINAL GLB · PRODUCT STUDY\", 65, 110);\n  ctx.fillStyle = \"#a5b2c6\"; ctx.fillText(\"SHAPE / LIGHT / MOTION\", 65, 665);\n});"
+                },
+                "keyframeTracks": {}
+              }
+            ]
+          },
+          {
+            "id": "product-layer",
+            "name": "Bottle",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "product",
+                "name": "Bottle",
+                "kind": "object-3d",
+                "assetId": "product-glb",
+                "targetClipId": "scene1",
+                "inFrame": 0,
+                "outFrame": 360,
+                "params": {
+                  "position": {
+                    "key": "position",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec3",
+                    "default": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  }
+                },
+                "parentPlacementId": "rig-placement"
+              }
+            ]
+          },
+          {
+            "id": "product-rig",
+            "name": "Turntable",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "rig-placement",
+                "name": "Null1",
+                "kind": "object-3d",
+                "assetId": "null1",
+                "targetClipId": "scene1",
+                "inFrame": 0,
+                "outFrame": 360,
+                "params": {
+                  "position": {
+                    "key": "position",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec3",
+                    "default": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  }
+                },
+                "keyframeTracks": {
+                  "rotation": [
+                    {
+                      "frame": 0,
+                      "value": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "easing": "linear"
+                    },
+                    {
+                      "frame": 359,
+                      "value": [
+                        0,
+                        6.283185307179586,
+                        0
+                      ],
+                      "easing": "linear"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "camera-layer",
+            "name": "Camera1",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "camera-placement",
+                "name": "Camera1",
+                "kind": "object-3d",
+                "assetId": "camera1",
+                "targetClipId": "scene1",
+                "inFrame": 0,
+                "outFrame": 360,
+                "params": {
+                  "position": {
+                    "key": "position",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      367
+                    ],
+                    "value": [
+                      330,
+                      160,
+                      550
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec3",
+                    "default": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "cameraType": {
+                    "key": "cameraType",
+                    "type": "select",
+                    "default": "perspective",
+                    "value": "perspective",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "options": [
+                      "perspective",
+                      "orthographic"
+                    ]
+                  },
+                  "fov": {
+                    "key": "fov",
+                    "type": "number",
+                    "default": 60,
+                    "value": 42,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 1,
+                    "max": 179,
+                    "step": 1
+                  },
+                  "orthoHeight": {
+                    "key": "orthoHeight",
+                    "type": "number",
+                    "default": 405,
+                    "value": 405,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0.001,
+                    "max": 100000,
+                    "step": 1
+                  },
+                  "near": {
+                    "key": "near",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0.001,
+                    "step": 0.1
+                  },
+                  "far": {
+                    "key": "far",
+                    "type": "number",
+                    "default": 100000,
+                    "value": 100000,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0.01,
+                    "step": 1
+                  },
+                  "aimMode": {
+                    "key": "aimMode",
+                    "type": "select",
+                    "default": "rotation",
+                    "value": "aim",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "options": [
+                      "rotation",
+                      "aim",
+                      "placement"
+                    ]
+                  },
+                  "aimTarget": {
+                    "key": "aimTarget",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "light-layer",
+            "name": "Light1",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "light-placement",
+                "name": "Light1",
+                "kind": "object-3d",
+                "assetId": "keylight",
+                "targetClipId": "scene1",
+                "inFrame": 0,
+                "outFrame": 360,
+                "params": {
+                  "position": {
+                    "key": "position",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      180,
+                      300,
+                      350
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec3",
+                    "default": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "lightType": {
+                    "key": "lightType",
+                    "type": "select",
+                    "default": "directional",
+                    "value": "directional",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "options": [
+                      "directional",
+                      "point",
+                      "spot",
+                      "ambient"
+                    ]
+                  },
+                  "color": {
+                    "key": "color",
+                    "type": "color",
+                    "default": "#ffffff",
+                    "value": "#ffffff",
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "intensity": {
+                    "key": "intensity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 3,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.1
+                  },
+                  "distance": {
+                    "key": "distance",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 1
+                  },
+                  "decay": {
+                    "key": "decay",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.1
+                  },
+                  "angle": {
+                    "key": "angle",
+                    "type": "number",
+                    "default": 1.0472,
+                    "value": 1.0472,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 5e-324,
+                    "max": 1.5707963267948966,
+                    "step": 0.01
+                  },
+                  "penumbra": {
+                    "key": "penumbra",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "scene-layer",
+            "name": "Layer1",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "scene1",
+                "name": "Scene1",
+                "kind": "html",
+                "assetId": "scene1-asset",
+                "capabilities": [
+                  "centi3d"
+                ],
+                "inFrame": 0,
+                "outFrame": 360,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "space": "pixels",
+                    "interpolable": true
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "step": 0.01,
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "space": "degrees",
+                    "interpolable": true
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "group": "builtin",
+                    "interpolable": false
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "custom",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "<canvas id=\"stage\"></canvas>",
+                  "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+                  "js": "const { scene, T } = clip.use(\"centi3d\");\nsetup(() => {\n  size(1280, 720); scene.background = new T.Color(\"#101622\");\n  scene.add(new T.HemisphereLight(0xb8ddff, 0x182034, 2));\n  const ground = new T.Mesh(new T.CylinderGeometry(135, 150, 24, 64),\n    new T.MeshStandardMaterial({ color: \"#263447\", roughness: 0.55 }));\n  ground.position.y = -110; scene.add(ground);\n});"
+                }
+              }
+            ]
+          },
+          {
+            "id": "rim-layer",
+            "name": "Rim",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "rim",
+                "name": "Rim",
+                "kind": "object-3d",
+                "assetId": "keylight",
+                "targetClipId": "scene1",
+                "inFrame": 0,
+                "outFrame": 360,
+                "params": {
+                  "position": {
+                    "key": "position",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      -250,
+                      120,
+                      -220
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "vec3",
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec3",
+                    "default": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "lightType": {
+                    "key": "lightType",
+                    "type": "select",
+                    "default": "directional",
+                    "value": "directional",
+                    "group": "builtin",
+                    "interpolable": false,
+                    "options": [
+                      "directional",
+                      "point",
+                      "spot",
+                      "ambient"
+                    ]
+                  },
+                  "color": {
+                    "key": "color",
+                    "type": "color",
+                    "default": "#ffffff",
+                    "value": "#ff6c9a",
+                    "group": "builtin",
+                    "interpolable": true
+                  },
+                  "intensity": {
+                    "key": "intensity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 2,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.1
+                  },
+                  "distance": {
+                    "key": "distance",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 1
+                  },
+                  "decay": {
+                    "key": "decay",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "step": 0.1
+                  },
+                  "angle": {
+                    "key": "angle",
+                    "type": "number",
+                    "default": 1.0472,
+                    "value": 1.0472,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 5e-324,
+                    "max": 1.5707963267948966,
+                    "step": 0.01
+                  },
+                  "penumbra": {
+                    "key": "penumbra",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "interpolable": true,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "scene1-asset",
+      "name": "Scene1",
+      "kind": "html-clip",
+      "detail": "3D Scene",
+      "clipId": "scene1",
+      "htmlTemplate": {
+        "id": "scene1",
+        "name": "Scene1",
+        "kind": "html",
+        "assetId": "scene1-asset",
+        "capabilities": [
+          "centi3d"
+        ],
+        "inFrame": 0,
+        "outFrame": 360,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "group": "builtin",
+            "interpolable": true
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "space": "pixels",
+            "interpolable": true
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "group": "custom",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "step": 0.01,
+            "group": "builtin",
+            "interpolable": true
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "space": "degrees",
+            "interpolable": true
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "group": "builtin",
+            "interpolable": false
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "custom",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "<canvas id=\"stage\"></canvas>",
+          "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
+          "js": "const { scene, T } = clip.use(\"centi3d\");\nsetup(() => {\n  size(1280, 720); scene.background = new T.Color(\"#101622\");\n  scene.add(new T.HemisphereLight(0xb8ddff, 0x182034, 2));\n  const ground = new T.Mesh(new T.CylinderGeometry(135, 150, 24, 64),\n    new T.MeshStandardMaterial({ color: \"#263447\", roughness: 0.55 }));\n  ground.position.y = -110; scene.add(ground);\n});"
+        }
+      }
+    },
+    {
+      "id": "keylight",
+      "name": "Light1",
+      "kind": "light-3d",
+      "detail": "3D Light",
+      "descriptor": {
+        "decay": 0
+      }
+    },
+    {
+      "id": "camera1",
+      "name": "Camera1",
+      "kind": "camera-3d",
+      "detail": "3D Camera",
+      "descriptor": {}
+    },
+    {
+      "id": "null1",
+      "name": "Null1",
+      "kind": "null-3d",
+      "detail": "3D Null",
+      "descriptor": {}
+    },
+    {
+      "id": "product-glb",
+      "name": "Bottle GLB",
+      "kind": "model-3d",
+      "detail": "Original static product bottle / GLB 2.0",
+      "descriptor": {},
+      "format": "glb",
+      "sourceUrl": "data:model/gltf-binary;base64,Z2xURgIAAABsOQAAZAQAAEpTT057ImFzc2V0Ijp7InZlcnNpb24iOiIyLjAiLCJnZW5lcmF0b3IiOiJNYWNyb0ZsdXNoIFdlYiBvcmlnaW5hbCBib3R0bGUifSwic2NlbmUiOjAsInNjZW5lcyI6W3sibm9kZXMiOlswXX1dLCJub2RlcyI6W3sibWVzaCI6MH1dLCJtZXNoZXMiOlt7InByaW1pdGl2ZXMiOlt7ImF0dHJpYnV0ZXMiOnsiUE9TSVRJT04iOjAsIk5PUk1BTCI6MX0sImluZGljZXMiOjIsIm1hdGVyaWFsIjowfSx7ImF0dHJpYnV0ZXMiOnsiUE9TSVRJT04iOjAsIk5PUk1BTCI6MX0sImluZGljZXMiOjMsIm1hdGVyaWFsIjoxfV19XSwibWF0ZXJpYWxzIjpbeyJuYW1lIjoiQ3lhbiBlbmFtZWwiLCJwYnJNZXRhbGxpY1JvdWdobmVzcyI6eyJiYXNlQ29sb3JGYWN0b3IiOlswLjEyLDAuNjQsMC44MiwxXSwibWV0YWxsaWNGYWN0b3IiOjAuNDUsInJvdWdobmVzc0ZhY3RvciI6MC4yOH19LHsibmFtZSI6IkZyb250IGJhZGdlIiwicGJyTWV0YWxsaWNSb3VnaG5lc3MiOnsiYmFzZUNvbG9yRmFjdG9yIjpbMSwwLjg4LDAuNDUsMV0sIm1ldGFsbGljRmFjdG9yIjowLCJyb3VnaG5lc3NGYWN0b3IiOjAuN319XSwiYnVmZmVycyI6W3siYnl0ZUxlbmd0aCI6MTM1NDh9XSwiYnVmZmVyVmlld3MiOlt7ImJ1ZmZlciI6MCwiYnl0ZU9mZnNldCI6MCwiYnl0ZUxlbmd0aCI6NDc1MiwidGFyZ2V0IjozNDk2Mn0seyJidWZmZXIiOjAsImJ5dGVPZmZzZXQiOjQ3NTIsImJ5dGVMZW5ndGgiOjQ3NTIsInRhcmdldCI6MzQ5NjJ9LHsiYnVmZmVyIjowLCJieXRlT2Zmc2V0Ijo5NTA0LCJieXRlTGVuZ3RoIjo0MDQ0LCJ0YXJnZXQiOjM0OTYzfV0sImFjY2Vzc29ycyI6W3siYnVmZmVyVmlldyI6MCwiY29tcG9uZW50VHlwZSI6NTEyNiwiY291bnQiOjM5NiwidHlwZSI6IlZFQzMiLCJtaW4iOlstNTMs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AAAAAAAA4EIAAAAAAAAAAAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAAAAAAAAgAAA4EIAAACAAAAAgAAA4EIAAACAAAAAgAAA4EIAAACAAAAAgAAA4EIAAACAAAAAgAAA4EIAAACAAAAAgAAA4EIAAACAAAAAgAAA4EIAAACAAAAAgAAA4EIAAACAAAAAgAAA4EIAAACAAAAAgAAA4EIAAACAAAAAgAAA4EIAAACAAAAAgAAA4EIAAACAAAAAAAAA4EIAAACAAAAAAAAA4EIAAACAAAAAAAAA4EIAAACAAAAAAAAA4EIAAACAAAAAAAAA4EIAAACAAAAAAAAA4EIAAACAAAAAAAAA4EIAAACAAAAAAAAA4EIAAACAAAAAAAAA4EIAAACAAAAAAAAA4EIAAACAAAAAAAAA4EIAAACAAAAAAAAA4EIAAACAAADgwQAAyMEAAFhCAADgQQAAyMEAAFhCAADgQQAADEIAAFhCAADgwQAADEIAAFhCAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAAAAAAAAgAAAgL8AAACAAAAAgAAAgL8AAACAAAAAgAAAgL8AAACAAAAAgAAAgL8AAACAAAAAgAAAgL8AAACAAAAAgAAAgL8AAACAAAAAgAAAgL8AAACAAAAAgAAAgL8AAACA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DAA9AA0APQA+AA0ADQA+AA4APgA/AA4ADgA/AA8APwBAAA8ADwBAABAAQABBABAAEABBABEAQQBCABEAEQBCABIAQgBDABIAEgBDABMAQwBEABMAEwBEABQARABFABQAFABFABUARQBGABUAFQBGABYARgBHABYAFgBHABcARwBIABcAFwBIABgASABJABgAGABJABkASQBKABkAGQBKABoASgBLABoAGgBLABsASwBMABsAGwBMABwATABNABwAHABNAB0ATQBOAB0AHQBOAB4ATgBPAB4AHgBPAB8ATwBQAB8AHwBQACAAUABRACAAIABRACEAUQBSACEAIQBSACIAUgBTACIAIgBTACMAUwBUACMAIwBUACQAVABVACQAJABVACUAVQBWACUAJQBWACYAVgBXACYAJgBXACcAVwBYACcAJwBYACgAWABZACgAKABZACkAWQBaACkAKQBaACoAWgBbACoAKgBbACsAWwBcACsAKwBcACwAXABdACwALABdAC0AXQBeAC0ALQBeAC4AXgBfAC4ALgBfAC8AXwBgAC8ALwBgADAAYABhADAAMQBiADIAYgBjADIAMgBjADMAYwBkADMAMwBkADQAZABlADQANABlADUAZQBmADUANQBmADYAZgBnADYANgBnADcAZwBoADcANwBoADgAaABpADgAOABpADkAaQBqADkAOQBqADoAagBrADoAOgBrADsAawBsADsAOwBsADwAbABtADwAPABtAD0AbQBuAD0APQBuAD4AbgBvAD4APgBvAD8AbwBwAD8APwBwAEAAcABxAEAAQABxAEEAcQByAEEAQQByAEIAcgBzAEIAQgBzAEMAcwB0AEMAQwB0AEQAdAB1AEQARAB1AEUAdQB2AEUARQB2AEYAdgB3AEYARgB3AEcAdwB4AEcARwB4AEgAeAB5AEgASAB5AEkAeQB6AEkASQB6AEoAegB7AEoASgB7AEsAewB8AEsASwB8AEwAfAB9AEwATAB9AE0AfQB+AE0ATQB+AE4AfgB/AE4ATgB/AE8AfwCAAE8ATwCAAFAAgACBAFAAUACBAFEAgQCCAFEAUQCCAFIAggCDAFIAUgCDAFMAgwCEAFMAUwCEAFQAhACFAFQAVACFAFUAhQCGAFUAVQCGAFYAhgCHAFYAVgCHAFcAhwCIAFcAVwCIAFgAiACJAFgAWACJAFkAiQCKAFkAWQCKAFoAigCLAFoAWgCLAFsAiwCMAFsAWwCMAFwAjACNAFwAXACNAF0AjQCOAF0AXQCOAF4AjgCPAF4AXgCPAF8AjwCQAF8AXwCQAGAAkACRAGAAYACRAGEAkQCSAGEAYgCTAGMAkwCUAGMAYwCUAGQAlACVAGQAZACVAGUAlQCWAGUAZQCWAGYAlgCXAGYAZgCXAGcAlwCYAGcAZwCYAGgAmACZAGgAaACZAGkAmQCaAGkAaQCaAGoAmgCbAGoAagCbAGsAmwCcAGsAawCcAGwAnACdAGwAbACdAG0AnQCeAG0AbQCeAG4AngCfAG4AbgCfAG8AnwCgAG8AbwCgAHAAoAChAHAAcAChAHEAoQCiAHEAcQCiAHIAogCjAHIAcgCjAHMAowCkAHMAcwCkAHQApAClAHQAdAClAHUApQCmAHUAdQCmAHYApgCnAHYAdgCnAHcApwCoAHcAdwCoAHgAqACpAHgAeACpAHkAqQCqAHkAeQCqAHoAqgCrAHoAegCrAHsAqwCsAHsAewCsAHwArACtAHwAfACtAH0ArQCuAH0AfQCuAH4ArgCvAH4AfgCvAH8ArwCwAH8AfwCwAIAAsACxAIAAgACxAIEAsQCyAIEAgQCyAIIAsgCzAIIAggCzAIMAswC0AIMAgwC0AIQAtAC1AIQAhAC1AIUAtQC2AIUAhQC2AIYAtgC3AIYAhgC3AIcAtwC4AIcAhwC4AIgAuAC5AIgAiAC5AIkAuQC6AIkAiQC6AIoAugC7AIoAigC7AIsAuwC8AIsAiwC8AIwAvAC9AIwAjAC9AI0AvQC+AI0AjQC+AI4AvgC/AI4AjgC/AI8AvwDAAI8AjwDAAJAAwADBAJAAkADBAJEAwQDCAJEAkQDCAJIAwgDDAJIAkwDEAJQAxADFAJQAlADFAJUAxQDGAJUAlQDGAJYAxgDHAJYAlgDHAJcAxwDIAJcAlwDIAJgAyADJAJgAmADJAJkAyQDKAJkAmQDKAJoAygDLAJoAmgDLAJsAywDMAJsAmwDMAJwAzADNAJwAnADNAJ0AzQDOAJ0AnQDOAJ4AzgDPAJ4AngDPAJ8AzwDQAJ8AnwDQAKAA0ADRAKAAoADRAKEA0QDSAKEAoQDSAKIA0gDTAKIAogDTAKMA0wDUAKMAowDUAKQA1ADVAKQApADVAKUA1QDWAKUApQDWAKYA1gDXAKYApgDXAKcA1wDYAKcApwDYAKgA2ADZAKgAqADZAKkA2QDaAKkAqQDaAKoA2gDbAKoAqgDbAKsA2wDcAKsAqwDcAKwA3ADdAKwArADdAK0A3QDeAK0ArQDeAK4A3gDfAK4ArgDfAK8A3wDgAK8ArwDgALAA4ADhALAAsADhALEA4QDiALEAsQDiALIA4gDjALIAsgDjALMA4wDkALMAswDkALQA5ADlALQAtADlALUA5QDmALUAtQDmALYA5gDnALYAtgDnALcA5wDoALcAtwDoALgA6ADpALgAuADpALkA6QDqALkAuQDqALoA6gDrALoAugDrALsA6wDsALsAuwDsALwA7ADtALwAvADtAL0A7QDuAL0AvQDuAL4A7gDvAL4AvgDvAL8A7wDwAL8AvwDwAMAA8ADxAMAAwADxAMEA8QDyAMEAwQDyAMIA8gDzAMIAwgDzAMMA8wD0AMMAxAD1AMUA9QD2AMUAxQD2AMYA9gD3AMYAxgD3AMcA9wD4AMcAxwD4AMgA+AD5AMgAyAD5AMkA+QD6AMkAyQD6AMoA+gD7AMoAygD7AMsA+wD8AMsAywD8AMwA/AD9AMwAzAD9AM0A/QD+AM0AzQD+AM4A/gD/AM4AzgD/AM8A/wAAAc8AzwAAAdAAAAEBAdAA0AABAdEAAQECAdEA0QACAdIAAgEDAdIA0gADAdMAAwEEAdMA0wAEAdQABAEFAdQA1AAFAdUABQEGAdUA1QAGAdYABgEHAdYA1gAHAdcABwEIAdcA1wAIAdgACAEJAdgA2AAJAdkACQEKAdkA2QAKAdoACgELAdoA2gALAdsACwEMAdsA2wAMAdwADAENAdwA3AANAd0ADQEOAd0A3QAOAd4ADgEPAd4A3gAPAd8ADwEQAd8A3wAQAeAAEAERAeAA4AARAeEAEQESAeEA4QASAeIAEgETAeIA4gATAeMAEwEUAeMA4wAUAeQAFAEVAeQA5AAVAeUAFQEWAeUA5QAWAeYAFgEXAeYA5gAXAecAFwEYAecA5wAYAegAGAEZAegA6AAZAekAGQEaAekA6QAaAeoAGgEbAeoA6gAbAesAGwEcAesA6wAcAewAHAEdAewA7AAdAe0AHQEeAe0A7QAeAe4AHgEfAe4A7gAfAe8AHwEgAe8A7wAgAfAAIAEhAfAA8AAhAfEAIQEiAfEA8QAiAfIAIgEjAfIA8gAjAfMAIwEkAfMA8wAkAfQAJAElAfQA9QAmAfYAJgEnAfYA9gAnAfcAJwEoAfcA9wAoAfgAKAEpAfgA+AApAfkAKQEqAfkA+QAqAfoAKgErAfoA+gArAfsAKwEsAfsA+wAsAfwALAEtAfwA/AAtAf0ALQEuAf0A/QAuAf4ALgEvAf4A/gAvAf8ALwEwAf8A/wAwAQABMAExAQABAAExAQEBMQEyAQEBAQEyAQIBMgEzAQIBAgEzAQMBMwE0AQMBAwE0AQQBNAE1AQQBBAE1AQUBNQE2AQUBBQE2AQYBNgE3AQYBBgE3AQcBNwE4AQcBBwE4AQgBOAE5AQgBCAE5AQkBOQE6AQkBCQE6AQoBOgE7AQoBCgE7AQsBOwE8AQsBCwE8AQwBPAE9AQwBDAE9AQ0BPQE+AQ0BDQE+AQ4BPgE/AQ4BDgE/AQ8BPwFAAQ8BDwFAARABQAFBARABEAFBAREBQQFCAREBEQFCARIBQgFDARIBEgFDARMBQwFEARMBEwFEARQBRAFFARQBFAFFARUBRQFGARUBFQFGARYBRgFHARYBFgFHARcBRwFIARcBFwFIARgBSAFJARgBGAFJARkBSQFKARkBGQFKARoBSgFLARoBGgFLARsBSwFMARsBGwFMARwBTAFNARwBHAFNAR0BTQFOAR0BHQFOAR4BTgFPAR4BHgFPAR8BTwFQAR8BHwFQASABUAFRASABIAFRASEBUQFSASEBIQFSASIBUgFTASIBIgFTASMBUwFUASMBIwFUASQBVAFVASQBJAFVASUBVQFWASUBJgFXAScBVwFYAScBJwFYASgBWAFZASgBKAFZASkBWQFaASkBKQFaASoBWgFbASoBKgFbASsBWwFcASsBKwFcASwBXAFdASwBLAFdAS0BXQFeAS0BLQFeAS4BXgFfAS4BLgFfAS8BXwFgAS8BLwFgATABYAFhATABMAFhATEBYQFiATEBMQFiATIBYgFjATIBMgFjATMBYwFkATMBMwFkATQBZAFlATQBNAFlATUBZQFmATUBNQFmATYBZgFnATYBNgFnATcBZwFoATcBNwFoATgBaAFpATgBOAFpATkBaQFqATkBOQFqAToBagFrAToBOgFrATsBawFsATsBOwFsATwBbAFtATwBPAFtAT0BbQFuAT0BPQFuAT4BbgFvAT4BPgFvAT8BbwFwAT8BPwFwAUABcAFxAUABQAFxAUEBcQFyAUEBQQFyAUIBcgFzAUIBQgFzAUMBcwF0AUMBQwF0AUQBdAF1AUQBRAF1AUUBdQF2AUUBRQF2AUYBdgF3AUYBRgF3AUcBdwF4AUcBRwF4AUgBeAF5AUgBSAF5AUkBeQF6AUkBSQF6AUoBegF7AUoBSgF7AUsBewF8AUsBSwF8AUwBfAF9AUwBTAF9AU0BfQF+AU0BTQF+AU4BfgF/AU4BTgF/AU8BfwGAAU8BTwGAAVABgAGBAVABUAGBAVEBgQGCAVEBUQGCAVIBggGDAVIBUgGDAVMBgwGEAVMBUwGEAVQBhAGFAVQBVAGFAVUBhQGGAVUBVQGGAVYBhgGHAVYBiAGJAYoBiAGKAYsB"
+    },
+    {
+      "id": "title-asset",
+      "kind": "html-clip",
+      "name": "Title",
+      "detail": "Site-authored tutorial",
+      "clipId": "title",
+      "htmlTemplate": {
+        "id": "title",
+        "name": "Title",
+        "kind": "html",
+        "assetId": "title-asset",
+        "inFrame": 0,
+        "outFrame": 360,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "",
+          "css": "",
+          "js": "clip.use(\"centi\");\nsetup(() => { size(1280, 720); bg(0, 0); });\nonFrame(() => {\n  clear(); const ctx = getContext(); ctx.fillStyle = \"#eaf4ff\";\n  ctx.font = \"bold 32px sans-serif\"; ctx.fillText(\"FORM / 01\", 65, 80);\n  ctx.font = \"14px monospace\"; ctx.fillStyle = \"#5dd4ff\";\n  ctx.fillText(\"ORIGINAL GLB · PRODUCT STUDY\", 65, 110);\n  ctx.fillStyle = \"#a5b2c6\"; ctx.fillText(\"SHAPE / LIGHT / MOTION\", 65, 665);\n});"
+        },
+        "keyframeTracks": {}
+      }
+    }
+  ]
+}

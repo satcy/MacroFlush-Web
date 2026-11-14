@@ -1,3 +1,4 @@
+import { advancedProjects } from "./advanced-projects.js";
 import { workshopProjects } from "./workshop-projects.js";
 import { foundationProjects } from "./foundation-projects.js";
 // Real V2 documents: bundled application projects and standalone site examples.
@@ -16,6 +17,7 @@ export const examples = [
 export const editorProjects = [
   ...examples,
   ...foundationProjects,
+  ...advancedProjects,
   { id: "tutorial-3d-start", projectUrl: new URL("../projects/tutorials/timeline-3d/start.json", import.meta.url).href },
   { id: "tutorial-3d-complete", projectUrl: new URL("../projects/tutorials/timeline-3d/complete.json", import.meta.url).href },
   { id: "tutorial-p5-start", projectUrl: new URL("../projects/tutorials/p5-timeline/start.json", import.meta.url).href },

@@ -1,0 +1,328 @@
+{
+  "clipFormatVersion": 2,
+  "rootCompositionId": "cue-performance",
+  "assets": [
+    {
+      "id": "cue-performance",
+      "kind": "composition",
+      "name": "Cue Stage",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 480,
+        "cues": {
+          "Intro": {
+            "frame": 0,
+            "endFrame": 120,
+            "mode": "none"
+          },
+          "Loop": {
+            "frame": 120,
+            "endFrame": 360,
+            "mode": "loop"
+          },
+          "Outro": {
+            "frame": 360,
+            "endFrame": 480,
+            "mode": "stop"
+          }
+        },
+        "cueScript": "cue(\"Intro\", 0, { mode: \"none\", endFrame: 120 });\ncue(\"Loop\", 120, { mode: \"loop\", endFrame: 360 });\ncue(\"Outro\", 360, { mode: \"stop\", endFrame: 480 });",
+        "layers": [
+          {
+            "id": "stage-layer",
+            "name": "Stage",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "stage",
+                "name": "Stage",
+                "kind": "html",
+                "assetId": "stage-asset",
+                "inFrame": 0,
+                "outFrame": 480,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "",
+                  "css": "",
+                  "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonCue(({ cueName }) => { console.log(\"Cue:\", cueName); });\nonFrame(({ compFrame }) => {\n  bg(\"#0c1019\"); const ctx = getContext();\n  const section = compFrame < 120 ? 0 : compFrame < 360 ? 1 : 2;\n  const local = compFrame - [0, 120, 360][section];\n  const u = local / [120, 240, 120][section];\n  const colors = [\"#5dd4ff\", \"#ff6c9a\", \"#ffdc63\"];\n  const fade = section === 0 ? Math.min(1, u * 3) : section === 2 ? Math.max(0, 1 - u) : 1;\n  ctx.fillStyle = colors[section]; ctx.globalAlpha = fade;\n  ctx.font = \"bold 110px sans-serif\"; ctx.textAlign = \"center\";\n  ctx.fillText([\"INTRO\", \"LOOP\", \"OUTRO\"][section], 640, 350);\n  for (let i = 0; i < 16; i++) {\n    const phase = u * Math.PI * 2 + i / 16 * Math.PI * 2;\n    ctx.beginPath(); ctx.arc(640 + Math.cos(phase) * 330, 360 + Math.sin(phase) * 210, 6, 0, Math.PI * 2); ctx.fill();\n  }\n  ctx.globalAlpha = 1;\n});"
+                },
+                "keyframeTracks": {}
+              }
+            ]
+          }
+        ],
+        "name": "Cue Stage"
+      }
+    },
+    {
+      "id": "stage-asset",
+      "kind": "html-clip",
+      "name": "Stage",
+      "detail": "Site-authored tutorial",
+      "clipId": "stage",
+      "htmlTemplate": {
+        "id": "stage",
+        "name": "Stage",
+        "kind": "html",
+        "assetId": "stage-asset",
+        "inFrame": 0,
+        "outFrame": 480,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "",
+          "css": "",
+          "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonCue(({ cueName }) => { console.log(\"Cue:\", cueName); });\nonFrame(({ compFrame }) => {\n  bg(\"#0c1019\"); const ctx = getContext();\n  const section = compFrame < 120 ? 0 : compFrame < 360 ? 1 : 2;\n  const local = compFrame - [0, 120, 360][section];\n  const u = local / [120, 240, 120][section];\n  const colors = [\"#5dd4ff\", \"#ff6c9a\", \"#ffdc63\"];\n  const fade = section === 0 ? Math.min(1, u * 3) : section === 2 ? Math.max(0, 1 - u) : 1;\n  ctx.fillStyle = colors[section]; ctx.globalAlpha = fade;\n  ctx.font = \"bold 110px sans-serif\"; ctx.textAlign = \"center\";\n  ctx.fillText([\"INTRO\", \"LOOP\", \"OUTRO\"][section], 640, 350);\n  for (let i = 0; i < 16; i++) {\n    const phase = u * Math.PI * 2 + i / 16 * Math.PI * 2;\n    ctx.beginPath(); ctx.arc(640 + Math.cos(phase) * 330, 360 + Math.sin(phase) * 210, 6, 0, Math.PI * 2); ctx.fill();\n  }\n  ctx.globalAlpha = 1;\n});"
+        },
+        "keyframeTracks": {}
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "interactive-examples.mdn.mozilla.net",
+      "files.freemusicarchive.org"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  }
+}

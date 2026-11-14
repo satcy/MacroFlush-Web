@@ -1,12 +1,17 @@
+import { advancedUI } from "./advanced-projects.js";
 import { workshopUI } from "./workshop-projects.js";
 export const englishUI = {
   ...workshopUI,
+  ...advancedUI,
   "記事一覧": "All tutorials",
   "完成プレビュー": "Completed preview",
   "開始プロジェクトJSON": "Starter project JSON",
   "p5.js Tutorialの完成版。Timelineに同期する7本の軌道を描き、spreadのキーフレームで広がりを動かします。": "Completed p5.js tutorial: seven Timeline-driven orbits with their spread animated by keyframes.",
   "parent / mask / 3Dとの違い": "parent / mask / differences from 3D",
   "基礎から音・Shader・Feedback・3Dまで、制作の流れをたどります。": "Follow the workflow from the basics to audio, shaders, Feedback and 3D.",
+  "練習用4ステムとmix ZIP": "Practice stems and mix ZIP",
+  "オリジナルBottle GLB": "Original Bottle GLB",
+  "Web公開キットZIP": "Web publishing kit ZIP",
   "開始用プロジェクト": "Open starter project",
   "完成版をEditorで開く": "Open completed project in Editor",
   "完成プロジェクトJSON": "Download completed project JSON",

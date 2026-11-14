@@ -91,3 +91,7 @@ Tutorialを追加するときは、記事を `src/content.js` に定義したう
 UI変更の確認では、デスクトップと狭い画面、キーボード操作、フォーカス、reduced-motion、ダイアログのCloseボタンを対象にします。Player関連では実プロジェクトの初期描画、再生・停止・シーク、progress、Timeline / Curve切替、キー編集、JSON保存、閉じた後の破棄を変更箇所に応じて確認してください。
 
 基礎Tutorial 01〜03の教材は `projects/tutorials/first-clip/`・`parameters/`・`composition/` にある開始用・完成V2です。リンクとEditor登録は `src/foundation-projects.js`、再生成は `node scripts/generate-foundation-projects.mjs`（この6ファイルだけ）。本文のコードを生成元にし、01は静止円→時間で動く円、02はパラメータなし→speed / tintとspeedキー0:1・180:2・359:1、03は不透明Overlay→透明合成とIntro / LoopのCueです。来歴は `projects/tutorials/FOUNDATIONS.md`。
+
+追加10教材は `src/advanced-tutorials.js`（日英本文・関連Reference）、`src/advanced-code.js`（共有コード）、`src/advanced-projects.js`（カタログ）で管理します。生成は `node scripts/generate-advanced-tutorials.mjs`、slug指定でそのペアだけ再生成できます。`projects/tutorials/ADVANCED.md` に来歴と開始／完成差分があります。ステムのvocalsは合成音、WAVはモデル分離結果ではありません。GLBもオリジナル生成物です。本文のステップに `environments` を指定すると、その操作専用のバッヂが出ます。ステム分離とProResのみの手順はアプリ版専用を保ってください。
+
+Web埋め込み教材の実ホストは `src/tutorial-player-host.js`、ビルドは `scripts/build-tutorial-kit.mjs` です。`dist/projects/tutorials/embed-player/` に開始／完成HTMLとPlayer一式・ZIPを生成し、生成物はコミットしません。ZIPのPlayerを単独JSに減らさず、依存リソースとライセンスを保持します。時計・progress・Pause/Seek/Reset・非表示タブでの停止・破棄は実ブラウザで確認してください。`npm run check` は `scripts/check-tutorial-kit.mjs` も実行します。

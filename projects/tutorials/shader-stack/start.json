@@ -1,0 +1,312 @@
+{
+  "clipFormatVersion": 2,
+  "rootCompositionId": "shader-stack",
+  "assets": [
+    {
+      "id": "shader-stack",
+      "kind": "composition",
+      "name": "Layered Look",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 240,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "source-layer",
+            "name": "Prism",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "source",
+                "name": "Prism",
+                "kind": "html",
+                "assetId": "source-asset",
+                "inFrame": 0,
+                "outFrame": 240,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "",
+                  "css": "",
+                  "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  const ctx = getContext();\n  const g = ctx.createLinearGradient(0, 0, 1280, 720);\n  g.addColorStop(0, \"#5dd4ff\"); g.addColorStop(0.5, \"#793c93\"); g.addColorStop(1, \"#ff6c9a\");\n  ctx.fillStyle = g; ctx.fillRect(0, 0, 1280, 720);\n  ctx.strokeStyle = \"#ffdc63\"; ctx.lineWidth = 14;\n  for (let i = -6; i < 18; i++) {\n    const x = i * 100 + Math.sin(time) * 80;\n    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 300, 720); ctx.stroke();\n  }\n});"
+                },
+                "keyframeTracks": {}
+              }
+            ]
+          }
+        ],
+        "name": "Layered Look"
+      }
+    },
+    {
+      "id": "source-asset",
+      "kind": "html-clip",
+      "name": "Prism",
+      "detail": "Site-authored tutorial",
+      "clipId": "source",
+      "htmlTemplate": {
+        "id": "source",
+        "name": "Prism",
+        "kind": "html",
+        "assetId": "source-asset",
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "",
+          "css": "",
+          "js": "clip.use(\"centi\");\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  const ctx = getContext();\n  const g = ctx.createLinearGradient(0, 0, 1280, 720);\n  g.addColorStop(0, \"#5dd4ff\"); g.addColorStop(0.5, \"#793c93\"); g.addColorStop(1, \"#ff6c9a\");\n  ctx.fillStyle = g; ctx.fillRect(0, 0, 1280, 720);\n  ctx.strokeStyle = \"#ffdc63\"; ctx.lineWidth = 14;\n  for (let i = -6; i < 18; i++) {\n    const x = i * 100 + Math.sin(time) * 80;\n    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 300, 720); ctx.stroke();\n  }\n});"
+        },
+        "keyframeTracks": {}
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "interactive-examples.mdn.mozilla.net",
+      "files.freemusicarchive.org"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  }
+}

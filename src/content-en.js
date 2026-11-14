@@ -3,6 +3,7 @@ import { threeDGroupDescriptions, threeDDescriptions, threeDLessonEnglish } from
 import { oscSequencerLessonEnglish } from "./osc-sequencer-content.js";
 import { p5TimelineLessonEnglish } from "./p5-tutorial-content.js";
 import { workshopTranslations } from "./tutorial-workshops.js";
+import { advancedTranslations, advancedDescriptions } from "./advanced-tutorials.js";
 // English descriptions share the Japanese catalog's IDs, signatures and examples.
 export const groupDescriptions = {
   ...threeDGroupDescriptions,
@@ -22,6 +23,7 @@ export const groupDescriptions = {
 
 export const apiDescriptions = {
   ...threeDDescriptions,
+  ...advancedDescriptions,
   ...featureDescriptions,
   setup: "Register a Clip initialization callback. Use it to set a fixed canvas size and initial values. A numeric-literal size(720, 405) written directly inside setup() is synchronized to the Inspector size when you edit the source in the Editor. Specify dynamic sizes in onFrame().",
   onframe: "Called whenever the host delivers a frame. Draw from the supplied time instead of starting a separate animation loop inside the Clip.",
@@ -97,6 +99,7 @@ export const apiDescriptions = {
 
 export const lessonTranslations = {
   ...workshopTranslations,
+  ...advancedTranslations,
   "p5-timeline": p5TimelineLessonEnglish,
   "timeline-3d": threeDLessonEnglish,
   "osc-sequencer": oscSequencerLessonEnglish,

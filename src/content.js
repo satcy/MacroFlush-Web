@@ -5,6 +5,7 @@ import { oscSequencerLesson } from "./osc-sequencer-content.js";
 import { tutorialCategories } from "./tutorial-categories.js";
 import { p5TimelineLesson } from "./p5-tutorial-content.js";
 import { workshopLessons } from "./tutorial-workshops.js";
+import { advancedLessons, advancedReference } from "./advanced-tutorials.js";
 import { foundationMaterials } from "./foundation-projects.js";
 export const groups = [
   { id: "lifecycle", name: "Lifecycle & time", description: "Clipの初期化と、タイムラインが管理する時間。" },
@@ -32,6 +33,7 @@ export const api = [
   { id: "shapes", group: "canvas", name: "oval(...) / rect(...) / line(...)", text: "基本図形を描画します。ovalの第3引数は半径です。fill() / stroke()で塗りと線を切り替え、lineWidth()で線幅を指定します。", code: "fill();\noval(360, 202, 40);\nrect(100, 100, 80, 80);\nstroke();\nlineWidth(2);\nline(0, 0, 720, 405);" },
   { id: "getcontext", group: "canvas", name: "getContext()", text: "CentiのCanvasRenderingContext2Dを取得します。標準Canvas2D APIで描画する作例にも使えます。", code: "const ctx = getContext();\nctx.beginPath();\nctx.arc(360, 202, 80, 0, Math.PI * 2);\nctx.stroke();" },
   ...extraApi,
+  ...advancedReference,
   ...threeDApi,
   ...featureApi,
   { id: "cue", group: "events", environments: ["browser-editor", "app"], name: "cue(name, frame, options)", text: "CuesタブでコンポジションのCueを定義します。modeはstop、loop、none。通常のHTML ClipのJavaScriptでは使用しません。保存したCueはPlayerでも実行されます。", code: "// Cuesタブに記述\ncue(\"Intro\", 0, { mode: \"stop\" });\ncue(\"Loop\", 180, { mode: \"loop\" });" },
@@ -68,7 +70,8 @@ const sourceLessons = [
   threeDLesson,
   oscSequencerLesson,
   p5TimelineLesson,
-  ...workshopLessons
+  ...workshopLessons,
+  ...advancedLessons
 ];
 
 // Order lessons by category and number them from that order.

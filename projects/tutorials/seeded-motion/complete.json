@@ -1,0 +1,338 @@
+{
+  "clipFormatVersion": 2,
+  "rootCompositionId": "seeded-motion",
+  "assets": [
+    {
+      "id": "seeded-motion",
+      "kind": "composition",
+      "name": "Repeatable Field",
+      "detail": "1280 x 720, 60 fps",
+      "composition": {
+        "width": 1280,
+        "height": 720,
+        "fps": 60,
+        "bpm": 120,
+        "durationFrames": 240,
+        "cues": {},
+        "cueScript": "",
+        "layers": [
+          {
+            "id": "particles-layer",
+            "name": "Particles",
+            "kind": "chromium",
+            "visible": true,
+            "clips": [
+              {
+                "id": "particles",
+                "name": "Particles",
+                "kind": "html",
+                "assetId": "particles-asset",
+                "inFrame": 0,
+                "outFrame": 240,
+                "authoredBy": "human",
+                "remoteAssets": [],
+                "params": {
+                  "opacity": {
+                    "key": "opacity",
+                    "type": "number",
+                    "default": 1,
+                    "value": 1,
+                    "group": "builtin",
+                    "writable": false,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "position": {
+                    "key": "position",
+                    "type": "vec2",
+                    "default": [
+                      0,
+                      0
+                    ],
+                    "value": [
+                      0,
+                      0
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "anchorPoint": {
+                    "key": "anchorPoint",
+                    "type": "vec2",
+                    "default": [
+                      640,
+                      360
+                    ],
+                    "value": [
+                      640,
+                      360
+                    ],
+                    "label": "anchorPoint",
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "scale": {
+                    "key": "scale",
+                    "type": "vec2",
+                    "default": [
+                      1,
+                      1
+                    ],
+                    "value": [
+                      1,
+                      1
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "step": 0.01,
+                    "interpolable": true,
+                    "version": 1
+                  },
+                  "rotation": {
+                    "key": "rotation",
+                    "type": "number",
+                    "default": 0,
+                    "value": 0,
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": true,
+                    "space": "degrees",
+                    "version": 1
+                  },
+                  "blendMode": {
+                    "key": "blendMode",
+                    "type": "select",
+                    "default": "normal",
+                    "value": "normal",
+                    "group": "builtin",
+                    "writable": false,
+                    "options": [
+                      "normal",
+                      "add",
+                      "multiply",
+                      "screen",
+                      "overlay",
+                      "lighten",
+                      "darken"
+                    ],
+                    "interpolable": false,
+                    "version": 1
+                  },
+                  "size": {
+                    "key": "size",
+                    "type": "vec2",
+                    "default": [
+                      1280,
+                      720
+                    ],
+                    "value": [
+                      1280,
+                      720
+                    ],
+                    "group": "builtin",
+                    "writable": false,
+                    "interpolable": false,
+                    "space": "pixels",
+                    "version": 1
+                  },
+                  "seed": {
+                    "key": "seed",
+                    "type": "number",
+                    "default": 42,
+                    "value": 42,
+                    "min": 0,
+                    "max": 9999,
+                    "step": 1,
+                    "interpolable": true,
+                    "group": "custom",
+                    "writable": false,
+                    "version": 1
+                  }
+                },
+                "source": {
+                  "html": "",
+                  "css": "",
+                  "js": "clip.use(\"centi\");\nclip.defineParams({ seed: { type: \"number\", default: 42, min: 0, max: 9999, step: 1 } });\nfunction randomAt(seed, index) {\n  let n = (Math.floor(seed) ^ Math.imul(index + 1, 374761393)) >>> 0;\n  n = Math.imul(n ^ (n >>> 13), 1274126177);\n  return ((n ^ (n >>> 16)) >>> 0) / 4294967296;\n}\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  bg(\"#0c1019\"); const ctx = getContext();\n  for (let i = 0; i < 100; i++) {\n    const x = randomAt(clip.seed, i * 4) * 1280;\n    const y = randomAt(clip.seed, i * 4 + 1) * 720;\n    const phase = randomAt(clip.seed, i * 4 + 2) * Math.PI * 2;\n    const radius = 3 + randomAt(clip.seed, i * 4 + 3) * 9;\n    ctx.fillStyle = [\"#5dd4ff\", \"#ff6c9a\", \"#ffdc63\"][i % 3];\n    ctx.beginPath(); ctx.arc(x + Math.cos(time + phase) * 24, y + Math.sin(time + phase) * 24, radius, 0, Math.PI * 2); ctx.fill();\n  }\n});"
+                },
+                "keyframeTracks": {}
+              }
+            ]
+          }
+        ],
+        "name": "Repeatable Field"
+      }
+    },
+    {
+      "id": "particles-asset",
+      "kind": "html-clip",
+      "name": "Particles",
+      "detail": "Site-authored tutorial",
+      "clipId": "particles",
+      "htmlTemplate": {
+        "id": "particles",
+        "name": "Particles",
+        "kind": "html",
+        "assetId": "particles-asset",
+        "inFrame": 0,
+        "outFrame": 240,
+        "authoredBy": "human",
+        "remoteAssets": [],
+        "params": {
+          "opacity": {
+            "key": "opacity",
+            "type": "number",
+            "default": 1,
+            "value": 1,
+            "group": "builtin",
+            "writable": false,
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "position": {
+            "key": "position",
+            "type": "vec2",
+            "default": [
+              0,
+              0
+            ],
+            "value": [
+              0,
+              0
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "anchorPoint": {
+            "key": "anchorPoint",
+            "type": "vec2",
+            "default": [
+              640,
+              360
+            ],
+            "value": [
+              640,
+              360
+            ],
+            "label": "anchorPoint",
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "pixels",
+            "version": 1
+          },
+          "scale": {
+            "key": "scale",
+            "type": "vec2",
+            "default": [
+              1,
+              1
+            ],
+            "value": [
+              1,
+              1
+            ],
+            "group": "builtin",
+            "writable": false,
+            "step": 0.01,
+            "interpolable": true,
+            "version": 1
+          },
+          "rotation": {
+            "key": "rotation",
+            "type": "number",
+            "default": 0,
+            "value": 0,
+            "group": "builtin",
+            "writable": false,
+            "interpolable": true,
+            "space": "degrees",
+            "version": 1
+          },
+          "blendMode": {
+            "key": "blendMode",
+            "type": "select",
+            "default": "normal",
+            "value": "normal",
+            "group": "builtin",
+            "writable": false,
+            "options": [
+              "normal",
+              "add",
+              "multiply",
+              "screen",
+              "overlay",
+              "lighten",
+              "darken"
+            ],
+            "interpolable": false,
+            "version": 1
+          },
+          "size": {
+            "key": "size",
+            "type": "vec2",
+            "default": [
+              1280,
+              720
+            ],
+            "value": [
+              1280,
+              720
+            ],
+            "group": "builtin",
+            "writable": false,
+            "interpolable": false,
+            "space": "pixels",
+            "version": 1
+          },
+          "seed": {
+            "key": "seed",
+            "type": "number",
+            "default": 42,
+            "value": 42,
+            "min": 0,
+            "max": 9999,
+            "step": 1,
+            "interpolable": true,
+            "group": "custom",
+            "writable": false,
+            "version": 1
+          }
+        },
+        "source": {
+          "html": "",
+          "css": "",
+          "js": "clip.use(\"centi\");\nclip.defineParams({ seed: { type: \"number\", default: 42, min: 0, max: 9999, step: 1 } });\nfunction randomAt(seed, index) {\n  let n = (Math.floor(seed) ^ Math.imul(index + 1, 374761393)) >>> 0;\n  n = Math.imul(n ^ (n >>> 13), 1274126177);\n  return ((n ^ (n >>> 16)) >>> 0) / 4294967296;\n}\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  bg(\"#0c1019\"); const ctx = getContext();\n  for (let i = 0; i < 100; i++) {\n    const x = randomAt(clip.seed, i * 4) * 1280;\n    const y = randomAt(clip.seed, i * 4 + 1) * 720;\n    const phase = randomAt(clip.seed, i * 4 + 2) * Math.PI * 2;\n    const radius = 3 + randomAt(clip.seed, i * 4 + 3) * 9;\n    ctx.fillStyle = [\"#5dd4ff\", \"#ff6c9a\", \"#ffdc63\"][i % 3];\n    ctx.beginPath(); ctx.arc(x + Math.cos(time + phase) * 24, y + Math.sin(time + phase) * 24, radius, 0, Math.PI * 2); ctx.fill();\n  }\n});"
+        },
+        "keyframeTracks": {}
+      }
+    }
+  ],
+  "remoteAssetPolicy": {
+    "trustedDomains": [
+      "unpkg.com",
+      "cdn.jsdelivr.net",
+      "esm.sh",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "interactive-examples.mdn.mozilla.net",
+      "files.freemusicarchive.org"
+    ],
+    "projectAllowlist": [],
+    "requireHumanConfirmationForAi": true
+  }
+}
