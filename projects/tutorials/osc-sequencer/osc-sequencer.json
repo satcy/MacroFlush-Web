@@ -202,7 +202,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "clip.use(\"centi\");\n\nclip.defineParams({\n  val0: {type: \"number\", default:0, interpolable: true},\n  val1: {type: \"number\", default:0, interpolable: false},\n  color: {type: \"color\", default:\"#ffffff\", interpolable: true},\n  pos: {type:\"vec2\", interpolable: true}\n});\n\nsetup(() => {\n  size(1920, 1080);\n  bg(33);\n});\n\nonFrame(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n  clear();\n  bg(clip.color);\n  col(255);\n  let y = 0;\n  for(const name of clip.paramNames){\n    if (clip.isNew[name]) sendOsc(\"/\" + name, clip[name]);\n    bmTxt(name + \": \" + clip[name],0,y);\n    y += 40;\n  } \n  \n});\n\nonEnter(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});\n\nonBeat(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});"
+                  "js": "clip.use(\"centi\");\n\nclip.defineParams({\n  val0: {type: \"number\", default:0, interpolable: true},\n  val1: {type: \"number\", default:0, interpolable: false},\n  color: {type: \"color\", default:\"#ffffff\", interpolable: true},\n  pos: {type:\"vec2\", interpolable: true}\n});\n\nsetup(() => {\n  size(1920, 1080);\n  bg(33);\n});\n\nonFrame(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n  clear();\n  bg(clip.color);\n  col(255);\n  let y = 0;\n  for(const name of clip.paramNames){\n    if (clip.isNew[name]) sendOsc(\"/\" + getCompositionName() + \"/\" + name, clip[name]);\n    bmTxt(name + \": \" + clip[name],0,y);\n    y += 40;\n  } \n  \n});\n\nonEnter(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});\n\nonBeat(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});"
                 },
                 "keyframeTracks": {
                   "pos": [
@@ -221,548 +221,6 @@
                         -60.578125
                       ],
                       "easing": "linear"
-                    }
-                  ],
-                  "val1": [
-                    {
-                      "frame": 38,
-                      "value": 6.23046875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 39,
-                      "value": 8.8359375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 40,
-                      "value": 9.2421875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 41,
-                      "value": 11.2734375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 42,
-                      "value": 11.6796875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 49,
-                      "value": 10.046875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 50,
-                      "value": 8.8203125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 51,
-                      "value": 5.0234375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 52,
-                      "value": 4.203125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 58,
-                      "value": 4.609375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 59,
-                      "value": 5.421875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 60,
-                      "value": 11.0078125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 61,
-                      "value": 12.80078125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 62,
-                      "value": 15.64453125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 63,
-                      "value": 19.84375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 64,
-                      "value": 27.4296875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 65,
-                      "value": 36.04296875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 66,
-                      "value": 36.85546875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 68,
-                      "value": 36.85546875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 69,
-                      "value": 35.05859375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 70,
-                      "value": 31.46484375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 71,
-                      "value": 23.87109375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 72,
-                      "value": 13.45703125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 73,
-                      "value": 13.046875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 78,
-                      "value": 13.046875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 83,
-                      "value": 13.046875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 86,
-                      "value": 12.2265625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 87,
-                      "value": 11.40625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 88,
-                      "value": 10.99609375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 89,
-                      "value": 10.17578125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 90,
-                      "value": 8.1328125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 91,
-                      "value": 6.90625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 92,
-                      "value": 2.29296875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 93,
-                      "value": -7.3046875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 94,
-                      "value": -17.71875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 95,
-                      "value": -20.33203125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 96,
-                      "value": -21.15234375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 99,
-                      "value": -21.5625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 103,
-                      "value": -20.34375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 104,
-                      "value": -12.75390625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 105,
-                      "value": -6.95703125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 106,
-                      "value": 10.4375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 107,
-                      "value": 25.82421875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 108,
-                      "value": 30.4296875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 109,
-                      "value": 31.2421875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 115,
-                      "value": 32.0546875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 116,
-                      "value": 32.4609375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 117,
-                      "value": 33.6796875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 118,
-                      "value": 34.8984375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 119,
-                      "value": 37.50390625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 120,
-                      "value": 39.12890625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 121,
-                      "value": 48.5078125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 122,
-                      "value": 58.09765625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 123,
-                      "value": 64.70703125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 124,
-                      "value": 65.51953125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 125,
-                      "value": 66.73828125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 126,
-                      "value": 67.55078125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 127,
-                      "value": 68.76953125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 128,
-                      "value": 70.39453125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 129,
-                      "value": 71.61328125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 130,
-                      "value": 73.64453125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 131,
-                      "value": 74.86328125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 132,
-                      "value": 75.26953125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 133,
-                      "value": 76.08203125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 134,
-                      "value": 77.30078125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 135,
-                      "value": 81.69921875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 136,
-                      "value": 84.3046875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 137,
-                      "value": 85.5234375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 138,
-                      "value": 86.7421875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 139,
-                      "value": 87.9609375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 140,
-                      "value": 88.3671875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 141,
-                      "value": 88.7734375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 142,
-                      "value": 89.1796875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 143,
-                      "value": 89.5859375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 144,
-                      "value": 90.3984375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 145,
-                      "value": 91.2109375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 146,
-                      "value": 91.6171875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 147,
-                      "value": 92.8359375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 150,
-                      "value": 92.8359375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 152,
-                      "value": 91.19921875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 153,
-                      "value": 81.59765625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 154,
-                      "value": 74,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 155,
-                      "value": 62.3984375,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 156,
-                      "value": 55.78125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 157,
-                      "value": 43.36328125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 158,
-                      "value": 41.73046875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 159,
-                      "value": 40.91015625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 164,
-                      "value": 42.703125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 165,
-                      "value": 66.1015625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 166,
-                      "value": 81.69921875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 167,
-                      "value": 87.28515625,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 168,
-                      "value": 93.48828125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 169,
-                      "value": 94.70703125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 170,
-                      "value": 95.11328125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 175,
-                      "value": 97.3125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 176,
-                      "value": 98.125,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 177,
-                      "value": 100.32421875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 178,
-                      "value": 101.54296875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 179,
-                      "value": 102.35546875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 180,
-                      "value": 102.76171875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 181,
-                      "value": 103.57421875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 182,
-                      "value": 104.38671875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 183,
-                      "value": 105.19921875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 184,
-                      "value": 105.60546875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 185,
-                      "value": 106.41796875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 186,
-                      "value": 108.44921875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 187,
-                      "value": 108.85546875,
-                      "easing": "step"
-                    },
-                    {
-                      "frame": 359,
-                      "value": 0,
-                      "easing": "step"
                     }
                   ],
                   "val0": [
@@ -813,6 +271,38 @@
                       "frame": 322,
                       "value": "#63af18",
                       "easing": "linear"
+                    }
+                  ],
+                  "val1": [
+                    {
+                      "frame": 38,
+                      "value": 6.23046875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 89,
+                      "value": 10.17578125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 90,
+                      "value": 8.1328125,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 138,
+                      "value": 86.7421875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 187,
+                      "value": 108.85546875,
+                      "easing": "step"
+                    },
+                    {
+                      "frame": 359,
+                      "value": 0,
+                      "easing": "step"
                     }
                   ]
                 }
@@ -960,8 +450,8 @@
                       1080
                     ],
                     "value": [
-                      1280,
-                      720
+                      1920,
+                      1080
                     ],
                     "group": "custom",
                     "writable": false,
@@ -1015,7 +505,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-                  "js": "clip.use(\"centi\");\n\nclip.defineParams({\n  val0: {type: \"number\", default:0, interpolable: true},\n  val1: {type: \"number\", default:0, interpolable: false},\n  color: {type: \"color\", default:\"#ffffff\", interpolable: true},\n  pos: {type:\"vec2\", interpolable: true}\n});\n\nsetup(() => {\n  size(1920, 1080);\n  bg(33);\n});\n\nonFrame(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n  clear();\n  bg(clip.color);\n  col(255);\n  let y = 0;\n  for(const name of clip.paramNames){\n    if (clip.isNew[name]) sendOsc(\"/\" + name, clip[name]);\n    bmTxt(name + \": \" + clip[name],0,y);\n    y += 40;\n  } \n  \n});\n\nonEnter(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});\n\nonBeat(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});"
+                  "js": "clip.use(\"centi\");\n\nclip.defineParams({\n  val0: {type: \"number\", default:0, interpolable: true},\n  val1: {type: \"number\", default:0, interpolable: false},\n  color: {type: \"color\", default:\"#ffffff\", interpolable: true},\n  pos: {type:\"vec2\", interpolable: true}\n});\n\nsetup(() => {\n  size(1920, 1080);\n  bg(33);\n});\n\nonFrame(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n  clear();\n  bg(clip.color);\n  col(255);\n  let y = 0;\n  for(const name of clip.paramNames){\n    if (clip.isNew[name]) sendOsc(\"/\" + getCompositionName() + \"/\" + name, clip[name]);\n    bmTxt(name + \": \" + clip[name],0,y);\n    y += 40;\n  } \n  \n});\n\nonEnter(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});\n\nonBeat(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});"
                 },
                 "keyframeTracks": {
                   "val0": [
@@ -1145,14 +635,6 @@
                       "easing": "linear"
                     },
                     {
-                      "frame": 22,
-                      "value": [
-                        0,
-                        -1.03515625
-                      ],
-                      "easing": "linear"
-                    },
-                    {
                       "frame": 25,
                       "value": [
                         0,
@@ -1185,22 +667,6 @@
                       "easing": "linear"
                     },
                     {
-                      "frame": 31,
-                      "value": [
-                        0,
-                        41.4375
-                      ],
-                      "easing": "linear"
-                    },
-                    {
-                      "frame": 33,
-                      "value": [
-                        0,
-                        55.23046875
-                      ],
-                      "easing": "linear"
-                    },
-                    {
                       "frame": 36,
                       "value": [
                         0,
@@ -1225,34 +691,10 @@
                       "easing": "linear"
                     },
                     {
-                      "frame": 40,
-                      "value": [
-                        0,
-                        46.15625
-                      ],
-                      "easing": "linear"
-                    },
-                    {
                       "frame": 42,
                       "value": [
                         0,
                         45.3359375
-                      ],
-                      "easing": "linear"
-                    },
-                    {
-                      "frame": 43,
-                      "value": [
-                        0,
-                        43.6953125
-                      ],
-                      "easing": "linear"
-                    },
-                    {
-                      "frame": 45,
-                      "value": [
-                        0,
-                        40.66796875
                       ],
                       "easing": "linear"
                     },
@@ -1806,7 +1248,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{width:100%;height:100%;display:block}",
-          "js": "clip.use(\"centi\");\n\nclip.defineParams({\n  val0: {type: \"number\", default:0, interpolable: true},\n  val1: {type: \"number\", default:0, interpolable: false},\n  color: {type: \"color\", default:\"#ffffff\", interpolable: true},\n  pos: {type:\"vec2\", interpolable: true}\n});\n\nsetup(() => {\n  size(1920, 1080);\n  bg(33);\n});\n\nonFrame(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n  clear();\n  bg(clip.color);\n  col(255);\n  let y = 0;\n  for(const name of clip.paramNames){\n    if (clip.isNew[name]) sendOsc(\"/\" + name, clip[name]);\n    bmTxt(name + \": \" + clip[name],0,y);\n    y += 40;\n  } \n  \n});\n\nonEnter(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});\n\nonBeat(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});"
+          "js": "clip.use(\"centi\");\n\nclip.defineParams({\n  val0: {type: \"number\", default:0, interpolable: true},\n  val1: {type: \"number\", default:0, interpolable: false},\n  color: {type: \"color\", default:\"#ffffff\", interpolable: true},\n  pos: {type:\"vec2\", interpolable: true}\n});\n\nsetup(() => {\n  size(1920, 1080);\n  bg(33);\n});\n\nonFrame(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n  clear();\n  bg(clip.color);\n  col(255);\n  let y = 0;\n  for(const name of clip.paramNames){\n    if (clip.isNew[name]) sendOsc(\"/\" + getCompositionName() + \"/\" + name, clip[name]);\n    bmTxt(name + \": \" + clip[name],0,y);\n    y += 40;\n  } \n  \n});\n\nonEnter(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});\n\nonBeat(({ time, frame, progress, compTime, compFrame, runTime, runFrame, bar, beat }) => {\n});"
         }
       }
     }

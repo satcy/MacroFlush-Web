@@ -22,6 +22,7 @@ export const groupDescriptions = {
 };
 
 export const apiDescriptions = {
+  "composition-identity": "Return strings with the current name and stable asset ID of the Composition directly containing the executing Clip. These global APIs work in plain JavaScript, Centi, p5 global mode and Isolated replay; no clip.use() declaration is required. Inside a referenced Composition they identify the inner one; a runtime add() child gets its parent Clip's Composition identity. Renames appear from the next tick, so read the current name inside onFrame(). Use IDs to distinguish same-named Compositions. Missing identity, including an unnamed legacy V1 root, returns an empty string from both functions. The OSC tutorial uses the name as an outgoing address prefix, while UDP sending itself requires the app.",
   ...threeDDescriptions,
   ...advancedDescriptions,
   ...featureDescriptions,
