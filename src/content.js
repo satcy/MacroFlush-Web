@@ -2,6 +2,7 @@ import { extraGroups, extraApi } from "./reference-extra.js";
 import { featureGroups, featureApi } from "./reference-features.js";
 import { threeDGroups, threeDApi, threeDLesson } from "./three-d-content.js";
 import { oscSequencerLesson } from "./osc-sequencer-content.js";
+import { commandLineLesson } from "./command-line-tutorial.js";
 import { tutorialCategories } from "./tutorial-categories.js";
 import { p5TimelineLesson } from "./p5-tutorial-content.js";
 import { workshopLessons } from "./tutorial-workshops.js";
@@ -70,6 +71,7 @@ const sourceLessons = [
   ] },
   threeDLesson,
   oscSequencerLesson,
+  commandLineLesson,
   p5TimelineLesson,
   ...workshopLessons,
   ...advancedLessons

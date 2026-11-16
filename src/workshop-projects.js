@@ -1,6 +1,7 @@
 export const workshopCatalog = [
   ["curve-motion", "08", "Curve Motion", "同じキーの時刻と値で、補間だけを変えた3つの円。", "Three circles share key times and values, with different interpolation."],
-  ["feedback-pointer", "09", "Pointer Study", "練習用Pointerをsample()で読み、光点と軌跡を描く。", "Read a practice Pointer with sample() to draw a dot and trail."],
+  ["feedback-pointer", "09", "Pointer Study", "Inspectorで割り当てたPointerをonMouseコールバックで受け取り、軌跡を描く。", "Draw recorded strokes using onMouse callbacks and an Inspector Pointer assignment."],
+  ["feedback-sampling", "09a", "Pointer Sampling", "feedback()・sample()・at()で、時刻から光点と軌跡を描き直す。", "Redraw a dot and trail from time with feedback(), sample() and at()."],
   ["feedback-editor", "10", "Stroke Editing", "練習用ストロークの修正前・修正後を比べる教材。", "Compare rough and smoothed practice strokes."],
   ["shader-chromatic", "11", "Chromatic Study", "Effect layerで入力映像のRGBをずらすShader。", "A Shader on an Effect layer separates the input image's RGB channels."],
   ["audio-reactive", "12", "Audio Bands", "同梱のオリジナル音源をlow・mid・highで可視化。", "Visualize low, mid and high bands of an included original beat."],

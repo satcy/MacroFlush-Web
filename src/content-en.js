@@ -1,6 +1,7 @@
 import { featureGroupDescriptions, featureDescriptions } from "./reference-features.js";
 import { threeDGroupDescriptions, threeDDescriptions, threeDLessonEnglish } from "./three-d-content.js";
 import { oscSequencerLessonEnglish } from "./osc-sequencer-content.js";
+import { commandLineLessonEnglish } from "./command-line-tutorial.js";
 import { p5TimelineLessonEnglish } from "./p5-tutorial-content.js";
 import { workshopTranslations } from "./tutorial-workshops.js";
 import { advancedTranslations, advancedDescriptions } from "./advanced-tutorials.js";
@@ -104,6 +105,7 @@ export const lessonTranslations = {
   "p5-timeline": p5TimelineLessonEnglish,
   "timeline-3d": threeDLessonEnglish,
   "osc-sequencer": oscSequencerLessonEnglish,
+  "command-line-launch": commandLineLessonEnglish,
   "first-clip": {
     title: "Create your first Clip", summary: "Draw a circle on a canvas and animate it with the timeline.",
     steps: [

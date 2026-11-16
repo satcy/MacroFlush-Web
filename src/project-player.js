@@ -152,10 +152,13 @@ export class ProjectPreview {
           const target = Math.min(this.composition.durationFrames - 1, Math.round(time % this.duration * this.composition.fps));
           this.pendingCapture = { target, neighbor: target >= 2 ? target - 2 : Math.min(target + 2, this.composition.durationFrames - 1), phase: "neighbor" };
         }
-        this.player.tick(this.pendingCapture.phase === "neighbor" ? this.pendingCapture.neighbor : this.pendingCapture.target);
+        this.player.tick(this.pendingCapture.phase === "neighbor" ? this.pendingCapture.neighbor : this.pendingCapture.target, { inputDelivery: "sample-only" });
       } else {
+        // Recorded input requires explicit playback intent. A requested seek or
+        // edit first samples a baseline, even when the transport is playing.
+        const inputDelivery = playing && !this.dirty ? "playback" : "sample-only";
         if (playing) { this.dirty = false; this.pendingCapture = null; }
-        this.player.tick(frameAtTime(time, this.composition.fps, this.composition.durationFrames));
+        this.player.tick(frameAtTime(time, this.composition.fps, this.composition.durationFrames), { inputDelivery });
       }
     }
     catch (error) { this.fail(error); }

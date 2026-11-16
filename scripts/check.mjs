@@ -193,5 +193,6 @@ execFileSync(process.execPath, ["--experimental-vm-modules", "scripts/check-prev
 });
 
 await import("./check-tutorial-workshops.mjs");
+await import("./check-tutorial-code.mjs");
 
 await import("./check-tutorial-kit.mjs");

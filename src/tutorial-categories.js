@@ -35,7 +35,7 @@ export const tutorialCategories = [
     id: "input", name: "入力と連携", english: "Input & connection",
     description: "音・手の動き・外部ツールから、映像を動かす。",
     englishDescription: "Drive visuals from sound, hand movement and external tools.",
-    lessons: ["audio-reactive", "stem-reactive", "feedback-pointer", "feedback-editor", "osc-sequencer"]
+    lessons: ["audio-reactive", "stem-reactive", "feedback-pointer", "feedback-sampling", "feedback-editor", "osc-sequencer", "command-line-launch"]
   },
   {
     id: "delivery", name: "書き出しと公開", english: "Export & publishing",

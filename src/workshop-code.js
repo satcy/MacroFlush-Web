@@ -19,23 +19,140 @@ onFrame(() => {
   oval(clip.x, clip.row, 26);
 });`;
 
+export const pointerMouseCode = `clip.use("centi");
+
+const makeState = () => ({
+  strokes: [],
+  current: null,
+  counts: { down: 0, move: 0, up: 0, canceled: 0 },
+  last: null
+});
+let state = makeState();
+let lastTime = -1;
+
+function syncTime(time) {
+  if (time < lastTime) {
+    state = makeState();
+  }
+  lastTime = time;
+}
+
+onMouseDown(e => {
+  syncTime(e.frameTime);
+  state.counts.down++;
+  state.current = [{ x: e.x, y: e.y }];
+  state.strokes.push(state.current);
+  state.last = e;
+});
+
+onMouseMove(e => {
+  syncTime(e.frameTime);
+  state.counts.move++;
+  if (e.buttons) {
+    // Playback can begin while the recorded button is already held.
+    if (!state.current) {
+      state.current = [{ x: e.px, y: e.py }];
+      state.strokes.push(state.current);
+    }
+    state.current.push({ x: e.x, y: e.y });
+  }
+  state.last = e;
+});
+
+onMouseUp(e => {
+  syncTime(e.frameTime);
+  state.counts.up++;
+  if (e.canceled) {
+    state.counts.canceled++;
+  }
+  if (state.current && !e.canceled) {
+    state.current.push({ x: e.x, y: e.y });
+  }
+  state.current = null;
+  state.last = e;
+});
+
+setup(() => size(1280, 720));
+onFrame(({ time }) => {
+  syncTime(time);
+  bg("#0c0f17");
+  col("#5dd4ff");
+  lineWidth(5);
+  lineCap(1);
+  lineJoin(1);
+  stroke();
+  for (const points of state.strokes) {
+    if (points.length < 2) {
+      continue;
+    }
+    beginShape();
+    lines(points, false);
+    endShape();
+  }
+  const e = state.last;
+  if (e && e.inside) {
+    col(e.buttons ? "#ffdc63" : "#ff6b9d");
+    fill();
+    oval(e.x, e.y, e.buttons ? 16 : 10);
+  }
+  col("#dce9f6");
+  fill();
+  font("monospace", 22);
+  text("SAVED POINTER / onMouseDown · onMouseMove · onMouseUp", 50, 60);
+  const k = state.counts;
+  text("down " + k.down + "   move " + k.move + "   up " + k.up + "   canceled " + k.canceled, 50, 95);
+  if (e) {
+    text("last " + e.type + "   seq " + e.seq + "   time " + e.time.toFixed(2) + " s", 50, 130);
+  } else {
+    text("Assign Feedback Pointer, Apply, then Play from frame 0", 50, 130);
+  }
+});`;
+
+export const feedbackSampleCode = `clip.use("centi");
+clip.defineParams({ takeName: { type: "string", default: "Hand Take" } });
+const pointerOptions = { space: "clip" };
+let take;
+let takeName;
+setup(() => size(1280, 720));
+onFrame(() => {
+  bg("#0c0f17");
+  if (takeName !== clip.takeName) {
+    take = feedback(clip.takeName, { offset: 0, rate: 1, loop: false });
+    takeName = clip.takeName;
+  }
+  const pointer = take.sample("pointer", pointerOptions);
+  if (pointer.inside) {
+    col(pointer.buttons ? "#ffdc63" : "#ff6b9d");
+    fill();
+    oval(pointer.x, pointer.y, 16);
+  }
+});`;
+
 export const feedbackCode = `clip.use("centi");
 clip.defineParams({ takeName: { type: "string", default: "Hand Take" } });
+const pointerOptions = { space: "clip" };
+let take;
+let takeName;
 setup(() => size(1280, 720));
 onFrame(({ time }) => {
   col("#0c0f17");
   fill();
   rect(0, 0, 1280, 720);
-  const take = feedback(clip.takeName, { offset: 0, rate: 1, loop: false });
-  const pointer = take.sample("pointer", { space: "clip" });
+  if (takeName !== clip.takeName) {
+    take = feedback(clip.takeName, { offset: 0, rate: 1, loop: false });
+    takeName = clip.takeName;
+  }
+  const pointer = take.sample("pointer", pointerOptions);
   col("#5dd4ff");
   lineWidth(5);
   lineCap(1);
   stroke();
   beginShape();
   let penDown = false;
-  for (let i = 0; i <= 90; i++) {
-    const p = take.at("pointer", max(0, time - 1.5 + i / 60), { space: "clip" });
+  const steps = min(90, ceil(time * 60));
+  for (let i = 0; i <= steps; i++) {
+    const seconds = max(0, time - (steps - i) / 60);
+    const p = i === steps ? pointer : take.at("pointer", seconds, pointerOptions);
     if (p.buttons && p.inside) {
       if (penDown)
         lineTo(p.x, p.y);
@@ -97,14 +214,14 @@ uniform sampler2D inputTexture;
 void main() { gl_FragColor = texture2D(inputTexture, vUv); }`;
 
 export const audioCode = `clip.use("centi");
+const bands = ["low", "mid", "high"];
+const colors = ["#5dd4ff", "#ff6b9d", "#ffdc63"];
 clip.defineParams({ gain: { type: "number", default: 2, min: 0, max: 6, interpolable: true } });
 setup(() => size(1280, 720));
 onFrame(() => {
   col("#0c0f17");
   fill();
   rect(0, 0, 1280, 720);
-  const bands = ["low", "mid", "high"];
-  const colors = ["#5dd4ff", "#ff6b9d", "#ffdc63"];
   getContext().textAlign = "center";
   for (let i = 0; i < 3; i++) {
     const energy = min(1, audioBand("Workshop Beat", bands[i]) * clip.gain);
@@ -127,6 +244,11 @@ clip.defineParams({
   reveal: { type: "number", default: 0, min: 0, max: 1, interpolable: true },
   tint: { type: "color", default: "#5dd4ff", interpolable: true }
 });
+const tracking = 14;
+let title;
+let letters = [];
+let widths = [];
+let total = 0;
 setup(() => size(1280, 720));
 onFrame(() => {
   col("#0c0f17");
@@ -134,18 +256,23 @@ onFrame(() => {
   rect(0, 0, 1280, 720);
   font("sans-serif", 112, true);
   getContext().textBaseline = "middle";
-  const letters = Array.from(clip.title);
-  const tracking = 14;
-  const total = letters.reduce((sum, c) => sum + getContext().measureText(c).width, 0)
-    + max(0, letters.length - 1) * tracking;
+  if (title !== clip.title) {
+    const context = getContext();
+    letters = Array.from(clip.title);
+    widths = letters.map(letter => context.measureText(letter).width);
+    total = widths.reduce((sum, width) => sum + width, 0)
+      + max(0, letters.length - 1) * tracking;
+    title = clip.title;
+  }
+  const tint = hexToInt(clip.tint);
   let x = (1280 - total) / 2;
   letters.forEach((letter, i) => {
     const u = max(0, min(1, (clip.reveal - i * 0.07) / 0.55));
     const eased = 1 - pow(1 - u, 3);
-    hcol(hexToInt(clip.tint), u * 255);
+    hcol(tint, u * 255);
     fill();
     text(letter, x, 350 + (1 - eased) * 120);
-    x += getContext().measureText(letter).width + tracking;
+    x += widths[i] + tracking;
   });
   col("#ff6b9d");
   fill();

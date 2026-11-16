@@ -218,14 +218,14 @@ if (process.env.PREVIEW_BASELINE) {
 
   // Exercise the real wrapper's media transitions and async disposal as well.
   let queryCount = 0, options, created = 0, invalidations = 0, cloneCount = 0, resolveFetch;
-  const mediaStates = [];
+  const mediaStates = [], playerTicks = [];
   const media = { paused: false, pause() { this.paused = true; } };
   const document = { body: { append() {} }, createElement() {
     const host = new Element();
     host.querySelectorAll = () => { queryCount++; return [media]; };
     return host;
   } };
-  const player = { ready: Promise.resolve(), resize() {}, tick() {}, setMediaPlaying(state) { mediaStates.push(state); }, destroy() {}, getStats: () => ({ framesReceived: 1 }) };
+  const player = { ready: Promise.resolve(), resize() {}, tick(frame, input) { playerTicks.push({ frame, input }); }, setMediaPlaying(state) { mediaStates.push(state); }, destroy() {}, getStats: () => ({ framesReceived: 1 }) };
   const context = createContext({
     document, window: new Element(), URL, location: new URL("https://example.test/examples/"),
     AbortController, setTimeout, clearTimeout,
@@ -249,12 +249,20 @@ if (process.env.PREVIEW_BASELINE) {
   assert.equal(options.mediaPlaying, false, "New Players must start with media paused");
   options.onComposite();
   previewWrapper.tick(0, true, 0); previewWrapper.tick(1 / 60, true, 20);
+  assert.equal(playerTicks.at(-1).input.inputDelivery, "playback", "Forward playback must opt into recorded input delivery");
   previewWrapper.pauseMedia();
   assert.deepEqual(mediaStates, [true, false], "Media state should change only on play/pause transitions");
   assert(media.paused);
   const queriesAfterPause = queryCount;
   for (let i = 1; i <= 120; i++) previewWrapper.tick(1 / 60, false, 20 + i * 20);
   assert.equal(queryCount, queriesAfterPause, "Paused same-frame ticks must not rescan media");
+  previewWrapper.tick(2, false, 2500);
+  assert.equal(playerTicks.at(-1).input.inputDelivery, "sample-only", "Paused seek workaround must never dispatch recorded events");
+  previewWrapper.requestRender();
+  previewWrapper.tick(3, true, 2520);
+  assert.equal(playerTicks.at(-1).input.inputDelivery, "sample-only", "A requested jump must sample a new baseline even while playing");
+  previewWrapper.tick(3 + 1 / 60, true, 2540);
+  assert.equal(playerTicks.at(-1).input.inputDelivery, "playback", "Playback after a new baseline must resume event delivery");
   previewWrapper.destroy();
 
   resolveFetch = null;

@@ -7,6 +7,7 @@ import { foundationProjects } from "../src/foundation-projects.js";
 import { advancedProjects } from "../src/advanced-projects.js";
 import { advancedLessons, advancedTranslations } from "../src/advanced-tutorials.js";
 import { workshopLessons, workshopTranslations } from "../src/tutorial-workshops.js";
+import { feedbackCode, feedbackSampleCode, pointerMouseCode } from "../src/workshop-code.js";
 
 const materials = [...workshopProjects, ...foundationProjects, ...advancedProjects];
 assert.equal(new Set(materials.map(p => p.id)).size, materials.length);
@@ -24,6 +25,35 @@ for (const entry of materials) {
   const clips = composition.layers.flatMap(layer => layer.clips);
   const placements = new Set(clips.map(clip => clip.id));
   assert.equal(placements.size, clips.length);
+  if (entry.id.startsWith("workshop-feedback-editor-")) {
+    const pointer = clips.find(clip => clip.id === "pointer-clip");
+    assert.equal(pointer.source.js, pointerMouseCode);
+    assert.equal(pointer.feedback.assetId, "hand-take");
+    assert.equal(pointer.feedback.pointerChannelId, "pointer");
+    assert.equal(pointer.params.takeName, undefined);
+    assert.deepEqual(assets.get(pointer.assetId).htmlTemplate.feedback, pointer.feedback);
+  }
+  if (entry.id.startsWith("workshop-feedback-sampling-")) {
+    const pointer = clips.find(clip => clip.id === "pointer-clip");
+    assert.equal(pointer.source.js, entry.id.endsWith("-complete") ? feedbackCode : feedbackSampleCode);
+    assert.equal(assets.get(pointer.assetId).htmlTemplate.source.js, pointer.source.js);
+    assert.equal(pointer.params.takeName.value, "Hand Take");
+    assert.equal(pointer.feedback.pointerChannelId, undefined, "Named data reads need no Pointer assignment");
+    assert.deepEqual(assets.get("hand-take").recording,
+      JSON.parse(await readFile("projects/tutorials/feedback-pointer/practice-feedback.json", "utf8")),
+      "Alternate sampling study must share the unchanged Pointer practice data");
+  }
+  if (entry.id.startsWith("workshop-feedback-pointer-")) {
+    const pointer = clips.find(clip => clip.id === "pointer-clip");
+    assert(pointer, "Pointer tutorial must contain its input-reading Clip");
+    assert.equal(pointer.feedback.assetId, "hand-take");
+    assert.equal(pointer.feedback.pointerChannelId, entry.id.endsWith("-complete") ? "pointer" : undefined,
+      "Only the completed Pointer study has an applied Pointer channel");
+    assert.deepEqual(assets.get(pointer.assetId).htmlTemplate.feedback, pointer.feedback);
+    assert.deepEqual(assets.get("hand-take").recording,
+      JSON.parse(await readFile("projects/tutorials/feedback-pointer/practice-feedback.json", "utf8")),
+      "Pointer callback study must retain its original practice recording");
+  }
   if (entry.id.startsWith("workshop-camera-work-")) {
     const cameras = clips.filter(clip => assets.get(clip.assetId)?.kind === "camera-3d");
     assert.equal(new Set(cameras.map(clip => clip.assetId)).size, 2, "Use two Camera assets");

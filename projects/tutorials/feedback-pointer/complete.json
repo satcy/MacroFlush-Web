@@ -143,26 +143,17 @@
                     "interpolable": false,
                     "space": "pixels",
                     "version": 1
-                  },
-                  "takeName": {
-                    "key": "takeName",
-                    "type": "string",
-                    "default": "Hand Take",
-                    "value": "Hand Take",
-                    "interpolable": false,
-                    "group": "custom",
-                    "writable": false,
-                    "version": 1
                   }
                 },
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-                  "js": "clip.use(\"centi\");\nclip.defineParams({ takeName: { type: \"string\", default: \"Hand Take\" } });\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  col(\"#0c0f17\");\n  fill();\n  rect(0, 0, 1280, 720);\n  const take = feedback(clip.takeName, { offset: 0, rate: 1, loop: false });\n  const pointer = take.sample(\"pointer\", { space: \"clip\" });\n  col(\"#5dd4ff\");\n  lineWidth(5);\n  lineCap(1);\n  stroke();\n  beginShape();\n  let penDown = false;\n  for (let i = 0; i <= 90; i++) {\n    const p = take.at(\"pointer\", max(0, time - 1.5 + i / 60), { space: \"clip\" });\n    if (p.buttons && p.inside) {\n      if (penDown)\n        lineTo(p.x, p.y);\n      else\n        moveTo(p.x, p.y);\n      penDown = true;\n    }\n    else\n      penDown = false;\n  }\n  endShape();\n  if (pointer.inside) {\n    col(pointer.buttons ? \"#ffdc63\" : \"#ff6b9d\");\n    fill();\n    oval(pointer.x, pointer.y, 16);\n  }\n  font(\"sans-serif\", 20);\n  col(\"#a0afbf\");\n  fill();\n  text(\"POINTER / \" + clip.takeName, 50, 60);\n});"
+                  "js": "clip.use(\"centi\");\n\nconst makeState = () => ({\n  strokes: [],\n  current: null,\n  counts: { down: 0, move: 0, up: 0, canceled: 0 },\n  last: null\n});\nlet state = makeState();\nlet lastTime = -1;\n\nfunction syncTime(time) {\n  if (time < lastTime) {\n    state = makeState();\n  }\n  lastTime = time;\n}\n\nonMouseDown(e => {\n  syncTime(e.frameTime);\n  state.counts.down++;\n  state.current = [{ x: e.x, y: e.y }];\n  state.strokes.push(state.current);\n  state.last = e;\n});\n\nonMouseMove(e => {\n  syncTime(e.frameTime);\n  state.counts.move++;\n  if (e.buttons) {\n    // Playback can begin while the recorded button is already held.\n    if (!state.current) {\n      state.current = [{ x: e.px, y: e.py }];\n      state.strokes.push(state.current);\n    }\n    state.current.push({ x: e.x, y: e.y });\n  }\n  state.last = e;\n});\n\nonMouseUp(e => {\n  syncTime(e.frameTime);\n  state.counts.up++;\n  if (e.canceled) {\n    state.counts.canceled++;\n  }\n  if (state.current && !e.canceled) {\n    state.current.push({ x: e.x, y: e.y });\n  }\n  state.current = null;\n  state.last = e;\n});\n\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  syncTime(time);\n  bg(\"#0c0f17\");\n  col(\"#5dd4ff\");\n  lineWidth(5);\n  lineCap(1);\n  lineJoin(1);\n  stroke();\n  for (const points of state.strokes) {\n    if (points.length < 2) {\n      continue;\n    }\n    beginShape();\n    lines(points, false);\n    endShape();\n  }\n  const e = state.last;\n  if (e && e.inside) {\n    col(e.buttons ? \"#ffdc63\" : \"#ff6b9d\");\n    fill();\n    oval(e.x, e.y, e.buttons ? 16 : 10);\n  }\n  col(\"#dce9f6\");\n  fill();\n  font(\"monospace\", 22);\n  text(\"SAVED POINTER / onMouseDown · onMouseMove · onMouseUp\", 50, 60);\n  const k = state.counts;\n  text(\"down \" + k.down + \"   move \" + k.move + \"   up \" + k.up + \"   canceled \" + k.canceled, 50, 95);\n  if (e) {\n    text(\"last \" + e.type + \"   seq \" + e.seq + \"   time \" + e.time.toFixed(2) + \" s\", 50, 130);\n  } else {\n    text(\"Assign Feedback Pointer, Apply, then Play from frame 0\", 50, 130);\n  }\n});"
                 },
                 "keyframeTracks": {},
                 "feedback": {
                   "assetId": "hand-take",
+                  "pointerChannelId": "pointer",
                   "space": "clip",
                   "offset": 0,
                   "rate": 1,
@@ -301,26 +292,17 @@
             "interpolable": false,
             "space": "pixels",
             "version": 1
-          },
-          "takeName": {
-            "key": "takeName",
-            "type": "string",
-            "default": "Hand Take",
-            "value": "Hand Take",
-            "interpolable": false,
-            "group": "custom",
-            "writable": false,
-            "version": 1
           }
         },
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-          "js": "clip.use(\"centi\");\nclip.defineParams({ takeName: { type: \"string\", default: \"Hand Take\" } });\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  col(\"#0c0f17\");\n  fill();\n  rect(0, 0, 1280, 720);\n  const take = feedback(clip.takeName, { offset: 0, rate: 1, loop: false });\n  const pointer = take.sample(\"pointer\", { space: \"clip\" });\n  col(\"#5dd4ff\");\n  lineWidth(5);\n  lineCap(1);\n  stroke();\n  beginShape();\n  let penDown = false;\n  for (let i = 0; i <= 90; i++) {\n    const p = take.at(\"pointer\", max(0, time - 1.5 + i / 60), { space: \"clip\" });\n    if (p.buttons && p.inside) {\n      if (penDown)\n        lineTo(p.x, p.y);\n      else\n        moveTo(p.x, p.y);\n      penDown = true;\n    }\n    else\n      penDown = false;\n  }\n  endShape();\n  if (pointer.inside) {\n    col(pointer.buttons ? \"#ffdc63\" : \"#ff6b9d\");\n    fill();\n    oval(pointer.x, pointer.y, 16);\n  }\n  font(\"sans-serif\", 20);\n  col(\"#a0afbf\");\n  fill();\n  text(\"POINTER / \" + clip.takeName, 50, 60);\n});"
+          "js": "clip.use(\"centi\");\n\nconst makeState = () => ({\n  strokes: [],\n  current: null,\n  counts: { down: 0, move: 0, up: 0, canceled: 0 },\n  last: null\n});\nlet state = makeState();\nlet lastTime = -1;\n\nfunction syncTime(time) {\n  if (time < lastTime) {\n    state = makeState();\n  }\n  lastTime = time;\n}\n\nonMouseDown(e => {\n  syncTime(e.frameTime);\n  state.counts.down++;\n  state.current = [{ x: e.x, y: e.y }];\n  state.strokes.push(state.current);\n  state.last = e;\n});\n\nonMouseMove(e => {\n  syncTime(e.frameTime);\n  state.counts.move++;\n  if (e.buttons) {\n    // Playback can begin while the recorded button is already held.\n    if (!state.current) {\n      state.current = [{ x: e.px, y: e.py }];\n      state.strokes.push(state.current);\n    }\n    state.current.push({ x: e.x, y: e.y });\n  }\n  state.last = e;\n});\n\nonMouseUp(e => {\n  syncTime(e.frameTime);\n  state.counts.up++;\n  if (e.canceled) {\n    state.counts.canceled++;\n  }\n  if (state.current && !e.canceled) {\n    state.current.push({ x: e.x, y: e.y });\n  }\n  state.current = null;\n  state.last = e;\n});\n\nsetup(() => size(1280, 720));\nonFrame(({ time }) => {\n  syncTime(time);\n  bg(\"#0c0f17\");\n  col(\"#5dd4ff\");\n  lineWidth(5);\n  lineCap(1);\n  lineJoin(1);\n  stroke();\n  for (const points of state.strokes) {\n    if (points.length < 2) {\n      continue;\n    }\n    beginShape();\n    lines(points, false);\n    endShape();\n  }\n  const e = state.last;\n  if (e && e.inside) {\n    col(e.buttons ? \"#ffdc63\" : \"#ff6b9d\");\n    fill();\n    oval(e.x, e.y, e.buttons ? 16 : 10);\n  }\n  col(\"#dce9f6\");\n  fill();\n  font(\"monospace\", 22);\n  text(\"SAVED POINTER / onMouseDown · onMouseMove · onMouseUp\", 50, 60);\n  const k = state.counts;\n  text(\"down \" + k.down + \"   move \" + k.move + \"   up \" + k.up + \"   canceled \" + k.canceled, 50, 95);\n  if (e) {\n    text(\"last \" + e.type + \"   seq \" + e.seq + \"   time \" + e.time.toFixed(2) + \" s\", 50, 130);\n  } else {\n    text(\"Assign Feedback Pointer, Apply, then Play from frame 0\", 50, 130);\n  }\n});"
         },
         "keyframeTracks": {},
         "feedback": {
           "assetId": "hand-take",
+          "pointerChannelId": "pointer",
           "space": "clip",
           "offset": 0,
           "rate": 1,

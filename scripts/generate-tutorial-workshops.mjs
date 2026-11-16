@@ -1,6 +1,6 @@
 // Rebuild only the site's authored workshop materials; never sync application examples.
 import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { curveCode, feedbackCode, shaderInputCode, chromaticShader, passthroughShader, audioCode, typographyCode, paletteCode, swarmDotCode, swarmCode, cameraFlightShots, cameraCourseCode } from "../src/workshop-code.js";
+import { curveCode, feedbackCode, feedbackSampleCode, pointerMouseCode, shaderInputCode, chromaticShader, passthroughShader, audioCode, typographyCode, paletteCode, swarmDotCode, swarmCode, cameraFlightShots, cameraCourseCode } from "../src/workshop-code.js";
 
 const seed = JSON.parse(await readFile("projects/tutorials/p5-timeline/start.json", "utf8"));
 const seedClip = seed.assets.find(asset => asset.kind === "html-clip").htmlTemplate;
@@ -68,28 +68,30 @@ function beat() {
 }
 
 const names = {
-  "curve-motion": "Curve Motion", "feedback-pointer": "Pointer Study", "feedback-editor": "Stroke Editing",
+  "curve-motion": "Curve Motion", "feedback-pointer": "Pointer Study", "feedback-sampling": "Pointer Sampling", "feedback-editor": "Stroke Editing",
   "shader-chromatic": "Chromatic Study", "audio-reactive": "Audio Bands", "kinetic-type": "Kinetic Type",
   "shared-palette": "One Hue", "camera-work": "Camera Study", "runtime-swarm": "Runtime Swarm"
 };
+const pointerPractice = JSON.parse(await readFile("projects/tutorials/feedback-pointer/practice-feedback.json", "utf8"));
 const requested = process.argv.slice(2);
 if (requested.some(slug => !Object.hasOwn(names, slug))) throw new Error("Unknown workshop slug");
 for (const [slug, title] of Object.entries(names).filter(([slug]) => !requested.length || requested.includes(slug))) {
   const folder = `projects/tutorials/${slug}`; await mkdir(folder, { recursive: true });
   for (const stage of ["start", "complete"]) {
     const done = stage === "complete";
-    let p = project(slug, title, ["feedback-pointer", "feedback-editor", "audio-reactive", "camera-work"].includes(slug) ? 480 : 240);
+    let p = project(slug, title, ["feedback-pointer", "feedback-sampling", "feedback-editor", "audio-reactive", "camera-work"].includes(slug) ? 480 : 240);
     if (slug === "curve-motion") {
       for (const [i, label, tint, easing] of [[0, "LINEAR", "#5dd4ff", "linear"], [1, "SINE IN OUT", "#ff6b9d", "sineInOut"], [2, "BACK OUT", "#ffdc63", "backOut"]]) {
         const c = html(p, `ball-${i}`, label, curveCode, { x: number("x", 230, 100, 1180), row: number("row", 180 + i * 180, 0, 720), label: string("label", label), tint: string("tint", tint, "color") });
         c.keyframeTracks.x = keys([[0, 230], [119, 1080], [239, 230]], done ? easing : "linear"); layer(p, c);
       }
     } else if (slug.startsWith("feedback-")) {
-      const c = html(p, "pointer-clip", "Pointer Reader", feedbackCode, { takeName: string("takeName", "Hand Take") });
-      c.feedback = { assetId: "hand-take", space: "clip", offset: 0, rate: 1, loop: false }; layer(p, c);
-      const take = recording(done && slug === "feedback-editor");
+      const pointerCallbacks = slug !== "feedback-sampling";
+      const c = html(p, "pointer-clip", "Pointer Reader", pointerCallbacks ? pointerMouseCode : slug === "feedback-sampling" && !done ? feedbackSampleCode : feedbackCode, pointerCallbacks ? {} : { takeName: string("takeName", "Hand Take") });
+      c.feedback = { assetId: "hand-take", ...(pointerCallbacks && (done || slug === "feedback-editor") ? { pointerChannelId: "pointer" } : {}), space: "clip", offset: 0, rate: 1, loop: false }; layer(p, c);
+      const take = slug === "feedback-editor" ? recording(done) : structuredClone(pointerPractice);
       p.assets.push({ id: "hand-take", name: "Hand Take", kind: "feedback", detail: "Generated practice strokes / 8 sec", recording: take });
-      if (!done) await writeFile(`${folder}/practice-feedback.json`, JSON.stringify(take, null, 2) + "\n");
+      if (!done && slug === "feedback-editor") await writeFile(`${folder}/practice-feedback.json`, JSON.stringify(take, null, 2) + "\n");
     } else if (slug === "shader-chromatic") {
       const input = html(p, "input", "Source", shaderInputCode); layer(p, input, "Source");
       const shader = { id: "chromatic", name: "Chromatic", kind: "shader", assetId: "chromatic-asset", inFrame: 0, outFrame: 240, authoredBy: "human", remoteAssets: [], params: { amount: number("amount", done ? 14 : 0, 0, 24) }, source: { fragmentShader: done ? chromaticShader : passthroughShader }, keyframeTracks: done ? { amount: keys([[0, 0], [60, 14], [120, 0], [180, 20], [239, 0]], "sineInOut") } : {} };
