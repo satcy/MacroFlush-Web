@@ -108,6 +108,37 @@ onFrame(({ time }) => {
   }
 });`;
 
+// Keep input handling shared; only the Feedback Editor study fills a wide outline.
+export const feedbackEditorCode = pointerMouseCode
+  .replace("const makeState", "const outlines = new WeakMap();\nconst makeState")
+  .replace(`  lineWidth(5);
+  lineCap(1);
+  lineJoin(1);
+  stroke();
+  for (const points of state.strokes) {
+    if (points.length < 2) {
+      continue;
+    }
+    beginShape();
+    lines(points, false);
+    endShape();
+  }`, `  fill();
+  for (const points of state.strokes) {
+    if (points.length < 2) {
+      continue;
+    }
+    let cached = outlines.get(points);
+    if (!cached || cached.count !== points.length) {
+      const distinct = points.filter((p, i) => i === 0
+        || p.x !== points[i - 1].x || p.y !== points[i - 1].y);
+      cached = { count: points.length, outline: strk2fill(distinct, 30) };
+      outlines.set(points, cached);
+    }
+    beginShape();
+    lines(cached.outline, true);
+    endShape();
+  }`);
+
 export const feedbackSampleCode = `clip.use("centi");
 clip.defineParams({ takeName: { type: "string", default: "Hand Take" } });
 const pointerOptions = { space: "clip" };
@@ -240,7 +271,7 @@ onFrame(() => {
 
 export const typographyCode = `clip.use("centi");
 clip.defineParams({
-  title: { type: "string", default: "MOTION" },
+  title: { type: "string", default: "macroflush" },
   reveal: { type: "number", default: 0, min: 0, max: 1, interpolable: true },
   tint: { type: "color", default: "#5dd4ff", interpolable: true }
 });
@@ -267,7 +298,7 @@ onFrame(() => {
   const tint = hexToInt(clip.tint);
   let x = (1280 - total) / 2;
   letters.forEach((letter, i) => {
-    const u = max(0, min(1, (clip.reveal - i * 0.07) / 0.55));
+    const u = max(0, min(1, (clip.reveal - i * 0.05) / 0.55));
     const eased = 1 - pow(1 - u, 3);
     hcol(tint, u * 255);
     fill();

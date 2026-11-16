@@ -1,6 +1,6 @@
 // Rebuild only the site's authored workshop materials; never sync application examples.
 import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { curveCode, feedbackCode, feedbackSampleCode, pointerMouseCode, shaderInputCode, chromaticShader, passthroughShader, audioCode, typographyCode, paletteCode, swarmDotCode, swarmCode, cameraFlightShots, cameraCourseCode } from "../src/workshop-code.js";
+import { curveCode, feedbackCode, feedbackSampleCode, pointerMouseCode, feedbackEditorCode, shaderInputCode, chromaticShader, passthroughShader, audioCode, typographyCode, paletteCode, swarmDotCode, swarmCode, cameraFlightShots, cameraCourseCode } from "../src/workshop-code.js";
 
 const seed = JSON.parse(await readFile("projects/tutorials/p5-timeline/start.json", "utf8"));
 const seedClip = seed.assets.find(asset => asset.kind === "html-clip").htmlTemplate;
@@ -87,7 +87,7 @@ for (const [slug, title] of Object.entries(names).filter(([slug]) => !requested.
       }
     } else if (slug.startsWith("feedback-")) {
       const pointerCallbacks = slug !== "feedback-sampling";
-      const c = html(p, "pointer-clip", "Pointer Reader", pointerCallbacks ? pointerMouseCode : slug === "feedback-sampling" && !done ? feedbackSampleCode : feedbackCode, pointerCallbacks ? {} : { takeName: string("takeName", "Hand Take") });
+      const c = html(p, "pointer-clip", "Pointer Reader", slug === "feedback-editor" ? feedbackEditorCode : pointerCallbacks ? pointerMouseCode : slug === "feedback-sampling" && !done ? feedbackSampleCode : feedbackCode, pointerCallbacks ? {} : { takeName: string("takeName", "Hand Take") });
       c.feedback = { assetId: "hand-take", ...(pointerCallbacks && (done || slug === "feedback-editor") ? { pointerChannelId: "pointer" } : {}), space: "clip", offset: 0, rate: 1, loop: false }; layer(p, c);
       const take = slug === "feedback-editor" ? recording(done) : structuredClone(pointerPractice);
       p.assets.push({ id: "hand-take", name: "Hand Take", kind: "feedback", detail: "Generated practice strokes / 8 sec", recording: take });
@@ -105,7 +105,7 @@ for (const [slug, title] of Object.entries(names).filter(([slug]) => !requested.
       comp(p).layers.push({ id: "audio-layer", name: "Music", kind: "chromium", visible: true, clips: [audio] });
       if (!done) await writeFile(`${folder}/workshop-beat.wav`, wav);
     } else if (slug === "kinetic-type") {
-      const c = html(p, "title", "Title", typographyCode, { title: string("title", "MOTION"), reveal: number("reveal", done ? 0 : 1), tint: string("tint", "#5dd4ff", "color") });
+      const c = html(p, "title", "Title", typographyCode, { title: string("title", "macroflush"), reveal: number("reveal", done ? 0 : 1), tint: string("tint", "#5dd4ff", "color") });
       if (done) c.keyframeTracks.reveal = keys([[0, 0], [90, 1], [180, 1], [239, 0]]); layer(p, c);
     } else if (slug === "shared-palette") {
       comp(p).parameters = { hue: number("hue", 200, 0, 360) };

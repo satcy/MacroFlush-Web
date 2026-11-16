@@ -147,8 +147,8 @@
                   "title": {
                     "key": "title",
                     "type": "string",
-                    "default": "MOTION",
-                    "value": "MOTION",
+                    "default": "macroflush",
+                    "value": "macroflush",
                     "interpolable": false,
                     "group": "custom",
                     "writable": false,
@@ -181,7 +181,7 @@
                 "source": {
                   "html": "<canvas id=\"stage\"></canvas>",
                   "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-                  "js": "clip.use(\"centi\");\nclip.defineParams({\n  title: { type: \"string\", default: \"MOTION\" },\n  reveal: { type: \"number\", default: 0, min: 0, max: 1, interpolable: true },\n  tint: { type: \"color\", default: \"#5dd4ff\", interpolable: true }\n});\nconst tracking = 14;\nlet title;\nlet letters = [];\nlet widths = [];\nlet total = 0;\nsetup(() => size(1280, 720));\nonFrame(() => {\n  col(\"#0c0f17\");\n  fill();\n  rect(0, 0, 1280, 720);\n  font(\"sans-serif\", 112, true);\n  getContext().textBaseline = \"middle\";\n  if (title !== clip.title) {\n    const context = getContext();\n    letters = Array.from(clip.title);\n    widths = letters.map(letter => context.measureText(letter).width);\n    total = widths.reduce((sum, width) => sum + width, 0)\n      + max(0, letters.length - 1) * tracking;\n    title = clip.title;\n  }\n  const tint = hexToInt(clip.tint);\n  let x = (1280 - total) / 2;\n  letters.forEach((letter, i) => {\n    const u = max(0, min(1, (clip.reveal - i * 0.07) / 0.55));\n    const eased = 1 - pow(1 - u, 3);\n    hcol(tint, u * 255);\n    fill();\n    text(letter, x, 350 + (1 - eased) * 120);\n    x += widths[i] + tracking;\n  });\n  col(\"#ff6b9d\");\n  fill();\n  rect(360, 490, 560 * clip.reveal, 5);\n});"
+                  "js": "clip.use(\"centi\");\nclip.defineParams({\n  title: { type: \"string\", default: \"macroflush\" },\n  reveal: { type: \"number\", default: 0, min: 0, max: 1, interpolable: true },\n  tint: { type: \"color\", default: \"#5dd4ff\", interpolable: true }\n});\nconst tracking = 14;\nlet title;\nlet letters = [];\nlet widths = [];\nlet total = 0;\nsetup(() => size(1280, 720));\nonFrame(() => {\n  col(\"#0c0f17\");\n  fill();\n  rect(0, 0, 1280, 720);\n  font(\"sans-serif\", 112, true);\n  getContext().textBaseline = \"middle\";\n  if (title !== clip.title) {\n    const context = getContext();\n    letters = Array.from(clip.title);\n    widths = letters.map(letter => context.measureText(letter).width);\n    total = widths.reduce((sum, width) => sum + width, 0)\n      + max(0, letters.length - 1) * tracking;\n    title = clip.title;\n  }\n  const tint = hexToInt(clip.tint);\n  let x = (1280 - total) / 2;\n  letters.forEach((letter, i) => {\n    const u = max(0, min(1, (clip.reveal - i * 0.05) / 0.55));\n    const eased = 1 - pow(1 - u, 3);\n    hcol(tint, u * 255);\n    fill();\n    text(letter, x, 350 + (1 - eased) * 120);\n    x += widths[i] + tracking;\n  });\n  col(\"#ff6b9d\");\n  fill();\n  rect(360, 490, 560 * clip.reveal, 5);\n});"
                 },
                 "keyframeTracks": {}
               }
@@ -321,8 +321,8 @@
           "title": {
             "key": "title",
             "type": "string",
-            "default": "MOTION",
-            "value": "MOTION",
+            "default": "macroflush",
+            "value": "macroflush",
             "interpolable": false,
             "group": "custom",
             "writable": false,
@@ -355,7 +355,7 @@
         "source": {
           "html": "<canvas id=\"stage\"></canvas>",
           "css": "html,body{margin:0;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%}",
-          "js": "clip.use(\"centi\");\nclip.defineParams({\n  title: { type: \"string\", default: \"MOTION\" },\n  reveal: { type: \"number\", default: 0, min: 0, max: 1, interpolable: true },\n  tint: { type: \"color\", default: \"#5dd4ff\", interpolable: true }\n});\nconst tracking = 14;\nlet title;\nlet letters = [];\nlet widths = [];\nlet total = 0;\nsetup(() => size(1280, 720));\nonFrame(() => {\n  col(\"#0c0f17\");\n  fill();\n  rect(0, 0, 1280, 720);\n  font(\"sans-serif\", 112, true);\n  getContext().textBaseline = \"middle\";\n  if (title !== clip.title) {\n    const context = getContext();\n    letters = Array.from(clip.title);\n    widths = letters.map(letter => context.measureText(letter).width);\n    total = widths.reduce((sum, width) => sum + width, 0)\n      + max(0, letters.length - 1) * tracking;\n    title = clip.title;\n  }\n  const tint = hexToInt(clip.tint);\n  let x = (1280 - total) / 2;\n  letters.forEach((letter, i) => {\n    const u = max(0, min(1, (clip.reveal - i * 0.07) / 0.55));\n    const eased = 1 - pow(1 - u, 3);\n    hcol(tint, u * 255);\n    fill();\n    text(letter, x, 350 + (1 - eased) * 120);\n    x += widths[i] + tracking;\n  });\n  col(\"#ff6b9d\");\n  fill();\n  rect(360, 490, 560 * clip.reveal, 5);\n});"
+          "js": "clip.use(\"centi\");\nclip.defineParams({\n  title: { type: \"string\", default: \"macroflush\" },\n  reveal: { type: \"number\", default: 0, min: 0, max: 1, interpolable: true },\n  tint: { type: \"color\", default: \"#5dd4ff\", interpolable: true }\n});\nconst tracking = 14;\nlet title;\nlet letters = [];\nlet widths = [];\nlet total = 0;\nsetup(() => size(1280, 720));\nonFrame(() => {\n  col(\"#0c0f17\");\n  fill();\n  rect(0, 0, 1280, 720);\n  font(\"sans-serif\", 112, true);\n  getContext().textBaseline = \"middle\";\n  if (title !== clip.title) {\n    const context = getContext();\n    letters = Array.from(clip.title);\n    widths = letters.map(letter => context.measureText(letter).width);\n    total = widths.reduce((sum, width) => sum + width, 0)\n      + max(0, letters.length - 1) * tracking;\n    title = clip.title;\n  }\n  const tint = hexToInt(clip.tint);\n  let x = (1280 - total) / 2;\n  letters.forEach((letter, i) => {\n    const u = max(0, min(1, (clip.reveal - i * 0.05) / 0.55));\n    const eased = 1 - pow(1 - u, 3);\n    hcol(tint, u * 255);\n    fill();\n    text(letter, x, 350 + (1 - eased) * 120);\n    x += widths[i] + tracking;\n  });\n  col(\"#ff6b9d\");\n  fill();\n  rect(360, 490, 560 * clip.reveal, 5);\n});"
         },
         "keyframeTracks": {}
       }

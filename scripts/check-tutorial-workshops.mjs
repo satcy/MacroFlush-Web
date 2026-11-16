@@ -7,7 +7,7 @@ import { foundationProjects } from "../src/foundation-projects.js";
 import { advancedProjects } from "../src/advanced-projects.js";
 import { advancedLessons, advancedTranslations } from "../src/advanced-tutorials.js";
 import { workshopLessons, workshopTranslations } from "../src/tutorial-workshops.js";
-import { feedbackCode, feedbackSampleCode, pointerMouseCode } from "../src/workshop-code.js";
+import { feedbackCode, feedbackSampleCode, feedbackEditorCode } from "../src/workshop-code.js";
 
 const materials = [...workshopProjects, ...foundationProjects, ...advancedProjects];
 assert.equal(new Set(materials.map(p => p.id)).size, materials.length);
@@ -27,7 +27,7 @@ for (const entry of materials) {
   assert.equal(placements.size, clips.length);
   if (entry.id.startsWith("workshop-feedback-editor-")) {
     const pointer = clips.find(clip => clip.id === "pointer-clip");
-    assert.equal(pointer.source.js, pointerMouseCode);
+    assert.equal(pointer.source.js, feedbackEditorCode);
     assert.equal(pointer.feedback.assetId, "hand-take");
     assert.equal(pointer.feedback.pointerChannelId, "pointer");
     assert.equal(pointer.params.takeName, undefined);
