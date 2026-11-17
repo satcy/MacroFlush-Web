@@ -3,9 +3,9 @@ export const advancedCatalog = [
   ["timeline-mask", "Alpha Window", "マスクで映像を切り抜く", "Reveal visuals through a mask", "隠したMatteのアルファで動く映像を切り抜く。", "Use a hidden Matte's alpha to crop moving visuals."],
   ["cue-performance", "Cue Stage", "Cueで切り替えるライブ映像をつくる", "Build a live performance with Cues", "Intro・Loop・OutroをCueで切り替える。", "Switch Intro, Loop and Outro with Cues."],
   ["stem-reactive", "Stem Ensemble", "ドラム・ベース・ボーカルを別々に動かす", "Animate drums, bass and vocals separately", "オリジナルの練習用4ステムを別の形へ割り当てる。", "Map four original practice stems to different shapes."],
-  ["seamless-loop", "Perfect Orbit", "継ぎ目のないループを設計する", "Design a seamless loop", "整数周期と位相で4秒のループをつなぐ。", "Join a four-second loop with integer cycles and phase."],
+  ["seamless-loop", "Perfect Orbit", "継ぎ目のないループを設計する", "Design a seamless loop", "24個の粒の回転・膨らみ・大きさを4秒でつなぐ。", "Join rotating, pulsing particles and their size in four seconds."],
   ["shader-stack", "Layered Look", "Shaderを重ねてルックをつくる", "Build a look by stacking Shaders", "Blur・色収差・色調整をEffect layerで順につなぐ。", "Chain blur, chromatic separation and grading with Effect layers."],
-  ["model-product", "Product Studio", "GLBモデルの商品紹介映像をつくる", "Make a product film from a GLB model", "オリジナルのボトルGLBを照明・回転・タイトルで見せる。", "Present an original bottle GLB with lighting, rotation and type."],
+  ["model-product", "Product Studio", "GLBモデルの商品紹介映像をつくる", "Make a product film from a GLB model", "ボトルと、2倍速で回転しSINで上下する12個の球体を見せる。", "Present a bottle with twelve spheres orbiting at twice its speed and moving in a sine wave."],
   ["seeded-motion", "Repeatable Field", "同じランダム模様をシークでも再現する", "Make random motion repeatable on seek", "seedと現在時刻から粒の配置を決め直す。", "Recalculate particles from a seed and current time."],
   ["alpha-logo", "Clear Mark", "透明背景のロゴアニメーションを書き出す", "Export a logo animation with transparency", "背景なしのオリジナルマークをPNGやProResへ出力する。", "Export an original transparent mark to PNG or ProRes."],
   ["embed-player", "Web Player", "作品を自分のWebページへ埋め込む", "Embed your work in a web page", "Playerとホストの時計で再生・停止・シークをつくる。", "Build playback, pause and seek with Player and a host clock."]

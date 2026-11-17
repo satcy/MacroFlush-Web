@@ -104,6 +104,8 @@ UI変更の確認では、デスクトップと狭い画面、キーボード操
 
 追加10教材は `src/advanced-tutorials.js`（日英本文・関連Reference）、`src/advanced-code.js`（共有コード）、`src/advanced-projects.js`（カタログ）で管理します。生成は `node scripts/generate-advanced-tutorials.mjs`、slug指定でそのペアだけ再生成できます。`projects/tutorials/ADVANCED.md` に来歴と開始／完成差分があります。ステムのvocalsは合成音、WAVはモデル分離結果ではありません。GLBもオリジナル生成物です。本文のステップに `environments` を指定すると、その操作専用のバッヂが出ます。ステム分離とProResのみの手順はアプリ版専用を保ってください。
 
+GLB商品紹介教材のScene1は `productSceneCode` / `productSceneStarterCode` です。BottleのGLBは変更せず、独立したOrbit Ring Groupに球体12個をXZ半径165で並べ、Yを `30 + sin(offset * 4 + orbitAngle) * 45` にします。円周上で4周期、各球はグループ1回転につき上下1周期です。色は `#070ed8` / `#ca186e` / `#86d624`。setupの初期Yも `sin(offset * 4)` に揃えます。BottleのNullキー0〜359でY 0〜360°に対し、球体は `orbitAngle = frame / 359 * 2π * 2` で720°。Nullの子にして回転を加算しないでください。開始用は両方静止、完成版は両方動きます。Geometry 1個・Material 3個はsetupで共有します。終点を変更する場合はNullキーとコードの359を揃え、日英の手順と同梱Three.jsによる `check-tutorial-code.mjs` の検証も更新してください。
+
 Web埋め込み教材の実ホストは `src/tutorial-player-host.js`、ビルドは `scripts/build-tutorial-kit.mjs` です。`dist/projects/tutorials/embed-player/` に開始／完成HTMLとPlayer一式・ZIPを生成し、生成物はコミットしません。ZIPのPlayerを単独JSに減らさず、依存リソースとライセンスを保持します。時計・progress・Pause/Seek/Reset・非表示タブでの停止・破棄は実ブラウザで確認してください。`npm run check` は `scripts/check-tutorial-kit.mjs` も実行します。
 
 教材コードの性能確認は `scripts/check-tutorial-code.mjs` で、Feedback参照の再利用・名前変更・シーク・軌跡の読み取り回数、文字幅の再計測を検証します。文字幅は固定のsans-serifフォントでtitle変更時だけ計算し、revealのアニメーションは毎フレーム反映します。外部フォントやフォント設定を追加する際は、その変更・読み込み完了時にもレイアウトキャッシュを無効化してください。

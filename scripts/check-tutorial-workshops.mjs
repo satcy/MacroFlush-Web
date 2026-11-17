@@ -8,6 +8,7 @@ import { advancedProjects } from "../src/advanced-projects.js";
 import { advancedLessons, advancedTranslations } from "../src/advanced-tutorials.js";
 import { workshopLessons, workshopTranslations } from "../src/tutorial-workshops.js";
 import { feedbackCode, feedbackSampleCode, feedbackEditorCode } from "../src/workshop-code.js";
+import { productSceneCode, productSceneStarterCode } from "../src/advanced-code.js";
 
 const materials = [...workshopProjects, ...foundationProjects, ...advancedProjects];
 assert.equal(new Set(materials.map(p => p.id)).size, materials.length);
@@ -25,6 +26,14 @@ for (const entry of materials) {
   const clips = composition.layers.flatMap(layer => layer.clips);
   const placements = new Set(clips.map(clip => clip.id));
   assert.equal(placements.size, clips.length);
+  if (entry.id.startsWith("advanced-model-product-")) {
+    const scene = clips.find(clip => clip.id === "scene1");
+    assert.equal(scene.source.js, entry.id.endsWith("-complete") ? productSceneCode : productSceneStarterCode);
+    assert.equal(assets.get(scene.assetId).htmlTemplate.source.js, scene.source.js);
+    assert.equal(clips.find(clip => clip.id === "product").parentPlacementId, "rig-placement");
+    const glb = Buffer.from(assets.get("product-glb").sourceUrl.split(",")[1], "base64");
+    assert(glb.equals(await readFile("projects/tutorials/model-product/bottle.glb")), "Orbiting spheres must not modify the bottle GLB");
+  }
   if (entry.id.startsWith("workshop-feedback-editor-")) {
     const pointer = clips.find(clip => clip.id === "pointer-clip");
     assert.equal(pointer.source.js, feedbackEditorCode);

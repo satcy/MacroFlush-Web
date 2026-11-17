@@ -117,10 +117,11 @@ onFrame(({ time }) => {
   for (let i = 0; i < 24; i++) {
     const offset = i / 24 * PI * 2;
     const angle = phase + offset;
-    const radius = 170 + 50 * sin(phase * 2 + offset);
-    col(["#5dd4ff", "#ff6c9a", "#ffdc63"][i % 3]);
+    const factor = pow(map(sin(phase * 2 + offset * 1), -1, 1, 0, 1), 10);
+    const radius = 170 + 100 * abs(sin(phase * 2 + offset * 2)) * factor;
+    col(["#3399beff", "#e32f68ff", "#eae0baff"][i % 3]);
     fill();
-    oval(640 + cos(angle) * radius, 360 + sin(angle) * radius, 9);
+    oval(640 + cos(angle) * radius, 360 + sin(angle) * radius, 9 + radius / 15);
   }
 });`;
 
@@ -149,6 +150,8 @@ void main() {
 }`;
 
 export const productSceneCode = `const { scene, T } = clip.use("centi3d");
+const orbitRing = new T.Group();
+const orbiters = [];
 setup(() => {
   size(1280, 720);
   scene.background = new T.Color("#101622");
@@ -156,7 +159,31 @@ setup(() => {
   const ground = new T.Mesh(new T.CylinderGeometry(135, 150, 24, 64), new T.MeshStandardMaterial({ color: "#263447", roughness: 0.55 }));
   ground.position.y = -110;
   scene.add(ground);
+  orbitRing.name = "Orbit Ring";
+  scene.add(orbitRing);
+  const geometry = new T.SphereGeometry(15, 24, 16);
+  const materials = ["#070ed8", "#ca186e", "#86d624"].map(color =>
+    new T.MeshStandardMaterial({ color, metalness: 0.25, roughness: 0.3 }));
+  for (let i = 0; i < 12; i++) {
+    const offset = i / 12 * PI * 2;
+    const sphere = new T.Mesh(geometry, materials[i % 3]);
+    sphere.name = "Orbit Sphere " + (i + 1);
+    sphere.position.set(cos(offset) * 165, 30 + sin(offset * 4) * 45, sin(offset) * 165);
+    orbitRing.add(sphere);
+    orbiters.push({ sphere, offset });
+  }
+});
+onFrame(({ frame }) => {
+  const bottleAngle = frame / 359 * PI * 2;
+  const orbitAngle = bottleAngle * 2;
+  orbitRing.rotation.y = orbitAngle;
+  for (const { sphere, offset } of orbiters) {
+    sphere.position.y = 30 + sin(offset * 4 + orbitAngle) * 45;
+  }
 });`;
+export const productSceneStarterCode = productSceneCode.replace(
+  "const bottleAngle = frame / 359 * PI * 2;", "const bottleAngle = 0;"
+);
 export const productTitleCode = `clip.use("centi");
 setup(() => {
   size(1280, 720);

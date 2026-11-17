@@ -75,7 +75,7 @@ for (const [id, title] of advancedCatalog.filter(([id]) => !requested.length || 
       p.assets=p.assets.filter(a=>!["mesh1", "mesh2", "mesh1-geometry", "mesh2-geometry", "mesh1-material", "mesh2-material"].includes(a.id));
       camera.params.position.value=[330,160,550];camera.params.aimTarget.value=[0,0,0];camera.params.fov.value=42;
       light.params.position.value=[180,300,350];light.params.intensity.value=3;
-      scene.source.js=code.productSceneCode;
+      scene.source.js=done?code.productSceneCode:code.productSceneStarterCode;
       root(p).layers.unshift({id:"product-layer",name:"Bottle",kind:"chromium",visible:true,clips:[model]},{id:"product-rig",name:"Turntable",kind:"chromium",visible:true,clips:[rig]});
       if(done){const rim=structuredClone(light);rim.id="rim";rim.name="Rim";rim.params.position.value=[-250,120,-220];rim.params.color.value="#ff6c9a";rim.params.intensity.value=2;layer(p,rim);const titleClip=html(p,"title","Title",code.productTitleCode);root(p).layers.unshift({id:"title-layer",name:"Title",kind:"chromium",visible:true,clips:[titleClip]});}
     } else if (id === "seeded-motion") {
