@@ -18,6 +18,8 @@ export const editorProjects = [
   ...examples,
   ...foundationProjects,
   ...advancedProjects,
+  { id: "perlin-mesh-start", projectUrl: new URL("../projects/tutorials/perlin-mesh/start.json", import.meta.url).href },
+  { id: "perlin-mesh-complete", title: "Perlin Surface", category: "3D", projectUrl: new URL("../projects/tutorials/perlin-mesh/complete.json", import.meta.url).href, description: "3D Perlin Noise · 4 s" },
   { id: "tutorial-3d-start", projectUrl: new URL("../projects/tutorials/timeline-3d/start.json", import.meta.url).href },
   { id: "tutorial-3d-complete", projectUrl: new URL("../projects/tutorials/timeline-3d/complete.json", import.meta.url).href },
   { id: "tutorial-p5-start", projectUrl: new URL("../projects/tutorials/p5-timeline/start.json", import.meta.url).href },

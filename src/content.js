@@ -1,3 +1,4 @@
+import { perlinMeshLesson } from "./perlin-mesh-tutorial.js";
 import { extraGroups, extraApi } from "./reference-extra.js";
 import { featureGroups, featureApi } from "./reference-features.js";
 import { threeDGroups, threeDApi, threeDLesson } from "./three-d-content.js";
@@ -42,7 +43,7 @@ export const api = [
   { id: "go", group: "events", name: "go(name) / onCue(callback)", text: "go()は名前付きCueへPlayheadを移動します。onCue()はClipが作成済みCueに入ったときの処理を登録します。", code: "onCue(({ cueName }) => {\n  console.log(cueName);\n});\n// 明示的なジャンプ: go(\"Intro\");" },
   { id: "audio", group: "events", name: "audioBand(name, band)", text: "Projectに読み込んだ音声アセットの帯域エネルギーを0〜1で取得します。low / mid / highを指定でき、コンポジションのPlayheadに従います。対応する音声Clipがアクティブでない場合は0です。", code: "onFrame(() => {\n  const bass = audioBand(\"Music\", \"low\");\n  clip.scale = [1 + bass * 0.3, 1 + bass * 0.3];\n});" },
   { id: "createplayer", group: "player", name: "createClipPlayer(options)", text: "ビルドで生成されるmacroflush-player.jsからインポートします。projectとcanvasを渡してPlayerを作成し、readyを待ってから再生します。", code: "import { createClipPlayer } from \"./macroflush-player.js\";\nconst player = createClipPlayer({ project, canvas });\nawait player.ready;\nplayer.tickTime(0);" },
-  { id: "tick", group: "player", name: "player.tickTime(seconds) / tick(frame)", text: "ホスト側から描画する時刻またはフレームを渡します。Clip内のonFrame()とは別に、埋め込み先のWebページが時間を管理します。", code: "// ホスト側のWebページで実行\nconst start = performance.now();\nfunction render(now) {\n  player.tickTime((now - start) / 1000);\n  requestAnimationFrame(render);\n}\nrequestAnimationFrame(render);" },
+  { id: "tick", group: "player", name: "player.tickTime(seconds) / tick(frame)", text: "ホスト側から描画する時刻またはフレームを渡します。Clip内のonFrame()とは別に、埋め込み先のWebページが時間を管理します。Manual restoreの3D Scriptを使うプロジェクトでは、ホスト側のシークやクロックの折り返しで player.tick(frame, { transport: { seek: true } }) のように伝えます（Player自身のCueの折り返しは自動で扱われます）。", code: "// ホスト側のWebページで実行\nconst start = performance.now();\nfunction render(now) {\n  player.tickTime((now - start) / 1000);\n  requestAnimationFrame(render);\n}\nrequestAnimationFrame(render);" },
   { id: "player-angle-unit", group: "player", name: "player.setClipParam() / getClipParam() / angleUnit", text: "管理された3D配置のXYZ rotationとLight angleは、Playerの数値制御（setClipParam / getClipParam / set / get）では既定でラジアンです。createClipPlayer()にangleUnit: \"degrees\"を渡すと、ネストしたCompositionのアドレスを含め、これらを度で読み書きできます。プロジェクトファイル、ScriptのThree.js、fov、2D transform、独自パラメータの単位は変わりません。", code: "const player = createClipPlayer({ project, canvas, angleUnit: \"degrees\" });\nawait player.ready;\nplayer.setClipParam(\"Layer 1\", \"Mesh1\", \"rotation\", 0, 90, 0);\nplayer.set(\"/Layer 1/Light1/angle\", 45);" },
   { id: "destroy", group: "player", name: "player.destroy()", text: "埋め込み先のビューを破棄するときにPlayerのリソースを解放します。ホスト側のアニメーションループも停止してください。", code: "player.destroy();" }
 ];
@@ -70,6 +71,7 @@ const sourceLessons = [
     { title: "ファイルを確認する", text: "出力したファイルの解像度、尺、音声、必要な場合はアルファを確認します。ブラウザ版では、ブラウザが許せばフォルダやファイルへ直接保存され、そうでなければMP4または連番PNGのZIPがダウンロードされます（直接保存できないときは128 MiBまで）。現行の書き出しには対象Clipの制約があります。ネストしたCompositionやWGSL、DOMのみのHTML Clipなどは対応状況をアプリのREADMEで確認してください。" }
   ] },
   threeDLesson,
+  perlinMeshLesson,
   oscSequencerLesson,
   commandLineLesson,
   p5TimelineLesson,

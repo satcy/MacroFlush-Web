@@ -29,7 +29,7 @@ export const tutorialCategories = [
     id: "three-d", name: "3D", english: "3D",
     description: "Timeline上の3Dシーンと、Cameraだけで魅せる演出。",
     englishDescription: "3D scenes on the Timeline, and staging with the Camera alone.",
-    lessons: ["timeline-3d", "camera-work", "model-product"]
+    lessons: ["timeline-3d", "camera-work", "model-product", "perlin-mesh"]
   },
   {
     id: "input", name: "入力と連携", english: "Input & connection",

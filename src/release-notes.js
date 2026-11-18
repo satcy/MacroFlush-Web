@@ -23,6 +23,42 @@ const item = (kind, scope, ja, en) => ({ kind, scope, ja, en });
 
 export const releases = [
   {
+    version: "0.4.0",
+    headline: {
+      ja: "3DのScriptが、書いた変更を保ったまま動かせるようになりました。",
+      en: "3D Scripts can now keep their changes between frames."
+    },
+    items: [
+      item("new", "",
+        "3DアセットのScriptに Manual restore を追加。Camera・Light・Null・Mesh（Modelは対象外）で、InspectorのScript stateから選びます。選ぶと `onFrame` が `state` と `jumped` を受け取り、Scriptが書いた値は、戻すまで残ります。従来の動作（restore-each-frame）は既定のままです。",
+        "Manual restore for 3D asset Scripts. For a Camera, Light, Null or Mesh (not a Model), choose it under Script state in the Inspector. `onFrame` then receives `state` and `jumped`, and what the Script writes stays until it restores it. The existing behavior (restore-each-frame) is still the default."),
+      item("new", "",
+        "`state.restore()`・`state.set()`・`state.mix()`・`state.snapshot()` で値を戻す・書く・補間する・保存できます。Meshでは `state.positions` で頂点を直接動かせます。キーフレームのあるキーと、Aim中のCameraの回転はTimelineが管理するため、書き換えられません。",
+        "`state.restore()`, `state.set()`, `state.mix()` and `state.snapshot()` put values back, write them, interpolate them and save them. On a Mesh, `state.positions` moves vertices directly. Keys with keyframes, and a Camera's rotation under Aim, stay with the Timeline and cannot be overwritten."),
+      item("new", "",
+        "Jump の設定で、シーク・コマ送り・Cueジャンプ・ループの折り返し・逆再生・書き出しの開始のときに状態を戻すか（Reset、既定）、持ち越すか（Keep state）を選べます。通常の再生、一時停止、速度の変更では戻りません。",
+        "The Jump setting chooses whether the state is restored (Reset, the default) or carried over (Keep state) on a seek, frame step, Cue jump, loop wrap, reversal or export start. Normal playback, pausing and speed changes never reset it."),
+      item("new", "app",
+        "MCPに `set_3d_script_state` を追加。AIクライアントから、3DアセットのScript stateとJumpを設定できます。",
+        "MCP gains `set_3d_script_state`, which lets an AI client set a 3D asset's Script state and Jump."),
+      item("improved", "",
+        "Inspectorに、Script stateとJumpの行を追加しました。Scriptが操作するキーと、Timelineなどが管理するキーの数を示す Key ownership の表示もあります。設定は、そのアセットを使うすべての配置で共通で、Undo 1回分です。",
+        "The Inspector gains Script state and Jump rows, plus a Key ownership summary showing which keys the Script controls and which belong to the Timeline. The settings are shared by every placement of the asset and are one Undo step."),
+      item("changed", "",
+        "Manual restore を使うプロジェクトだけ、新しいV4形式で保存されます。それ以外のプロジェクトは、これまでと同じ形式で保存されます。V4のファイルは、以前の0.3.x系のEditorと公開Playerでは開けません（エラーを表示します）。また、Export Embedded V2 はできません。",
+        "Only projects that use Manual restore are saved in the new V4 format; every other project is saved exactly as before. A V4 file cannot be opened by earlier 0.3.x Editors or the public Player (they show an error), and Export Embedded V2 is refused."),
+      item("changed", "player",
+        "単独のPlayerでManual restoreのプロジェクトを再生するときは、ホスト側のシークやクロックの折り返しで `player.tick(frame, { transport: { seek: true } })` と伝えます。Player自身のCueの折り返しは自動で扱われます。",
+        "To play a Manual restore project in a standalone Player, pass `player.tick(frame, { transport: { seek: true } })` on the host's own seeks and clock wraps. The Player's own Cue wraps are handled automatically."),
+      item("fixed", "",
+        "3DアセットのInspectorで、Asset・Target・Parent・Aim target・Transition・Durationなどの行の右端がそろっていなかったのを修正しました。",
+        "Fixed the right edges of rows such as Asset, Target, Parent, Aim target, Transition and Duration not lining up in the 3D asset Inspector."),
+      item("fixed", "",
+        "Safariで、Feedback Editorの背景が元のフレームの外に描かれる問題を修正しました。",
+        "Fixed the Feedback Editor background being drawn outside the source frame in Safari.")
+    ]
+  },
+  {
     version: "0.3.20",
     headline: {
       ja: "ターミナルからOSCを有効にして起動できるようになりました。",
