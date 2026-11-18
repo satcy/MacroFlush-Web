@@ -19,7 +19,7 @@ export async function build() {
   await buildTutorialKit();
   for (const language of ["ja", "en"]) {
     const root = language === "en" ? "dist/en" : "dist";
-    for (const page of ["top", "about", "reference", "examples", "tutorials", "online-editor"]) {
+    for (const page of ["top", "about", "reference", "examples", "tutorials", "release-notes", "online-editor"]) {
       const dir = page === "top" ? root : `${root}/${page}`;
       await mkdir(dir, { recursive: true });
       await writeFile(`${dir}/index.html`, prefixSiteLinks(render(page, undefined, language), basePath));
@@ -31,6 +31,6 @@ export async function build() {
   }
   await writeFile("dist/404.html", prefixSiteLinks(render404(), basePath));
   await writeFile("dist/.nojekyll", "");
-  console.log(`Built ${2 * (6 + lessons.length)} pages (JA / EN), ${examples.length} examples and OnlineEditor → dist/ (base: ${basePath})`);
+  console.log(`Built ${2 * (7 + lessons.length)} pages (JA / EN), ${examples.length} examples and OnlineEditor → dist/ (base: ${basePath})`);
 }
 if (process.argv[1] === new URL(import.meta.url).pathname) await build();

@@ -24,7 +24,7 @@ async function files(dir) {
   return found;
 }
 const htmlFiles = (await files(root)).filter(file => file.endsWith(".html") && !file.startsWith(resolve(root, "editor") + "/") && !file.startsWith(resolve(root, "projects") + "/"));
-assert.equal(htmlFiles.length, 2 * (6 + lessons.length) + 1, "Missing localized pages");
+assert.equal(htmlFiles.length, 2 * (7 + lessons.length) + 1, "Missing localized pages");
 assert.equal(new Set(api.map(entry => entry.id)).size, api.length);
 for (const group of groups) assert(groupDescriptions[group.id], `Missing English group: ${group.id}`);
 for (const lesson of lessons) {

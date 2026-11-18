@@ -28,6 +28,7 @@ npm run preview  # 生成済み dist/ を配信
 | `src/pages.js` | 共通レイアウト・ページ本文・ダイアログ |
 | `src/content.js` | APIの共通項目・チュートリアル |
 | `src/tutorial-categories.js` | Tutorialのカテゴリと学習順（記事は必ずいずれか1つに所属し、番号は順序から自動採番） |
+| `src/release-notes.js` | Release Notes（`/release-notes/`）の日英本文。本体の `CHANGELOG.md` をエンドユーザー向けに書き直したもの。フッターからリンク（ヘッダーのナビには置かない） |
 | `src/reference-extra.js` | Centi / p5.jsの詳細リファレンス |
 | `src/reference-guides.js` | 導入手順・単位・比較表 |
 | `src/examples.js` | 実プロジェクトの掲載カタログ |
